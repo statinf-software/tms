@@ -1,0 +1,289 @@
+/*
+ *	RISC-V Instruction Set
+ *
+ *	This file is part of GLISS
+ *	Copyright (c) 2017, IRIT UPS.
+ *
+ *	GLISS is free software; you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation; either version 2 of the License, or
+ *	(at your option) any later version.
+ *
+ *	GLISS is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with GLISS; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+// load instructions
+op all_load =
+	  lb
+	| lbu
+	| lh
+	| lhu
+	| lw
+	| lwu
+	| ld
+
+// store instructions
+op all_stores =
+	  sb
+	| sh
+	| sw
+	| sd
+
+// atomic instructions
+op all_atomic =
+	  lr
+	| sc
+	| amoswap
+	| amoadd
+	| amoxor
+	| amoand
+	| amoor
+	| amomin
+	| amomax
+	| amominu
+	| amomaxu
+
+// load instructions
+op lb(offset: int(12), base: reg_t, dest: reg_t)
+	syntax = format("lb %s, %d(%s)", dest, offset, base)
+	image  = format("%12b %s 000 %s 0000011", offset, base, dest)
+	action = {
+		let vAddr = R[base] + offset;
+		setR(dest, M[vAddr]);
+	}
+
+op lbu(offset: int(12), base: reg_t, dest: reg_t)
+	syntax = format("lbu %s, %d(%s)", dest, offset, base)
+	image  = format("%12b %s 100 %s 0000011", offset, base, dest)
+	action = {
+		let vAddr = R[base] + offset;
+		setR(dest, coerce(card(32), M[vAddr]));
+	}
+
+op lh(offset: int(12), base: reg_t, dest: reg_t)
+	syntax = format("lh %s, %d(%s)", dest, offset, base)
+	image  = format("%12b %s 001 %s 0000011", offset, base, dest)
+	action = {
+		let vAddr = offset + R[base];
+		let memdouble = M64[vAddr];
+		setR(dest, coerce(int(32), M16[vAddr]));
+	}
+
+op lhu(offset: int(12), base: reg_t, dest: reg_t)
+	syntax = format("lhu %s, %d(%s)", dest, offset, base)
+	image  = format("%12b %s 101 %s 0000011", offset, base, dest)
+	action = {
+		let vAddr = offset + R[base];
+		let memdouble = M64[vAddr];
+		setR(dest, coerce(duword, M16[vAddr]));
+	}
+
+op lw(offset: int(12), base: reg_t, dest: reg_t)
+	syntax = format("lw %s, %d(%s)", dest, offset, base)
+	image  = format("%12b %s 010 %s 0000011", offset, base, dest)
+	action = {
+		let vAddr = offset + R[base];
+		let memword = M32[vAddr];
+		setR(dest, memword);
+	}
+	
+op ld(offset: int(12), base: reg_t, dest: reg_t)
+	syntax = format("ld %s, %d(%s)", dest, offset, base)
+	image  = format("%12b %s 011 %s 0000011", offset, base, dest)
+	action = {
+		let vAddr = R[base] + offset;
+		setR(dest, M64[vAddr]);
+	}
+
+op lwu(offset: int(12), base: reg_t, dest: reg_t)
+	syntax = format("lwu %s, %d(%s)", dest, offset, base)
+	image  = format("%12b %s 110 %s 0000011", offset, base, dest)
+	action = {
+		let vAddr = offset + R[base];
+		setR(dest, coerce(duword, M32[vAddr]));
+	}
+
+
+// store instructions
+op sb(offset: int(12), src: reg_t, base: reg_t)
+	syntax = format("sb %s, %d(%s)", src, offset, base)
+	image  = format("%7b %s %s 000 %5b 0100011", offset<11..5>, src, base, offset<4..0>)
+	action = {
+		let vAddr = offset + R[base];
+		AddressTranslation(pAddr, uncached, vAddr, DATA, STORE);
+		pAddr = pAddr<31..2> :: (pAddr<1..0> ^ (ReverseEndian :: ReverseEndian));
+		let byte = vAddr<1..0> ^ (BigEndianCPU :: BigEndianCPU);
+		let dataword = R[src];
+		StoreMemoryBYTE(uncached, dataword, pAddr + 8*byte, vAddr);
+	}
+
+op sh(offset: int(12), src: reg_t, base: reg_t)
+	syntax = format("sh %s, %d(%s)", src, offset, base)
+	image  = format("%7b %s %s 001 %5b 0100011", offset<11..5>, src, base, offset<4..0>)
+	action = {
+		let vAddr = offset + R[base];
+		AddressTranslation(pAddr, uncached, vAddr, DATA, STORE);
+		let halfword = R[src];
+		StoreMemoryHALFWORD(uncached, halfword, pAddr, vAddr);
+	}
+
+op sw(offset: int(12), src: reg_t, base: reg_t)
+	syntax = format("sw %s, %d(%s)", src, offset, base)
+	image  = format("%7b %s %s 010 %5b 0100011", offset<11..5>, src, base, offset<4..0>)
+	action = {
+		let vAddr = offset + R[base];
+		AddressTranslation(pAddr, uncached, vAddr, DATA, STORE);
+		let dataword = R[src];
+		StoreMemoryWORD(uncached, dataword, pAddr, vAddr);
+	}
+
+op sd(offset: int(12), src: reg_t, base: reg_t)
+	syntax = format("sd %s, %d(%s)", src, offset, base)
+	image  = format("%7b %s %s 011 %5b 0100011", offset<11..5>, src, base, offset<4..0>)
+	action = {
+		let vAddr = offset + R[base];
+		AddressTranslation(pAddr, uncached, vAddr, DATA, STORE);
+		let datadouble = R[src];
+		StoreMemoryDOUBLEWORD(uncached, datadouble, pAddr, vAddr);
+	}
+
+
+// atomic instructions
+op lr(aq: bool, rl: bool, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("lr.w %s, (%s)", dest, addr) else if width == 3
+		then format("lr.d %s, (%s)", dest, addr)
+		else format("lr %s, (%s)", dest, addr)
+		endif endif
+	image  = format("00010 %1b %1b 00000 %s %3b %s 0101111", aq, rl, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op sc(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("sc.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("sc.d %s, %s, (%s)", dest, src, addr)
+		else format("sc %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("00011 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amoswap(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amoswap.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amoswap.d %s, %s, (%s)", dest, src, addr)
+		else format("amoswap %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("00001 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amoadd(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amoadd.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amoadd.d %s, %s, (%s)", dest, src, addr)
+		else format("amoadd %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("00000 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amoxor(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amoxor.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amoxor.d %s, %s, (%s)", dest, src, addr)
+		else format("amoxor %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("00100 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amoand(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amoand.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amoand.d %s, %s, (%s)", dest, src, addr)
+		else format("amoand %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("01100 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amoor(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amoor.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amoor.d %s, %s, (%s)", dest, src, addr)
+		else format("amoor %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("01000 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amomin(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amomin.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amomin.d %s, %s, (%s)", dest, src, addr)
+		else format("amomin %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("10000 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amomax(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amomax.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amomax.d %s, %s, (%s)", dest, src, addr)
+		else format("amomax %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("10100 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amominu(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amominu.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amominu.d %s, %s, (%s)", dest, src, addr)
+		else format("amominu %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("11000 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
+
+op amomaxu(aq: bool, rl: bool, src: reg_t, addr: reg_t, width: card(3), dest: reg_t)
+	syntax = 
+		if width == 2 
+		then format("amomaxu.w %s, %s, (%s)", dest, src, addr) else if width == 3
+		then format("amomaxu.d %s, %s, (%s)", dest, src, addr)
+		else format("amomaxu %s, %s, (%s)", dest, src, addr)
+		endif endif
+	image  = format("11100 %1b %1b %s %s %3b %s 0101111", aq, rl, src, addr, width, dest)
+	action = {
+		// empty, no simulation
+	}
