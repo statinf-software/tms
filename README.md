@@ -13,7 +13,7 @@ cd ..
 hg clone https://wwwwsecu.irit.fr/hg/TRACES/gliss2/trunk gliss2
 cd gliss2
 make
-cd ../mips
+cd ../tms
 ```
 
 Then, you have just to build ISS, disassembler and libraries with:
