@@ -1,0 +1,380 @@
+found 39 sections in the executable blinky.out
+	                    	type:00000000	addr:00000000	size:00000000
+	              .cinit	type:00000002	addr:000820f4	size:00000040
+	              .pinit	type:00000000	addr:00000000	size:00000000
+	           codestart	type:00000000	addr:00000000	size:00000000
+	         .TI.ramfunc	type:00000000	addr:00008000	size:00000000
+	              .stack	type:00000000	addr:00000400	size:00000400
+	               .ebss	type:00000000	addr:00000000	size:00000000
+	            .esysmem	type:00000000	addr:00000000	size:00000000
+	             .econst	type:00000000	addr:00000000	size:00000000
+	             .switch	type:00000000	addr:00000000	size:00000000
+	              .reset	type:00000000	addr:003fffc0	size:00000000
+	     Filter_RegsFile	type:00000000	addr:00000000	size:00000000
+	         SHARERAMGS0	type:00000000	addr:00000000	size:00000000
+	         SHARERAMGS1	type:00000000	addr:00000000	size:00000000
+	           PUTBUFFER	type:00000000	addr:00000000	size:00000000
+	         PUTWRITEIDX	type:00000000	addr:00000000	size:00000000
+	          GETREADIDX	type:00000000	addr:00000000	size:00000000
+	           GETBUFFER	type:00000000	addr:0003f800	size:00000000
+	         GETWRITEIDX	type:00000000	addr:0003f800	size:00000000
+	          PUTREADIDX	type:00000000	addr:0003f800	size:00000000
+	          .TI.memcrc	type:00000003	addr:00000000	size:000000c0
+	              .const	type:00000000	addr:00000000	size:00000000
+	             .sysmem	type:00000000	addr:00000000	size:00000000
+	         .init_array	type:00000000	addr:00000000	size:00000000
+	               .data	type:00000000	addr:00000122	size:00000018
+	        .debug_types	type:00000003	addr:00000000	size:00000f02
+	         .debug_info	type:00000003	addr:00000000	size:00000843
+	         .debug_line	type:00000003	addr:00000000	size:00000636
+	        .debug_frame	type:00000003	addr:00000000	size:000001a0
+[X]	               .text	type:00000001	addr:00082000	size:000001e2
+	                .bss	type:00000000	addr:0000a800	size:00000002
+	       .debug_abbrev	type:00000003	addr:00000000	size:00000211
+	          .debug_str	type:00000003	addr:00000000	size:00000384
+	      .debug_aranges	type:00000003	addr:00000000	size:00000228
+	     .debug_pubnames	type:00000003	addr:00000000	size:000002c9
+	__TI_build_attributes	type:00000000	addr:00000000	size:00000034
+	             .symtab	type:00000000	addr:00000000	size:00000c70
+	   .TI.section.flags	type:00000000	addr:00000000	size:0000001a
+	             .strtab	type:00000000	addr:00000000	size:00000560
+	           .shstrtab	type:00000000	addr:00000000	size:0000019f
+found 1 sections to disasemble
+
+found 198 symbols in the executable blinky.out
+	                    	value:00000000	size:00000000	info:00000000	shndx:00000000
+	              .cinit	value:000820F4	size:00000000	info:00000000	shndx:00000001
+	              .pinit	value:00000000	size:00000000	info:00000000	shndx:00000002
+	           codestart	value:00000000	size:00000000	info:00000000	shndx:00000003
+	         .TI.ramfunc	value:00008000	size:00000000	info:00000000	shndx:00000004
+	              .stack	value:00000400	size:00000000	info:00000000	shndx:00000005
+	               .ebss	value:00000000	size:00000000	info:00000000	shndx:00000006
+	            .esysmem	value:00000000	size:00000000	info:00000000	shndx:00000007
+	             .econst	value:00000000	size:00000000	info:00000000	shndx:00000008
+	             .switch	value:00000000	size:00000000	info:00000000	shndx:00000009
+	              .reset	value:003FFFC0	size:00000000	info:00000000	shndx:0000000A
+	     Filter_RegsFile	value:00000000	size:00000000	info:00000000	shndx:0000000B
+	         SHARERAMGS0	value:00000000	size:00000000	info:00000000	shndx:0000000C
+	         SHARERAMGS1	value:00000000	size:00000000	info:00000000	shndx:0000000D
+	           PUTBUFFER	value:00000000	size:00000000	info:00000000	shndx:0000000E
+	         PUTWRITEIDX	value:00000000	size:00000000	info:00000000	shndx:0000000F
+	          GETREADIDX	value:00000000	size:00000000	info:00000000	shndx:00000010
+	           GETBUFFER	value:0003F800	size:00000000	info:00000000	shndx:00000011
+	         GETWRITEIDX	value:0003F800	size:00000000	info:00000000	shndx:00000012
+	          PUTREADIDX	value:0003F800	size:00000000	info:00000000	shndx:00000013
+	          .TI.memcrc	value:00000000	size:00000000	info:00000000	shndx:00000014
+	              .const	value:00000000	size:00000000	info:00000000	shndx:00000015
+	             .sysmem	value:00000000	size:00000000	info:00000000	shndx:00000016
+	         .init_array	value:00000000	size:00000000	info:00000000	shndx:00000017
+	               .data	value:00000122	size:00000000	info:00000000	shndx:00000018
+	        .debug_types	value:00000000	size:00000000	info:00000000	shndx:00000019
+	         .debug_info	value:00000000	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:00000000	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000000	size:00000000	info:00000000	shndx:0000001C
+	               .text	value:00082000	size:00000000	info:00000000	shndx:0000001D
+	                .bss	value:0000A800	size:00000000	info:00000000	shndx:0000001E
+	         TI4G71rKIU9	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	               .text	value:000820D2	size:00000000	info:00000000	shndx:0000001D
+	               .data	value:0000012C	size:00000000	info:00000000	shndx:00000018
+	                .bss	value:0000A800	size:00000000	info:00000000	shndx:0000001E
+	         .debug_info	value:00000000	size:00000000	info:00000000	shndx:0000001A
+	         .debug_info	value:000000F9	size:00000000	info:00000000	shndx:0000001A
+	         .debug_info	value:000001DC	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:00000000	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:00000030	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:00000060	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:000000A6	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000000	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000000	size:00000000	info:00000000	shndx:00000019
+	          boot28.asm	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+[L]	    BYPASS_AUTO_INIT	value:000820B5	size:00000000	info:00000002	shndx:0000001D
+	               .text	value:000820A2	size:00000000	info:00000000	shndx:0000001D
+	              .stack	value:00000400	size:00000000	info:00000000	shndx:00000005
+	         .debug_info	value:000002E8	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:000000C7	size:00000000	info:00000000	shndx:0000001B
+	         TI18mmMCLhC	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	               .text	value:000820EE	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:00000440	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:00000116	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:00000155	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000040	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000000	size:00000000	info:00000000	shndx:00000019
+	         TI1auq8rEZv	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+[L]	              $C$L11	value:00082047	size:00000000	info:00000002	shndx:0000001D
+[L]	              $C$L12	value:00082056	size:00000000	info:00000002	shndx:0000001D
+	.text:__TI_auto_init_nobinit_nopinit	value:00082031	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:0000058D	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:00000176	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:000001EA	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000080	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:000002D9	size:00000000	info:00000000	shndx:00000019
+	         TI1l8VUcvK1	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+[L]	               $C$L1	value:000820BF	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L2	value:000820C5	size:00000000	info:00000002	shndx:0000001D
+	.text:decompress:ZI:__TI_zero_init_nomemset	value:000820B9	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:0000074C	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:0000020B	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:0000025D	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:000000D8	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:000008F7	size:00000000	info:00000000	shndx:00000019
+	         TI1mHS21Lho	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	.text:decompress:none	value:000820E6	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:00000902	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:0000027E	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:000002D5	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000118	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000000	size:00000000	info:00000000	shndx:00000019
+	         TI1p6fOrDaq	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+[L]	               $C$L1	value:00082001	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L2	value:00082004	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L3	value:00082009	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L4	value:00082011	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L5	value:00082013	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L6	value:0008201B	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L7	value:00082029	size:00000000	info:00000002	shndx:0000001D
+	.text:decompress:lzss	value:00082000	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:00000AB9	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:000002F6	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:00000390	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000158	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000AEA	size:00000000	info:00000000	shndx:00000019
+	         TI2m0nKVwR1	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+[L]	               $C$L1	value:0008205D	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L2	value:00082070	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L3	value:0008207B	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L4	value:00082081	size:00000000	info:00000002	shndx:0000001D
+	               .text	value:0008205C	size:00000000	info:00000000	shndx:0000001D
+	               .data	value:00000122	size:00000000	info:00000000	shndx:00000018
+	         .debug_info	value:00000CC5	size:00000000	info:00000000	shndx:0000001A
+	         .debug_info	value:00000E63	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:000003B1	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:000003DC	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:00000442	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:000001A0	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000C7B	size:00000000	info:00000000	shndx:00000019
+	         TI2oekL1Kob	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	               .text	value:000820DD	size:00000000	info:00000000	shndx:0000001D
+	         .data:_lock	value:00000128	size:00000000	info:00000000	shndx:00000018
+	       .data:_unlock	value:0000012A	size:00000000	info:00000000	shndx:00000018
+	         .debug_info	value:0000100C	size:00000000	info:00000000	shndx:0000001A
+	         .debug_info	value:00001113	size:00000000	info:00000000	shndx:0000001A
+	         .debug_info	value:0000121E	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:00000463	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:0000048F	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:000004BB	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:0000051A	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000200	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000D3A	size:00000000	info:00000000	shndx:00000019
+	         TI2rvlh5AUp	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+[L]	               $C$L1	value:000820CD	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L2	value:000820CF	size:00000000	info:00000002	shndx:0000001D
+	               .text	value:000820C6	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:00001421	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:0000053B	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:00000589	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:00000270	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000D69	size:00000000	info:00000000	shndx:00000019
+	         TI3R9TnZ3qo	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	         TI15qt3RIZm	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	         TI16lFXUY3o	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+[L]	               $C$L1	value:0008208B	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L2	value:0008208F	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L3	value:00082096	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L4	value:00082098	size:00000000	info:00000002	shndx:0000001D
+[L]	               $C$L5	value:000820A0	size:00000000	info:00000002	shndx:0000001D
+	               .text	value:00082085	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:0000157E	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:000005B9	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:0000061C	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:000002B0	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000E4A	size:00000000	info:00000000	shndx:00000019
+	         TI18ZHyFNQE	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	               .text	value:000820F0	size:00000000	info:00000000	shndx:0000001D
+	         .debug_info	value:00001719	size:00000000	info:00000000	shndx:0000001A
+	         .debug_line	value:0000063D	size:00000000	info:00000000	shndx:0000001B
+	         .debug_line	value:00000678	size:00000000	info:00000000	shndx:0000001B
+	        .debug_frame	value:000002F0	size:00000000	info:00000000	shndx:0000001C
+	        .debug_types	value:00000000	size:00000000	info:00000000	shndx:00000019
+	      .debug_aranges	value:00000000	size:00000000	info:00000000	shndx:00000021
+	     .debug_pubnames	value:00000000	size:00000000	info:00000000	shndx:00000022
+	  _RamfuncsLoadStart	value:00008000	size:00000000	info:00000000	shndx:00000004
+	   _RamfuncsLoadSize	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	    _RamfuncsLoadEnd	value:00008000	size:00000000	info:00000000	shndx:00000004
+	   _RamfuncsRunStart	value:00008000	size:00000000	info:00000000	shndx:00000004
+	    _RamfuncsRunSize	value:00000000	size:00000000	info:00000000	shndx:0000FFF1
+	     _RamfuncsRunEnd	value:00008000	size:00000000	info:00000000	shndx:00000004
+	     __TI_CINIT_Base	value:0008210C	size:00000000	info:00000000	shndx:00000001
+	    __TI_CINIT_Limit	value:00082114	size:00000000	info:00000000	shndx:00000001
+	     __TI_CINIT_Warm	value:00082114	size:00000000	info:00000000	shndx:00000001
+	__TI_Handler_Table_Base	value:00082100	size:00000000	info:00000000	shndx:00000001
+	__TI_Handler_Table_Limit	value:00082106	size:00000000	info:00000000	shndx:00000001
+	         _table_name	value:00000000	size:00000000	info:00000000	shndx:00000014
+	__TI_MEMRANGE_CRC__table_name	value:00000000	size:00000000	info:00000000	shndx:00000014
+	     __TI_STACK_SIZE	value:00000200	size:00000000	info:00000000	shndx:0000FFF1
+	      __TI_STACK_END	value:00000600	size:00000000	info:00000000	shndx:00000005
+	 __TI_pprof_out_hndl	value:FFFFFFFF	size:00000000	info:00000000	shndx:0000FFF1
+	__TI_prof_data_start	value:FFFFFFFF	size:00000000	info:00000000	shndx:0000FFF1
+	 __TI_prof_data_size	value:FFFFFFFF	size:00000000	info:00000000	shndx:0000FFF1
+[L]	                   c	value:0000A800	size:00000002	info:00000001	shndx:0000001E
+[L]	                   b	value:0000012D	size:00000002	info:00000001	shndx:00000018
+[L]	                   a	value:0000012C	size:00000002	info:00000001	shndx:00000018
+[L]	                main	value:000820D2	size:0000000B	info:00000002	shndx:0000001D
+[L]	            _c_int00	value:000820A2	size:00000000	info:00000002	shndx:0000001D
+[L]	             __stack	value:00000400	size:00000000	info:00000001	shndx:00000005
+[L]	    _system_pre_init	value:000820EE	size:00000002	info:00000002	shndx:0000001D
+[L]	__TI_auto_init_nobinit_nopinit	value:00082031	size:0000002B	info:00000002	shndx:0000001D
+[L]	__TI_zero_init_nomemset	value:000820B9	size:0000000D	info:00000002	shndx:0000001D
+[L]	__TI_decompress_none	value:000820E6	size:00000008	info:00000002	shndx:0000001D
+[L]	__TI_decompress_lzss	value:00082000	size:00000031	info:00000002	shndx:0000001D
+[L]	             C$$EXIT	value:0008205C	size:00000000	info:00000002	shndx:0000001D
+[L]	               abort	value:0008205C	size:00000002	info:00000002	shndx:0000001D
+[L]	                exit	value:0008205E	size:00000027	info:00000002	shndx:0000001D
+[L]	      __TI_dtors_ptr	value:00000126	size:00000004	info:00000001	shndx:00000018
+[L]	    __TI_cleanup_ptr	value:00000124	size:00000004	info:00000001	shndx:00000018
+[L]	__TI_enable_exit_profile_output	value:00000122	size:00000002	info:00000001	shndx:00000018
+[L]	                _nop	value:000820E5	size:00000001	info:00000002	shndx:0000001D
+[L]	               _lock	value:00000128	size:00000004	info:00000001	shndx:00000018
+[L]	             _unlock	value:0000012A	size:00000004	info:00000001	shndx:00000018
+[L]	      _register_lock	value:000820E1	size:00000004	info:00000002	shndx:0000001D
+[L]	    _register_unlock	value:000820DD	size:00000004	info:00000002	shndx:0000001D
+[L]	          _args_main	value:000820C6	size:0000000C	info:00000002	shndx:0000001D
+[L]	              memcpy	value:00082085	size:0000001D	info:00000002	shndx:0000001D
+[L]	  _system_post_cinit	value:000820F0	size:00000001	info:00000002	shndx:0000001D
+	          __c_args__	value:00000000	size:00000000	info:00000000	shndx:00000000
+
+disasm new section, addr=00082000, size=000001e2
+
+00082000 <__TI_decompress_lzss>
+    2000:	bdaa842f	<unknown>
+
+00082004 <$C$L2>
+    2004:	ab2b186f	<unknown>
+    2008:	a9a0a001	<unknown>
+    200c:	0119a71e	<unknown>
+    2010:	81de8758	<unknown>
+    2014:	000281de	<unknown>
+    2018:	01198578	<unknown>
+    201c:	a60ffa60	<unknown>
+    2020:	036f8492	lwu t5, -1752(fp)
+    2024:	8596aa92	<unknown>
+    2028:	c0ffa92f	<unknown>
+    202c:	ab92019c	<unknown>
+    2030:	a9271052	<unknown>
+    2034:	e763aa40	jalr t2, s4, 0008243e <_system_post_cinit+0x34e>
+    2038:	f56d8492	<unknown>
+    203c:	a9cd0f00	<unknown>
+    2040:	029dc3ff	<unknown>
+    2044:	a888a958	<unknown>
+    2048:	11530460	<unknown>
+    204c:	a606840d	<unknown>
+    2050:	a61ea05a	<unknown>
+    2054:	c076ff0f	<unknown>
+    2058:	a706a20f	<unknown>
+
+0008205c <abort>
+    205c:	d660be86	<unknown>
+    2060:	0600bdb2	<unknown>
+    2064:	088f0621	<unknown>
+    2068:	bdaaa9a8	<unknown>
+    206c:	bda2c88d	<unknown>
+
+00082070 <$C$L2>
+    2070:	0021a30f	<unknown>
+    2074:	1c61088f	<unknown>
+    2078:	1421488d	<unknown>
+    207c:	0c21a9a8	<unknown>
+    2080:	a10f1561	<unknown>
+    2084:	a103013b	<unknown>
+    2088:	41ff0119	<unknown>
+    208c:	a986818a	<unknown>
+    2090:	013b8492	<unknown>
+    2094:	0356a901	lhu a2, 26(s2)
+
+00082098 <$C$L4>
+    2098:	a307a983	sb s10, 2095(s2)
+    209c:	c5c58183	<unknown>
+
+000820a0 <$C$L5>
+    20a0:	673e81da	jalr t3, sp, 00081e48 <c+0x77648>
+    20a4:	00020119	<unknown>
+    20a8:	a20ff260	<unknown>
+    20ac:	4876f020	<unknown>
+    20b0:	be82be86	<unknown>
+    20b4:	be8b0600	<unknown>
+    20b8:	0077006f	<unknown>
+    20bc:	bdb21f76	<unknown>
+    20c0:	0400a959	<unknown>
+    20c4:	22920d61	<unknown>
+    20c8:	ab28ffff	<unknown>
+    20cc:	aa28ffff	<unknown>
+    20d0:	a928ffff	<unknown>
+    20d4:	a828ffff	<unknown>
+    20d8:	ab0f0361	<unknown>
+    20dc:	7f76ffff	<unknown>
+    20e0:	1f760400	<unknown>
+    20e4:	28c5673e	<unknown>
+    20e8:	1f760400	<unknown>
+    20ec:	26060461	<unknown>
+
+000820f0 <_system_post_cinit>
+    20f0:	a71ea192	<unknown>
+    20f4:	0100db00	<unknown>
+    20f8:	01000000	<unknown>
+    20fc:	0200e520	<unknown>
+    2100:	08001000	<unknown>
+    2104:	01000300	<unknown>
+    2108:	f0ff0000	<unknown>
+    210c:	b9200800	<unknown>
+    2110:	00200800	<unknown>
+    2114:	e6200800	<unknown>
+    2118:	00000000	<unknown>
+    211c:	01000000	<unknown>
+    2120:	00000000	<unknown>
+    2124:	f4200800	<unknown>
+    2128:	22010000	<unknown>
+    212c:	06210800	<unknown>
+    2130:	00a80000	<unknown>
+    2134:	0e00feff	<unknown>
+    2138:	85928796	<unknown>
+    213c:	0c00f8ff	<unknown>
+    2140:	a4a90600	<unknown>
+    2144:	ad280004	<unknown>
+    2148:	69ff1f56	<unknown>
+    214c:	16561a56	<unknown>
+    2150:	10e60002	<unknown>
+    2154:	40291f76	<unknown>
+    2158:	00000229	<unknown>
+    215c:	1b764876	<unknown>
+    2160:	ee200052	<unknown>
+    2164:	03614876	lwu sp, 1892(a6)
+    2168:	31204876	<unknown>
+    216c:	c6204876	<unknown>
+    2170:	5e20cc8a	<unknown>
+    2174:	00020119	<unknown>
+    2178:	81dca40f	<unknown>
+    217c:	07610002	<unknown>
+    2180:	81dc852b	<unknown>
+    2184:	0119a40f	<unknown>
+    2188:	fb600600	<unknown>
+    218c:	008f0000	<unknown>
+    2190:	a9a80460	<unknown>
+    2194:	009a00d4	<unknown>
+    2198:	036fc492	lwu t5, -1748(fp)
+    219c:	02dc4876	<unknown>
+    21a0:	d2200600	<unknown>
+    21a4:	1f760400	<unknown>
+    21a8:	2c922d94	<unknown>
+    21ac:	a92d2c12	<unknown>
+    21b0:	1f76a002	<unknown>
+    21b4:	0096009a	<unknown>
+    21b8:	06001f76	<unknown>
+    21bc:	04002aa8	<unknown>
+    21c0:	06001f76	<unknown>
+    21c4:	040028a8	<unknown>
+    21c8:	06000600	<unknown>
+    21cc:	a5c4a483	<unknown>
+    21d0:	cd06a68a	<unknown>
+    21d4:	03dd4876	lhu s10, 1892(a7)
+    21d8:	85200600	<unknown>
+    21dc:	019a0600	<unknown>
+    21e0:	06000000	<unknown>
