@@ -26,11 +26,35 @@ include "nmp/macros.nmp"
 // GLISS configuration
 let proc = "tms"
 let bit_order = "uppermost"
-let gliss_isize = "32"
+let gliss_isize = "16,32"
 //let bit_image_order =  1
 
 
 // modes
+
+mode reg_r (r: rindex) = r
+	num = r
+	syntax =
+		switch ( r ) {
+		case  0:	"zero"
+		case  1:	"ra"
+		case  2: 	"sp"
+		case  3: 	"gp"
+		case  4: 	"tp"
+		case  5: 	"t0"
+		case  6: 	"t1"
+		case  7: 	"t2"
+		case  8:	"fp"
+		case  9:	"s1"
+		case 10:	"a0"
+		case 11:	"a1"
+		case 12:	"a2"
+		case 13:	"a3"
+		case 14:	"a4"
+		case 15:	"a5"
+		}
+	image  = format ( "%4b", r )
+
 mode reg_t (r: index) = r
 	num = r
 	syntax =
@@ -134,17 +158,17 @@ op instruction (x: allinstr)
 
 op allinstr =
 	  all_rrr
-	| all_rri
-	| all_alu
-	| all_branch
-	| all_special
-	| all_muldiv
-//	| all_dshift
-	| all_load
-	| all_stores
-	| all_floating
-	| all_atomic
-	| rv64im
+//	| all_rri
+//	| all_alu
+//	| all_branch
+//	| all_special
+//	| all_muldiv
+////	| all_dshift
+//	| all_load
+//	| all_stores
+//	| all_floating
+//	| all_atomic
+//	| rv64im
 
 op init ()
 	action = {

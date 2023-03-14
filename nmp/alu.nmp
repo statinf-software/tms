@@ -21,16 +21,17 @@
 
 // Integer and Bitwise Register-Register Operations
 op all_rrr =
-	  add 
-	| and
-	| or
-	| sll
-	| slt
-	| sltu
-	| sra
-	| srl
-	| sub
-	| xor
+	//  add 
+	//| and
+	//| or
+	//| sll
+	//| slt
+	//| sltu
+	//| sra
+	//| srl
+	//| sub
+	//| xor
+	movl
 
 // Integer Register-Register Operations
 op all_rri =
@@ -76,6 +77,21 @@ op rv64im =
 	| divuw
 	| remw
 	| remuw
+
+
+//op movl(src1: reg_r, dest: reg_r)
+//	syntax = format("MOVL %s, %s", dest, src1)
+//	image = format("10101010 %s %s", src1, dest)
+//	action = {	
+//		//setR(dest, R[src1] + R[src2]);
+//	}
+
+op movl()
+	syntax = "MOVL SP, XAR2"
+	//image = "1011110110101010"
+	image = "1010101010111101"
+	action = {	
+	}
 
 // addition + subtraction
 op add(src2: reg_t, src1: reg_t, dest: reg_t)

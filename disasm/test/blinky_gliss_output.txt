@@ -1,4 +1,4 @@
-found 39 sections in the executable blinky.out
+found 39 sections in the executable test/blinky.elf
 	                    	type:00000000	addr:00000000	size:00000000
 	              .cinit	type:00000002	addr:000820f4	size:00000040
 	              .pinit	type:00000000	addr:00000000	size:00000000
@@ -41,7 +41,7 @@ found 39 sections in the executable blinky.out
 	           .shstrtab	type:00000000	addr:00000000	size:0000019f
 found 1 sections to disasemble
 
-found 198 symbols in the executable blinky.out
+found 198 symbols in the executable test/blinky.elf
 	                    	value:00000000	size:00000000	info:00000000	shndx:00000000
 	              .cinit	value:000820F4	size:00000000	info:00000000	shndx:00000001
 	              .pinit	value:00000000	size:00000000	info:00000000	shndx:00000002
@@ -245,136 +245,272 @@ found 198 symbols in the executable blinky.out
 disasm new section, addr=00082000, size=000001e2
 
 00082000 <__TI_decompress_lzss>
-    2000:	bdaa842f	<unknown>
+    2000:	bdaa	MOVL SP, XAR2
+    2002:	842f	<unknown>
 
 00082004 <$C$L2>
-    2004:	ab2b186f	<unknown>
-    2008:	a9a0a001	<unknown>
-    200c:	0119a71e	<unknown>
-    2010:	81de8758	<unknown>
-    2014:	000281de	<unknown>
-    2018:	01198578	<unknown>
-    201c:	a60ffa60	<unknown>
-    2020:	036f8492	lwu t5, -1752(fp)
-    2024:	8596aa92	<unknown>
-    2028:	c0ffa92f	<unknown>
-    202c:	ab92019c	<unknown>
-    2030:	a9271052	<unknown>
-    2034:	e763aa40	jalr t2, s4, 0008243e <_system_post_cinit+0x34e>
-    2038:	f56d8492	<unknown>
-    203c:	a9cd0f00	<unknown>
-    2040:	029dc3ff	<unknown>
-    2044:	a888a958	<unknown>
-    2048:	11530460	<unknown>
-    204c:	a606840d	<unknown>
-    2050:	a61ea05a	<unknown>
-    2054:	c076ff0f	<unknown>
-    2058:	a706a20f	<unknown>
+    2004:	ab2b	<unknown>
+    2006:	186f	<unknown>
+    2008:	a9a0	<unknown>
+    200a:	a001	<unknown>
+    200c:	0119	<unknown>
+    200e:	a71e	<unknown>
+    2010:	81de	<unknown>
+    2012:	8758	<unknown>
+    2014:	0002	<unknown>
+    2016:	81de	<unknown>
+    2018:	0119	<unknown>
+    201a:	8578	<unknown>
+    201c:	a60f	<unknown>
+    201e:	fa60	<unknown>
+    2020:	036f	<unknown>
+    2022:	8492	<unknown>
+    2024:	8596	<unknown>
+    2026:	aa92	<unknown>
+    2028:	c0ff	<unknown>
+    202a:	a92f	<unknown>
+    202c:	ab92	<unknown>
+    202e:	019c	<unknown>
+    2030:	a927	<unknown>
+    2032:	1052	<unknown>
+    2034:	e763	<unknown>
+    2036:	aa40	<unknown>
+    2038:	f56d	<unknown>
+    203a:	8492	<unknown>
+    203c:	a9cd	<unknown>
+    203e:	0f00	<unknown>
+    2040:	029d	<unknown>
+    2042:	c3ff	<unknown>
+    2044:	a888	<unknown>
+    2046:	a958	<unknown>
+    2048:	1153	<unknown>
+    204a:	0460	<unknown>
+    204c:	a606	<unknown>
+    204e:	840d	<unknown>
+    2050:	a61e	<unknown>
+    2052:	a05a	<unknown>
+    2054:	c076	<unknown>
+
+00082056 <$C$L12>
+    2056:	ff0f	<unknown>
+    2058:	a706	<unknown>
+    205a:	a20f	<unknown>
 
 0008205c <abort>
-    205c:	d660be86	<unknown>
-    2060:	0600bdb2	<unknown>
-    2064:	088f0621	<unknown>
-    2068:	bdaaa9a8	<unknown>
-    206c:	bda2c88d	<unknown>
+    205c:	d660	<unknown>
+
+0008205e <exit>
+    205e:	be86	<unknown>
+    2060:	0600	<unknown>
+    2062:	bdb2	<unknown>
+    2064:	088f	<unknown>
+    2066:	0621	<unknown>
+    2068:	bdaa	MOVL SP, XAR2
+    206a:	a9a8	<unknown>
+    206c:	bda2	<unknown>
+    206e:	c88d	<unknown>
 
 00082070 <$C$L2>
-    2070:	0021a30f	<unknown>
-    2074:	1c61088f	<unknown>
-    2078:	1421488d	<unknown>
-    207c:	0c21a9a8	<unknown>
-    2080:	a10f1561	<unknown>
-    2084:	a103013b	<unknown>
-    2088:	41ff0119	<unknown>
-    208c:	a986818a	<unknown>
-    2090:	013b8492	<unknown>
-    2094:	0356a901	lhu a2, 26(s2)
+    2070:	0021	<unknown>
+    2072:	a30f	<unknown>
+    2074:	1c61	<unknown>
+    2076:	088f	<unknown>
+    2078:	1421	<unknown>
+    207a:	488d	<unknown>
+    207c:	0c21	<unknown>
+    207e:	a9a8	<unknown>
+    2080:	a10f	<unknown>
+    2082:	1561	<unknown>
+    2084:	a103	<unknown>
+    2086:	013b	<unknown>
+    2088:	41ff	<unknown>
+    208a:	0119	<unknown>
+    208c:	a986	<unknown>
+    208e:	818a	<unknown>
+    2090:	013b	<unknown>
+    2092:	8492	<unknown>
+    2094:	0356	<unknown>
+
+00082096 <$C$L3>
+    2096:	a901	<unknown>
 
 00082098 <$C$L4>
-    2098:	a307a983	sb s10, 2095(s2)
-    209c:	c5c58183	<unknown>
+    2098:	a307	<unknown>
+    209a:	a983	<unknown>
+    209c:	c5c5	<unknown>
+    209e:	8183	<unknown>
 
 000820a0 <$C$L5>
-    20a0:	673e81da	jalr t3, sp, 00081e48 <c+0x77648>
-    20a4:	00020119	<unknown>
-    20a8:	a20ff260	<unknown>
-    20ac:	4876f020	<unknown>
-    20b0:	be82be86	<unknown>
-    20b4:	be8b0600	<unknown>
-    20b8:	0077006f	<unknown>
-    20bc:	bdb21f76	<unknown>
-    20c0:	0400a959	<unknown>
-    20c4:	22920d61	<unknown>
-    20c8:	ab28ffff	<unknown>
-    20cc:	aa28ffff	<unknown>
-    20d0:	a928ffff	<unknown>
-    20d4:	a828ffff	<unknown>
-    20d8:	ab0f0361	<unknown>
-    20dc:	7f76ffff	<unknown>
-    20e0:	1f760400	<unknown>
-    20e4:	28c5673e	<unknown>
-    20e8:	1f760400	<unknown>
-    20ec:	26060461	<unknown>
+    20a0:	673e	<unknown>
+
+000820a2 <_c_int00>
+    20a2:	81da	<unknown>
+    20a4:	0002	<unknown>
+    20a6:	0119	<unknown>
+    20a8:	a20f	<unknown>
+    20aa:	f260	<unknown>
+    20ac:	4876	<unknown>
+    20ae:	f020	<unknown>
+    20b0:	be82	<unknown>
+    20b2:	be86	<unknown>
+    20b4:	be8b	<unknown>
+    20b6:	0600	<unknown>
+    20b8:	0077	<unknown>
+    20ba:	006f	<unknown>
+    20bc:	bdb2	<unknown>
+    20be:	1f76	<unknown>
+    20c0:	0400	<unknown>
+    20c2:	a959	<unknown>
+    20c4:	2292	<unknown>
+
+000820c6 <_args_main>
+    20c6:	0d61	<unknown>
+    20c8:	ab28	<unknown>
+    20ca:	ffff	<unknown>
+    20cc:	aa28	<unknown>
+    20ce:	ffff	<unknown>
+    20d0:	a928	<unknown>
+
+000820d2 <main>
+    20d2:	ffff	<unknown>
+    20d4:	a828	<unknown>
+    20d6:	ffff	<unknown>
+    20d8:	ab0f	<unknown>
+    20da:	0361	<unknown>
+    20dc:	7f76	<unknown>
+    20de:	ffff	<unknown>
+    20e0:	1f76	<unknown>
+    20e2:	0400	<unknown>
+    20e4:	28c5	<unknown>
+
+000820e6 <__TI_decompress_none>
+    20e6:	673e	<unknown>
+    20e8:	1f76	<unknown>
+    20ea:	0400	<unknown>
+    20ec:	2606	<unknown>
+
+000820ee <_system_pre_init>
+    20ee:	0461	<unknown>
 
 000820f0 <_system_post_cinit>
-    20f0:	a71ea192	<unknown>
-    20f4:	0100db00	<unknown>
-    20f8:	01000000	<unknown>
-    20fc:	0200e520	<unknown>
-    2100:	08001000	<unknown>
-    2104:	01000300	<unknown>
-    2108:	f0ff0000	<unknown>
-    210c:	b9200800	<unknown>
-    2110:	00200800	<unknown>
-    2114:	e6200800	<unknown>
-    2118:	00000000	<unknown>
-    211c:	01000000	<unknown>
-    2120:	00000000	<unknown>
-    2124:	f4200800	<unknown>
-    2128:	22010000	<unknown>
-    212c:	06210800	<unknown>
-    2130:	00a80000	<unknown>
-    2134:	0e00feff	<unknown>
-    2138:	85928796	<unknown>
-    213c:	0c00f8ff	<unknown>
-    2140:	a4a90600	<unknown>
-    2144:	ad280004	<unknown>
-    2148:	69ff1f56	<unknown>
-    214c:	16561a56	<unknown>
-    2150:	10e60002	<unknown>
-    2154:	40291f76	<unknown>
-    2158:	00000229	<unknown>
-    215c:	1b764876	<unknown>
-    2160:	ee200052	<unknown>
-    2164:	03614876	lwu sp, 1892(a6)
-    2168:	31204876	<unknown>
-    216c:	c6204876	<unknown>
-    2170:	5e20cc8a	<unknown>
-    2174:	00020119	<unknown>
-    2178:	81dca40f	<unknown>
-    217c:	07610002	<unknown>
-    2180:	81dc852b	<unknown>
-    2184:	0119a40f	<unknown>
-    2188:	fb600600	<unknown>
-    218c:	008f0000	<unknown>
-    2190:	a9a80460	<unknown>
-    2194:	009a00d4	<unknown>
-    2198:	036fc492	lwu t5, -1748(fp)
-    219c:	02dc4876	<unknown>
-    21a0:	d2200600	<unknown>
-    21a4:	1f760400	<unknown>
-    21a8:	2c922d94	<unknown>
-    21ac:	a92d2c12	<unknown>
-    21b0:	1f76a002	<unknown>
-    21b4:	0096009a	<unknown>
-    21b8:	06001f76	<unknown>
-    21bc:	04002aa8	<unknown>
-    21c0:	06001f76	<unknown>
-    21c4:	040028a8	<unknown>
-    21c8:	06000600	<unknown>
-    21cc:	a5c4a483	<unknown>
-    21d0:	cd06a68a	<unknown>
-    21d4:	03dd4876	lhu s10, 1892(a7)
-    21d8:	85200600	<unknown>
-    21dc:	019a0600	<unknown>
-    21e0:	06000000	<unknown>
+    20f0:	a71e	<unknown>
+    20f2:	a192	<unknown>
+    20f4:	0100	<unknown>
+    20f6:	db00	<unknown>
+    20f8:	0100	<unknown>
+    20fa:	0000	<unknown>
+    20fc:	0200	<unknown>
+    20fe:	e520	<unknown>
+    2100:	0800	<unknown>
+    2102:	1000	<unknown>
+    2104:	0100	<unknown>
+    2106:	0300	<unknown>
+    2108:	f0ff	<unknown>
+    210a:	0000	<unknown>
+    210c:	b920	<unknown>
+    210e:	0800	<unknown>
+    2110:	0020	<unknown>
+    2112:	0800	<unknown>
+    2114:	e620	<unknown>
+    2116:	0800	<unknown>
+    2118:	0000	<unknown>
+    211a:	0000	<unknown>
+    211c:	0100	<unknown>
+    211e:	0000	<unknown>
+    2120:	0000	<unknown>
+    2122:	0000	<unknown>
+    2124:	f420	<unknown>
+    2126:	0800	<unknown>
+    2128:	2201	<unknown>
+    212a:	0000	<unknown>
+    212c:	0621	<unknown>
+    212e:	0800	<unknown>
+    2130:	00a8	<unknown>
+    2132:	0000	<unknown>
+    2134:	0e00	<unknown>
+    2136:	feff	<unknown>
+    2138:	8592	<unknown>
+    213a:	8796	<unknown>
+    213c:	0c00	<unknown>
+    213e:	f8ff	<unknown>
+    2140:	a4a9	<unknown>
+    2142:	0600	<unknown>
+    2144:	ad28	<unknown>
+    2146:	0004	<unknown>
+    2148:	69ff	<unknown>
+    214a:	1f56	<unknown>
+    214c:	1656	<unknown>
+    214e:	1a56	<unknown>
+    2150:	10e6	<unknown>
+    2152:	0002	<unknown>
+    2154:	4029	<unknown>
+    2156:	1f76	<unknown>
+    2158:	0000	<unknown>
+    215a:	0229	<unknown>
+    215c:	1b76	<unknown>
+    215e:	4876	<unknown>
+    2160:	ee20	<unknown>
+    2162:	0052	<unknown>
+    2164:	0361	<unknown>
+    2166:	4876	<unknown>
+    2168:	3120	<unknown>
+    216a:	4876	<unknown>
+    216c:	c620	<unknown>
+    216e:	4876	<unknown>
+    2170:	5e20	<unknown>
+    2172:	cc8a	<unknown>
+    2174:	0002	<unknown>
+    2176:	0119	<unknown>
+    2178:	81dc	<unknown>
+    217a:	a40f	<unknown>
+    217c:	0761	<unknown>
+    217e:	0002	<unknown>
+    2180:	81dc	<unknown>
+    2182:	852b	<unknown>
+    2184:	0119	<unknown>
+    2186:	a40f	<unknown>
+    2188:	fb60	<unknown>
+    218a:	0600	<unknown>
+    218c:	008f	<unknown>
+    218e:	0000	<unknown>
+    2190:	a9a8	<unknown>
+    2192:	0460	<unknown>
+    2194:	009a	<unknown>
+    2196:	00d4	<unknown>
+    2198:	036f	<unknown>
+    219a:	c492	<unknown>
+    219c:	02dc	<unknown>
+    219e:	4876	<unknown>
+    21a0:	d220	<unknown>
+    21a2:	0600	<unknown>
+    21a4:	1f76	<unknown>
+    21a6:	0400	<unknown>
+    21a8:	2c92	<unknown>
+    21aa:	2d94	<unknown>
+    21ac:	a92d	<unknown>
+    21ae:	2c12	<unknown>
+    21b0:	1f76	<unknown>
+    21b2:	a002	<unknown>
+    21b4:	0096	<unknown>
+    21b6:	009a	<unknown>
+    21b8:	0600	<unknown>
+    21ba:	1f76	<unknown>
+    21bc:	0400	<unknown>
+    21be:	2aa8	<unknown>
+    21c0:	0600	<unknown>
+    21c2:	1f76	<unknown>
+    21c4:	0400	<unknown>
+    21c6:	28a8	<unknown>
+    21c8:	0600	<unknown>
+    21ca:	0600	<unknown>
+    21cc:	a5c4	<unknown>
+    21ce:	a483	<unknown>
+    21d0:	cd06	<unknown>
+    21d2:	a68a	<unknown>
+    21d4:	03dd	<unknown>
+    21d6:	4876	<unknown>
+    21d8:	8520	<unknown>
+    21da:	0600	<unknown>
+    21dc:	019a	<unknown>
+    21de:	0600	<unknown>
+    21e0:	0600	<unknown>

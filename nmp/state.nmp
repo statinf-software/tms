@@ -31,6 +31,7 @@ type word      = int (32)
 type dword     = int (64)
 type address   = card(32)
 type index     = card( 5)
+type rindex    = card( 4)
 
 
 // state
