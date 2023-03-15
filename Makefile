@@ -101,6 +101,9 @@ check: $(ARCH).irg
 lib: src include/$(ARCH)/config.h src/disasm.c
 	(cd src; make -j $(REC_FLAGS))
 
+fix:
+	(cd src; cp mem.c.save mem.c); (cd disasm; cp tms-disasm.c.save tms-disasm.c)
+
 $(ARCH)-disasm:
 	cd disasm; make -j3
 
@@ -110,7 +113,7 @@ $(ARCH)-sim:
 src/disasm.c: $(ARCH).irg
 	$(GLISS_PREFIX)/gep/gliss-disasm -v -switch $< -o $@ -c
 
-test_disasm:
+test_disasm: $(ARCH)-disasm
 	disasm/tms-disasm disasm/test/blinky.elf > disasm/test/out.gliss
 
 distclean: clean

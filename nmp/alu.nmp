@@ -137,7 +137,7 @@ op movl_XAR7_loc32(src: LOC32) MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
 
 // DOC: page 309
 macro MakeMovlXarn22bit(xarn, fmt) = \
-	syntax = format("MOVL %s, #0x%06x !!!!", xarn, imm)\
+	syntax = format("MOVL %s, #0x%06x", xarn, imm)\
 	image = format(fmt, imm)\
 	action = { } // XARn = 0:22bit;
 op movl_XAR0_22bit(imm: card(22)) MakeMovlXarn22bit("XAR0", "1000 1101 00 %22b")
