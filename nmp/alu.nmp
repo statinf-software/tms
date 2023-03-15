@@ -19,26 +19,18 @@
  *	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Integer and Bitwise Register-Register Operations
-op all_rrr =
-	//  add 
-	//| and
-	//| or
-	//| sll
-	//| slt
-	//| sltu
-	//| sra
-	//| srl
-	//| sub
-	//| xor
-	movl_XAR0
-	| movl_XAR1
-	| movl_XAR2
-	| movl_XAR3
-	| movl_XAR4
-	| movl_XAR5
-	| movl_XAR6
-	| movl_XAR7
+// MOVL operations
+op all_movl =
+	  movl_loc32_XAR0
+	| movl_loc32_XAR1
+	| movl_loc32_XAR2
+	| movl_loc32_XAR3
+	| movl_loc32_XAR4
+	| movl_loc32_XAR5
+	| movl_loc32_XAR6
+	| movl_loc32_XAR7
+	| movl_ACC_loc32
+	| movl_loc32_ACC
 
 // Integer Register-Register Operations
 op all_rri =
@@ -85,23 +77,31 @@ op rv64im =
 	| remw
 	| remuw
 
+// DOC: page 298
+op movl_ACC_loc32(src: LOC32)
+	syntax = format("MOVL ACC, %s", src.syntax)
+	image = format("0000 0110 %s", src.image)
+	action = { } // ACC = [loc32];
 
-// ASSUMES: AMODE = 0
+// DOC: page 
+op movl_loc32_ACC(src: LOC32)
+	syntax = format("MOVL %s, ACC", src.syntax)
+	image = format("0001 1110 %s", src.image)
+	action = { } // ACC = [loc32];
+
 // DOC: page 304
 macro MakeMovl(xarn, fmt) = \
 	syntax = format("MOVL %s, %s", dest.syntax, xarn)\
 	image = format(fmt, dest.image)\
-	action = { }
-	//setR(dest, R[src1] + R[src2]);
-
-op movl_XAR0(dest: LOC32) MakeMovl("XAR0", "0011 1010 %s")
-op movl_XAR1(dest: LOC32) MakeMovl("XAR1", "1011 0010 %s")
-op movl_XAR2(dest: LOC32) MakeMovl("XAR2", "1010 1010 %s")
-op movl_XAR3(dest: LOC32) MakeMovl("XAR3", "1010 0010 %s")
-op movl_XAR4(dest: LOC32) MakeMovl("XAR4", "1010 1000 %s")
-op movl_XAR5(dest: LOC32) MakeMovl("XAR5", "1010 0000 %s")
-op movl_XAR6(dest: LOC32) MakeMovl("XAR6", "1100 0010 %s")
-op movl_XAR7(dest: LOC32) MakeMovl("XAR7", "1100 0011 %s")
+	action = { } // setR(dest, R[src1] + R[src2]);
+op movl_loc32_XAR0(dest: LOC32) MakeMovl("XAR0", "0011 1010 %s")
+op movl_loc32_XAR1(dest: LOC32) MakeMovl("XAR1", "1011 0010 %s")
+op movl_loc32_XAR2(dest: LOC32) MakeMovl("XAR2", "1010 1010 %s")
+op movl_loc32_XAR3(dest: LOC32) MakeMovl("XAR3", "1010 0010 %s")
+op movl_loc32_XAR4(dest: LOC32) MakeMovl("XAR4", "1010 1000 %s")
+op movl_loc32_XAR5(dest: LOC32) MakeMovl("XAR5", "1010 0000 %s")
+op movl_loc32_XAR6(dest: LOC32) MakeMovl("XAR6", "1100 0010 %s")
+op movl_loc32_XAR7(dest: LOC32) MakeMovl("XAR7", "1100 0011 %s")
 
 // op movb()
 // 	syntax = "MOVB AX, ..."

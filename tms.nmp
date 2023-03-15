@@ -32,11 +32,12 @@ let gliss_isize = "16,32"
 
 // modes
 
+// ASSUMES: AMODE = 0
 // DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
 mode LOC32(reg32: loc32index) = reg32
+	isloc32 = 1 // TODO: determine this, loc16 is broken for now (duplicate mode into LOC16 most likely)
 	num = reg32
 	reg32ff = reg32<0..7> // flipped reg32
-	isloc32 = 1 // TODO: determine this
 	syntax =
 		// TODO: check bit order of constants
 		switch(reg32ff<0..1>) {
@@ -83,27 +84,27 @@ mode LOC32(reg32: loc32index) = reg32
 								if isloc32 then
 									// case 0b10100AAA: "@XAR%d"
 									if reg32ff<0..4> == 0b10100 then
-										format("@XAR%d", reg32ff<5..7>)
+										format("XAR%d", reg32ff<5..7>)
 									else switch(reg32) {
 										// 32-Bit Reg32ister Addressing Modes (XAR0 to XAR7, ACC, P, XT):
-										case 0b10101001: "@ACC"
-										case 0b10101011: "@P"
-										case 0b10101100: "@XT"
+										case 0b10101001: "ACC"
+										case 0b10101011: "P"
+										case 0b10101100: "XT"
 										default: "!!!"
 									}
 									endif
 								else // loc16 case
-									// case 0b10100AAA: "@AR%d"
+									// case 0b10100AAA: "AR%d"
 									if reg32ff<0..4> == 0b10100 then
-										format("@AR%d", reg32ff<5..7>)
+										format("AR%d", reg32ff<5..7>)
 									else switch(reg32) {
 										// 16-Bit Register Addressing Modes (AR0 to AR7, AH, AL, PH, PL, TH, SP):
-										case 0b10101000: "@AH"
-										case 0b10101001: "@AL"
-										case 0b10101010: "@PH"
-										case 0b10101011: "@PL"
-										case 0b10101100: "@TH"
-										case 0b10101101: "@SP"
+										case 0b10101000: "AH"
+										case 0b10101001: "AL"
+										case 0b10101010: "PH"
+										case 0b10101011: "PL"
+										case 0b10101100: "TH"
+										case 0b10101101: "SP"
 										default: "!!!"
 									}
 									endif
@@ -241,7 +242,7 @@ op instruction (x: allinstr)
 	}
 
 op allinstr =
-	  all_rrr
+	  all_movl
 //	| all_rri
 //	| all_alu
 //	| all_branch
