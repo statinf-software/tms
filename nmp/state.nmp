@@ -34,6 +34,16 @@ type index     = card( 5)
 type rindex    = card( 4) // remove?
 type loc32index = card( 8)
 
+// tms state
+// ISETSTATE definitions from ARM Thumb
+let InstrSet_TMS16   = 0b00
+let InstrSet_Thumb   = 0b01
+reg TFLAG[1,card(1)] // Fake TFLAG register inspired by VLE
+// let TFLAG = 0 // Fake TFLAG because TMS doesn't have the flag ARM Thumb has?
+// macro CurrentInstrSet() = TFLAG
+macro SelectInstrSet16() = TFLAG = 1
+macro SelectInstrSet32() = TFLAG = 0
+
 
 // state
 mem M   [32,  byte]

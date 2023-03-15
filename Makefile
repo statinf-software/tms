@@ -4,7 +4,7 @@
 ARCH=tms
 GLISS_PREFIX	=../gliss2/gliss2
 WITH_DISASM		= 1	# comment it to prevent disassembler building
-WITH_SIM		= 1	# comment it to prevent simulator building
+# WITH_SIM		= 1	# comment it to prevent simulator building
 #WITH_DYNLIB	= 1	# uncomment it to build dynamicaly linkable library
 #WITH_OSEMUL	= 1 # uncomment it to use OS emulation of system calls (only with Unix)
 CPU_ENDIAN		= little	# change to big if required
@@ -108,7 +108,7 @@ $(ARCH)-sim:
 	cd sim; make -j3
 
 src/disasm.c: $(ARCH).irg
-	$(GLISS_PREFIX)/gep/gliss-disasm -switch $< -o $@ -c
+	$(GLISS_PREFIX)/gep/gliss-disasm -v -switch $< -o $@ -c
 
 test_disasm:
 	disasm/tms-disasm disasm/test/blinky.elf > disasm/test/out.gliss

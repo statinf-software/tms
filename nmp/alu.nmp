@@ -20,7 +20,7 @@
  */
 
 // MOVL operations
-op all_movl =
+op all16_movl =
 	  movl_loc32_XAR0
 	| movl_loc32_XAR1
 	| movl_loc32_XAR2
@@ -39,14 +39,16 @@ op all_movl =
 	| movl_XAR5_loc32
 	| movl_XAR6_loc32
 	| movl_XAR7_loc32
-	// | movl_XAR0_22bit
-	// | movl_XAR1_22bit
-	// | movl_XAR2_22bit
-	// | movl_XAR3_22bit
-	// | movl_XAR4_22bit
-	// | movl_XAR5_22bit
-	// | movl_XAR6_22bit
-	// | movl_XAR7_22bit
+
+op all32_movl=
+	  movl_XAR0_22bit
+	| movl_XAR1_22bit
+	| movl_XAR2_22bit
+	| movl_XAR3_22bit
+	| movl_XAR4_22bit
+	| movl_XAR5_22bit
+	| movl_XAR6_22bit
+	| movl_XAR7_22bit
 
 // Integer Register-Register Operations
 op all_rri =
@@ -135,7 +137,7 @@ op movl_XAR7_loc32(src: LOC32) MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
 
 // DOC: page 309
 macro MakeMovlXarn22bit(xarn, fmt) = \
-	syntax = format("MOVL %s, #0x%022x !!!!", xarn, imm)\
+	syntax = format("MOVL %s, #0x%06x !!!!", xarn, imm)\
 	image = format(fmt, imm)\
 	action = { } // XARn = 0:22bit;
 op movl_XAR0_22bit(imm: card(22)) MakeMovlXarn22bit("XAR0", "1000 1101 00 %22b")

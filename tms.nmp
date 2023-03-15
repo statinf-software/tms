@@ -232,17 +232,45 @@ mode UIMM16(n: uhalf) = n
 
 
 // top-level instructions
-op instruction (x: allinstr)
-	syntax = x.syntax
-	image = x.image
-	action = {
-		NPC = PC + 4;
-		x.action;
-		PC = NPC;
-	}
+// op instruction (x: allinstr)
+// 	syntax = x.syntax
+// 	image = x.image
+// 	action = {
+// 		NPC = PC + 4;
+// 		x.action;
+// 		PC = NPC;
+// 	}
 
-op allinstr =
-	  all_movl
+op multi = TMS16 | TMS32
+
+op TMS32(x : TMS32_instr)
+	image = x.image
+	syntax = x.syntax
+	action = {
+		// NPC = PC + 4; // or just +8???
+		// PC = PC + 8;
+		x.action;
+		// PC = NPC;
+		// TFLAG = 0;
+	}
+	instruction_set_select = TFLAG == 0
+	instruction_set_name = "TMS32"
+
+op TMS16(i: TMS16_instr)
+	image = i.image
+	syntax = i.syntax
+	action = {
+		// NPC = PC + 2;
+		i.action;
+		// PC = NPC;
+		// TFLAG = 1;
+		// SelectInstrSet16();
+	}
+	instruction_set_select = TFLAG == 1
+	instruction_set_name = "TMS16"
+
+op TMS16_instr =
+	  all16_movl
 //	| all_rri
 //	| all_alu
 //	| all_branch
@@ -254,6 +282,11 @@ op allinstr =
 //	| all_floating
 //	| all_atomic
 //	| rv64im
+
+op TMS32_instr =
+	  // all32_movl
+	  // |
+	TMS16_instr
 
 op init ()
 	action = {
