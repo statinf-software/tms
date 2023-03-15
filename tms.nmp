@@ -32,6 +32,90 @@ let gliss_isize = "16,32"
 
 // modes
 
+// DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
+mode LOC32(reg32: loc32index) = reg32
+	num = reg32
+	reg32ff = reg32<0..7> // flipped reg32
+	isloc32 = 1 // TODO: determine this
+	syntax =
+		// TODO: check bit order of constants
+		switch(reg32ff<0..1>) {
+			case 0b00:
+				// UNTESTED
+				format("@0x%x", reg32ff<2..7>)
+			case 0b01:
+				// UNTESTED
+				format("*−SP[%d]", reg32ff<2..7>)
+			case 0b11:
+				// UNTESTED
+				format("*+XAR%d[%d]", reg32ff<5..7>, reg32ff<2..4>)				
+			case 0b10:
+				// UNTESTED
+				if reg32ff<2..2> == 0 then // 0b100
+					switch(reg32ff<3..4>) {
+						case 0b00: format("*XAR%d++", reg32ff<5..7>)
+						case 0b01: format("*−−XAR%d", reg32ff<5..7>)
+						case 0b10: format("*+XAR%d[AR0]", reg32ff<5..7>)
+						case 0b11: format("*+XAR%d[AR1]", reg32ff<5..7>)
+					}
+				else // 0b101
+					// UNTESTED except *SP++
+					switch(reg32) {
+						// Stack Addressing Modes (SP):
+						case 0b10111101: "*SP++"
+						case 0b10111110: "*--SP"
+						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
+						case 0b10111000: "*"
+						case 0b10111001: "*++"
+						case 0b10111010: "*−−"
+						case 0b10111011: "*0++"
+						case 0b10111100: "*0−−"
+						case 0b10101110: "*BR0++"
+						case 0b10101111: "*BR0−−"
+						// Circular Indirect Addressing Modes (XAR6, XAR1):
+						case 0b10111111: "*AR6%%++"
+						default:
+							// case 0b10110RRR: "*,ARP%d"
+							if reg32ff<0..4> == 0b10110 then
+								format("*,ARP%d", reg32ff<5..7>)
+							else
+								// 32-bit mode
+								if isloc32 then
+									// case 0b10100AAA: "@XAR%d"
+									if reg32ff<0..4> == 0b10100 then
+										format("@XAR%d", reg32ff<5..7>)
+									else switch(reg32) {
+										// 32-Bit Reg32ister Addressing Modes (XAR0 to XAR7, ACC, P, XT):
+										case 0b10101001: "@ACC"
+										case 0b10101011: "@P"
+										case 0b10101100: "@XT"
+										default: "!!!"
+									}
+									endif
+								else // loc16 case
+									// case 0b10100AAA: "@AR%d"
+									if reg32ff<0..4> == 0b10100 then
+										format("@AR%d", reg32ff<5..7>)
+									else switch(reg32) {
+										// 16-Bit Register Addressing Modes (AR0 to AR7, AH, AL, PH, PL, TH, SP):
+										case 0b10101000: "@AH"
+										case 0b10101001: "@AL"
+										case 0b10101010: "@PH"
+										case 0b10101011: "@PL"
+										case 0b10101100: "@TH"
+										case 0b10101101: "@SP"
+										default: "!!!"
+									}
+									endif
+								endif
+							endif
+							// default case end
+						// switch case end
+					}
+				endif
+		}
+	image = format("%8b", reg32)
+
 mode reg_r (r: rindex) = r
 	num = r
 	syntax =
@@ -163,7 +247,7 @@ op allinstr =
 //	| all_branch
 //	| all_special
 //	| all_muldiv
-////	| all_dshift
+//	| all_dshift
 //	| all_load
 //	| all_stores
 //	| all_floating
