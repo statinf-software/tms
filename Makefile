@@ -110,6 +110,9 @@ $(ARCH)-sim:
 src/disasm.c: $(ARCH).irg
 	$(GLISS_PREFIX)/gep/gliss-disasm -switch $< -o $@ -c
 
+test_disasm:
+	disasm/tms-disasm disasm/test/blinky.elf > disasm/test/out.gliss
+
 distclean: clean
 	-for d in $(SUBDIRS); do test -d $$d && (cd $$d; make distclean || exit 0); done
 	-rm -rf $(DISTCLEAN)
