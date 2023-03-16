@@ -168,96 +168,15 @@ mode LOC16(reg16: loc16index) = reg16
 		}
 	image = format("%8b", reg16)
 
-// mode reg_t (r: index) = r
-// 	num = r
-// 	syntax =
-// 		switch ( r ) {
-// 		case  0:	"zero"
-// 		case  1:	"ra"
-// 		case  2: 	"sp"
-// 		case  3: 	"gp"
-// 		case  4: 	"tp"
-// 		case  5: 	"t0"
-// 		case  6: 	"t1"
-// 		case  7: 	"t2"
-// 		case  8:	"fp"
-// 		case  9:	"s1"
-// 		case 10:	"a0"
-// 		case 11:	"a1"
-// 		case 12:	"a2"
-// 		case 13:	"a3"
-// 		case 14:	"a4"
-// 		case 15:	"a5"
-// 		case 16:	"a6"
-// 		case 17:	"a7"
-// 		case 18:	"s2"
-// 		case 19:	"s3"
-// 		case 20:	"s4"
-// 		case 21:	"s5"
-// 		case 22:	"s6"
-// 		case 23:	"s7"
-// 		case 24:	"s8"
-// 		case 25:	"s9"
-// 		case 26:	"s10"
-// 		case 27:	"s11"
-// 		case 28:	"t3"
-// 		case 29:	"t4"
-// 		case 30:	"t5"
-// 		case 31:	"t6"
-// 		}
-// 	image  = format ( "%5b", r )
 macro setR(d, v) = if d != 0 then R[d] = v; endif 
 
-// mode freg_t (f: index) = f
-// 	num = f
-// 	syntax =
-// 		switch ( f ) {
-// 		case  0:	"f0"
-// 		case  1:	"f1"
-// 		case  2: 	"f2"
-// 		case  3: 	"f3"
-// 		case  4: 	"f4"
-// 		case  5: 	"f5"
-// 		case  6: 	"f6"
-// 		case  7: 	"f7"
-// 		case  8:	"f8"
-// 		case  9:	"f9"
-// 		case 10:	"f10"
-// 		case 11:	"f11"
-// 		case 12:	"f12"
-// 		case 13:	"f13"
-// 		case 14:	"f14"
-// 		case 15:	"f15"
-// 		case 16:	"f16"
-// 		case 17:	"f17"
-// 		case 18:	"f18"
-// 		case 19:	"f19"
-// 		case 20:	"f20"
-// 		case 21:	"f21"
-// 		case 22:	"f22"
-// 		case 23:	"f23"
-// 		case 24:	"f24"
-// 		case 25:	"f25"
-// 		case 26:	"f26"
-// 		case 27:	"f27"
-// 		case 28:	"f28"
-// 		case 29:	"f29"
-// 		case 30:	"f30"
-// 		case 31:	"f31"
-// 		}
-// 	image  = format ( "%5b", f )
+// mode IMM16(n: half) = n
+// 	syntax = format("#%d", n)
+// 	image = format("%16b", n)
 
-
-
-mode IMM16(n: half) = n
-	syntax = format("#%d", n)
-	image = format("%16b", n)
-
-mode UIMM16(n: uhalf) = n
-   syntax = format ( "#%d", n )
-   image  = format ( "%16b", n )
-
-
+// mode UIMM16(n: uhalf) = n
+//    syntax = format ( "#%d", n )
+//    image  = format ( "%16b", n )
 
 // top-level instructions
 op instruction (x: allinstr)
