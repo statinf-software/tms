@@ -20,7 +20,7 @@
  */
 
 // MOVL operations
-op all16_movl =
+op all_movl =
 	  movl_loc32_XAR0
 	| movl_loc32_XAR1
 	| movl_loc32_XAR2
@@ -39,9 +39,8 @@ op all16_movl =
 	| movl_XAR5_loc32
 	| movl_XAR6_loc32
 	| movl_XAR7_loc32
-
-op all32_movl=
-	  movl_XAR0_22bit
+	// 32 bit instructions
+	| movl_XAR0_22bit
 	| movl_XAR1_22bit
 	| movl_XAR2_22bit
 	| movl_XAR3_22bit
@@ -148,13 +147,6 @@ op movl_XAR4_22bit(imm: card(22)) MakeMovlXarn22bit("XAR4", "1000 1111 00 %22b")
 op movl_XAR5_22bit(imm: card(22)) MakeMovlXarn22bit("XAR5", "1000 1111 01 %22b")
 op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
 op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
-
-// op movb()
-// 	syntax = "MOVB AX, ..."
-// 	// image = "1001101000000001"
-// 	image = "1000000001011001"
-// 	action = {
-// 	}
 
 // addition + subtraction
 op add(src2: reg_t, src1: reg_t, dest: reg_t)

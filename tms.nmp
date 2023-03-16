@@ -86,7 +86,7 @@ mode LOC32(reg32: loc32index) = reg32
 									if reg32ff<0..4> == 0b10100 then
 										format("XAR%d", reg32ff<5..7>)
 									else switch(reg32) {
-										// 32-Bit Reg32ister Addressing Modes (XAR0 to XAR7, ACC, P, XT):
+										// 32-Bit Register Addressing Modes (XAR0 to XAR7, ACC, P, XT):
 										case 0b10101001: "ACC"
 										case 0b10101011: "P"
 										case 0b10101100: "XT"
@@ -240,39 +240,9 @@ op instruction (x: allinstr)
 		x.action;
 		PC = NPC;
 	}
-
-// op multi = TMS16 | TMS32
-
-// op TMS32(x : TMS32_instr)
-// 	image = x.image
-// 	syntax = x.syntax
-// 	action = {
-// 		// NPC = PC + 4; // or just +8???
-// 		// PC = PC + 8;
-// 		x.action;
-// 		// PC = NPC;
-// 		// TFLAG = 0;
-// 	}
-// 	instruction_set_select = TFLAG == 1
-// 	instruction_set_name = "TMS32"
-
-// op TMS16(i: TMS16_instr)
-// 	image = i.image
-// 	syntax = i.syntax
-// 	action = {
-// 		// NPC = PC + 2;
-// 		i.action;
-// 		// PC = NPC;
-// 		// TFLAG = 1;
-// 		// SelectInstrSet16();
-// 	}
-// 	instruction_set_select = TFLAG == 0
-// 	instruction_set_name = "TMS16"
-
 // op TMS16_instr =
 op allinstr =
-	  all16_movl
-	  | all32_movl
+	all_movl
 //	| all_rri
 //	| all_alu
 //	| all_branch
@@ -284,11 +254,6 @@ op allinstr =
 //	| all_floating
 //	| all_atomic
 //	| rv64im
-
-// op TMS32_instr = all32_movl
-	  // all32_movl
-	  // |
-	// TMS16_instr
 
 op init ()
 	action = {
