@@ -62,13 +62,7 @@ NMP_MAIN = $(ARCH).nmp
 
 NMP =\
 	$(NMP_MAIN) \
-	nmp/alu.nmp \
-	nmp/config.nmp \
-	nmp/control.nmp \
-	nmp/macros.nmp \
-	nmp/mem.nmp \
-	nmp/special.nmp \
-	nmp/state.nmp
+	nmp/all.nmp
 
 
 # targets
