@@ -301,7 +301,7 @@ int main(int argc, char **argv) {
 	tms_state_t *state = tms_new_state(pf);
 	/* not really useful as select condition for instr set will never change as we don't execute here,
 	 * changing instr set should be done manually by manipulating state */
-	tms_set_cond_state(d, state);
+	// tms_set_cond_state(d, state);
 
 	/* compute instruction max size */
 	for(i = 1; i < TMS_TOP; i++) {
