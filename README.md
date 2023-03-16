@@ -1,8 +1,10 @@
-# TMS???
+# TMS320C28x Instruction Set Architecture
 
-TMS implementation in SimNML for GLISS2 ISS generator.
+TMS implementation in SimNML for the GLISS2 ISS generator.
 
-This GLISS ISA supports TMS???, 32???-bits architecture.
+This GLISS ISA supports TMS320C28x, 32-bits architecture, with both 16-bit and 32-bit instructions.
+
+You must use [our fork of GLISS2](https://github.com/jordr/gliss2) for some critical fixes.
 
 ## Installation
 
@@ -30,12 +32,28 @@ make WITH_DYNLIB=1
 
 to enable `-fPIC`.
 
+## Disassembler Use
+
+You can find the disassembler in `disasm/tms-disasm` and run it as such
+
+```sh
+disasm/tms-disasm <binaryfile>.elf
+```
+
+There is only one mode, `tms`, so you don't need to specify `-m`. You can test this repository with
+
+```sh
+make test_disasm
+```
+
 
 ## Implementation Status
 
-172 instructions, 70 fully implemented, 0 only interface
+TODO
+
+<!-- 172 instructions, 70 fully implemented, 0 only interface
 
 Notation:
 * [ ] -- not implemented
 * [I] -- ony interface implemented
-* [X] -- fully implemented
+* [X] -- fully implemented -->
