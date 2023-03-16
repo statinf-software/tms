@@ -56,16 +56,9 @@ op all_other =
 	| mov_loc16_0
 	| mov_ph_loc16
 	| subb_ACC
-	| subb_XAR0
-	| subb_XAR1
-	| subb_XAR2
-	| subb_XAR3
-	| subb_XAR4
-	| subb_XAR5
-	| subb_XAR6
-	| subb_XAR7
 	| subu
 	| addb_XARn
+	| subb_XARn
 
 // DOC: page 137
 op addb_XARn(xarn: card(3), imm: card(7))
@@ -181,21 +174,13 @@ op subb_ACC(src: card(8))
 	image = format("0001 1001 %8b", src)
 	action = { } //ACC = ACC - 0:8bit;
 
-//DOC: page 422
-//broken, catches dc02
-macro MakeSubbXarn(xarn, fmt) = \
-	syntax = format("SUBB %s, #%d", xarn, imm)\
-	image = format(fmt, imm) \ 
-	action = { }
-op subb_XAR0(imm:card(7)) MakeSubbXarn("XAR0", "1101 1000 1 %7b")
-op subb_XAR1(imm:card(7)) MakeSubbXarn("XAR1", "1101 1001 1 %7b")
-op subb_XAR2(imm:card(7)) MakeSubbXarn("XAR2", "1101 1010 1 %7b")
-op subb_XAR3(imm:card(7)) MakeSubbXarn("XAR3", "1101 1011 1 %7b")
-op subb_XAR4(imm:card(7)) MakeSubbXarn("XAR4", "1101 1100 1 %7b")
-op subb_XAR5(imm:card(7)) MakeSubbXarn("XAR5", "1101 1101 1 %7b")
-op subb_XAR6(imm:card(7)) MakeSubbXarn("XAR6", "1101 1110 1 %7b")
-op subb_XAR7(imm:card(7)) MakeSubbXarn("XAR7", "1101 1111 1 %7b")
-
+// DOC: page 422
+// catches dc02, ADDB must be implemented
+op subb_XARn(xarn: card(3), imm: card(7))
+	syntax = format("SUBB XAR%d, #%d", xarn, imm)
+	image = format("1101 1%3b 1 %7b", xarn, imm) 
+	action = { } // XARn = XARn − 0:7bit;
+	
 // DOC: page 433
 op subu(src: LOC16)
 	syntax = format("SUBU ACC, %s", src)
