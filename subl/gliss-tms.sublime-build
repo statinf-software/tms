@@ -1,0 +1,3 @@
+{
+	"shell_cmd": "(make || cd ..; make) && (make test_disasm || cd ..; make test_disasm)"
+}

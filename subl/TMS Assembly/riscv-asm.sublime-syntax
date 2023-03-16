@@ -1,0 +1,123 @@
+%YAML 1.2
+---
+name: TMS Assembly
+file_extensions: [asm, gliss]
+scope: source.rvasm
+contexts:
+  main:
+    # Comments
+    - match: '(//)'
+      scope: punctuation.definition.comment.rvasm
+      push:
+        - meta_scope: comment.line.rvasm
+        - match: $
+          pop: true
+    - match: /\*
+      scope: punctuation.definition.comment.rvasm
+      push:
+        - meta_scope: comment.block.rvasm
+        - match: \*/
+          scope: punctuation.definition.comment.rvasm
+          pop: true
+        - match: ^\s*(\*)(?!/)
+          captures:
+            1: punctuation.definition.comment.rvasm
+
+    - include: strings
+
+    # Symbols
+    - match: '([\w|$]+):'
+      captures:
+        1: entity.name.function.rvasm
+    - match: '^([^0-9\s][^\s]*?):'
+      captures:
+        1: support.type.rvasm
+
+    # Options
+    - match: \.(option|section|globl|word)\s+([\w\.]+)
+      captures:
+        1: keyword.operator.rvasm
+        2: variable.language.rvasm
+    # - match: \.(option|section|globl)
+    - match: \b(ZEROA|ZERO|ZAPA|ZAP|ZALR|XRETC|XRET|XPWRITE|XPREAD|XORB|XOR|XMACD|XMAC|XCALL|XBANZ|XB|UOUT|UI32TOF32|UI16TOF32|TSET|TRAP|TESTTF|TEST|TCLR|TBIT|SWAPF|SUBUL|SUBU|SUBRL|SUBR|SUBL|SUBF32|SUBCUL|SUBCU|SUBBL|SUBB|SUB|SQRS|SQRA|SPM|SFR|SETFLG|SETC|SBRK|SBF|SBBU|SB|SAVE|SAT64|SAT|RPTB|RPT|ROR|ROL|RESTORE|QMPYXUL|QMPYUL|QMPYSL|QMPYL|QMPYAL|QMACL|PWRITE|PUSH|PREAD|POP|Parallel|OUT|ORB|OR|NOT|NORM|NOP|NEGTC|NEGF32|NEG64|NEG|NASP|MPYXU|MPYU|MPYS|MPYF32|MPYB|MPYA|MPY|MOVZ|MOVXI|MOVX|MOVW|MOVU|MOVST0|MOVS|MOVP|MOVL|MOVIZF32|MOVIZ|MOVH|MOVDL|MOVD32|MOVB|MOVAD|MOVA|MOV32|MOV16|MOV|MINL|MINF32|MINCUL|MIN|MAXL|MAXF32|MAXCUL|MAX|MACF32|MAC|LSRL|LSR64|LSR|LSLL|LSL64|LSL|LRETR|LRETE|LRET|LPADDR|LOOPZ|LOOPNZ|LCR|LC|LB|IRET|INTR|INC|IN|IMPYXUL|IMPYSL|IMPYL|IMPYAL|IMACL|IDLE|IACK|I32TOF32|I16TOF32|FRACF32|FLIP|FFC|F32TOUI32|F32TOUI16R|F32TOUI16|F32TOI32|F32TOI16R|F32TOI16|ESTOP1|ESTOP0|EISQRTF32|EINVF32|EINT|EDIS|EALLOW|DMOV|DMAC|DIVF32|DINT|DEC|CSB|CMPR|CMPL|CMPF32|CMPB|CMP64|CMP|CLRC|C28OBJ|C28MAP|C28ADDR|C27OBJ|C27MAP|BF|BAR|BANZ|B|ASRL|ASR64|ASR|ASP|ANDB|AND|ADRK|ADDUL|ADDU|ADDL|ADDF32|ADDCU|ADDCL|ADDB|ADD|ABSTC|ABSF32|ABS|ABORTI)\b
+      scope: keyword.operator.rvasm
+
+    # Offsets
+    - match: (<([^>+-]+)([+-]((0x)?[0-9a-fA-F]+))?>)
+      captures:
+        1: support.function.rvasm
+        3: constant.numeric.rvasm
+
+    # TMS Registers
+    # - match: \b(mhartid|misa)\b
+    - match: \b(AL|P|PH|PL|SP|ACC|DP|T|TC|AR[0-9]|AH|XAR[0-7])\b
+      scope: variable.language.rvasm
+      # scope: support.type.rvasm
+
+    - include: operators
+
+    # TMS Flags?
+    - match: \b(EQ|NEQ|GEQ|GE|LEQ|LE|OBJMODE|AMODE|UNC)\b
+      scope: support.type.rvasm    
+
+    # Registers
+    - match: \b(ra|[sgtf]p)\b
+      scope: support.type.rvasm
+    - match: \b([xf][0-9]|[xf][012][0-9]|[xf]3[012]|ra|[sgtf]p|t[0-6]|f?s[0-9]|f?s1[01]|ft[0-7])\b
+      scope: storage.type.rvasm
+    - match: \b(f?a[0-7])\b
+      scope: keyword.operator.rvasm
+    - match: \bzero\b
+      scope: support.type.rvasm
+
+    # Numbers
+    - match: (-)?(#(0x)?)[0-9a-fA-F]+
+      scope: constant.numeric.rvasm
+    - match: \b(-)?(0x)?[0-9a-fA-F]+\b
+      scope: constant.numeric.rvasm
+
+  strings:
+    - match: '"'
+      scope: punctuation.definition.string.begin.rvasm
+      push:
+        - meta_scope: string.quoted.double.rvasm
+        - match: '"'
+          scope: punctuation.definition.string.end.rvasm
+          pop: true
+        - include: string_escaped_char
+        - include: string_placeholder
+    - match: "'"
+      scope: punctuation.definition.string.begin.rvasm
+      push:
+        - meta_scope: string.quoted.single.rvasm
+        - match: "'"
+          scope: punctuation.definition.string.end.rvasm
+          pop: true
+        - include: string_escaped_char
+
+  string_escaped_char:
+    - match: '(\\)$\n'
+      captures:
+        1: punctuation.separator.continuation.rvasm
+    - match: \\(?:\\|[abefnrtv\'"?]|[0-3][0-9]{0,2}|[4-7][0-9]?|x[a-fA-F0-9]+|u[a-fA-F0-9]{4}|U[a-fA-F0-9]{8})
+      scope: constant.character.escape.rvasm
+    - match: \\.
+      scope: invalid.illegal.unknown-escape.rvasm
+
+  operators:
+    - match: <<|>>|&&|\|\|
+      scope: keyword.operator.rvasm
+    - match: <\=|>\=|\=\=|<|>|\!\=
+      scope: keyword.operator.rvasm
+    - match: \+|\-|\*|/|%|&|\||\^|~|!
+      scope: keyword.operator.rvasm
+    - match: '\?|:'
+      scope: keyword.operator.rvasm
+    - match: \(|{|\[
+      scope: punctuation.section.group.begin.rvasm
+    - match: \)|}|\]
+      scope: punctuation.section.group.end.rvasm
+    - match: ',|\.'
+      scope: punctuation.separator.rvasm
+    - match: ';|:'
+      scope: punctuation.terminator.rvasm
