@@ -48,6 +48,7 @@ op all_movl =
 	| movl_XAR5_22bit
 	| movl_XAR6_22bit
 	| movl_XAR7_22bit
+	| cmpl_ACC_loc32
 
 // Integer Register-Register Operations
 op all_rri =
@@ -93,6 +94,12 @@ op rv64im =
 	| divuw
 	| remw
 	| remuw
+
+//DOC: page 181
+op cmpl_ACC_loc32(src: LOC32)
+	syntax = format("CMPL ACC, %s", src.syntax)
+	image = format("0000 1111 %s", src.image)
+	action = { } //Modify flags on (ACC - [loc32]);
 
 // DOC: page 298
 op movl_ACC_loc32(src: LOC32)
