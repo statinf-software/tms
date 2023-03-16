@@ -101,10 +101,10 @@ check: $(ARCH).irg
 lib: src include/$(ARCH)/config.h src/disasm.c
 	(cd src; make -j $(REC_FLAGS))
 
-fix:
-	(cd src; cp mem.c.save mem.c); (cd disasm; cp tms-disasm.c.save tms-disasm.c)
+fix-tms-disasm:
+	cd disasm; cp tms-disasm.c.save tms-disasm.c
 
-$(ARCH)-disasm:
+$(ARCH)-disasm: fix-$(ARCH)-disasm
 	cd disasm; make -j3
 
 $(ARCH)-sim:
