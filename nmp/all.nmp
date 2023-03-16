@@ -59,6 +59,7 @@ op all_other =
 	| subu
 	| addb_XARn
 	| subb_XARn
+	| sb
 
 // DOC: page 137
 op addb_XARn(xarn: card(3), imm: card(7))
@@ -166,7 +167,16 @@ op nop(arpn: card(8))
 			"NOP ???, ???"
 	endif
 	image = format("0111 0111 %8b", arpn)
-	action = { } // ;
+	action = { } // ;	
+
+// DOC: page 399
+op sb(off: int(8), cond: COND)
+	syntax = format("SB %d, %s", off, cond.syntax)
+	image = format("0110 %s %8b", cond.image, off)
+	action = {
+		// If (COND = true) PC = PC + signed 8-bit offset;
+		// If (COND = false) PC = PC + 1;
+	}
 
 // DOC: page 420
 op subb_ACC(src: card(8))
@@ -178,7 +188,7 @@ op subb_ACC(src: card(8))
 // catches dc02, ADDB must be implemented
 op subb_XARn(xarn: card(3), imm: card(7))
 	syntax = format("SUBB XAR%d, #%d", xarn, imm)
-	image = format("1101 1%3b 1 %7b", xarn, imm) 
+	image = format("1101 1%3b 1 %7b", xarn, imm)
 	action = { } // XARn = XARn − 0:7bit;
 	
 // DOC: page 433

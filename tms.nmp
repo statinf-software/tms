@@ -29,10 +29,32 @@ let bit_order = "uppermost"
 let gliss_isize = "16,32"
 //let bit_image_order =  1
 
+mode COND(cond: card(4)) = cond
+	num = cond
+	syntax =
+		switch(cond) {
+			case 0b0000: "NEQ" // Not Equal To Z=0
+			case 0b0001: "EQ" // Equal To Z=1
+			case 0b0010: "GT" // Greater Than Z = 0 AND N = 0
+			case 0b0011: "GEQ" // Greater Than or Equal To N=0
+			case 0b0100: "LT" // Less Than N=1
+			case 0b0101: "LEQ" // Less Than or Equal To Z = 1 OR N = 1
+			case 0b0110: "HI" // HigherC = 1 AND Z = 0
+			case 0b0111: "HIS, C" // Higher or Same, Carry Set C=1
+			case 0b1000: "LO, NC" // Lower, Carry Clear C=0
+			case 0b1001: "LOS" // Lower or Same C = 0 OR Z = 1
+			case 0b1010: "NOV" // No Overflow V=0
+			case 0b1011: "OV" // Overflow V=1
+			case 0b1100: "NTC" // Test Bit Not Set TC = 0
+			case 0b1101: "TC" // Test Bit Set TC = 1
+			case 0b1110: "NBIO" // BIO Input Equal To Zero BIO = 0
+			case 0b1111: "UNC" // Unconditional –
+		}
+	image = format("%4b", cond)
+
 // ASSUMES: AMODE = 0
 // DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
 mode LOC32(reg32: loc32index) = reg32
-	isloc32 = 1 // TODO: determine this, loc16 is broken for now (duplicate mode into LOC16 most likely)
 	num = reg32
 	reg32ff = reg32<0..7> // flipped reg32
 	syntax =
