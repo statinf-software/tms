@@ -54,6 +54,7 @@ op all_other =
 	| subb_ACC
 	| cmpl_ACC_loc32
 	| lretr
+	| mov_loc16_0
 
 // DOC: page 181
 op cmpl_ACC_loc32(src: LOC32)
@@ -73,6 +74,14 @@ op lretr()
 		SP = SP - 1;
 		TMP<15..0> = M32[SP];
 		RPC = TMP<21..0>;
+	}
+
+// DOC: page 262
+op mov_loc16_0(dest: LOC16)
+	syntax = format("MOV %s, #0", dest.syntax)
+	image = format("0010 1011 %s", dest.image)
+	action = {
+		// [loc16] = 0x0000;
 	}
 
 // DOC: page 298

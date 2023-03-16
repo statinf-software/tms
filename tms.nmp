@@ -29,9 +29,6 @@ let bit_order = "uppermost"
 let gliss_isize = "16,32"
 //let bit_image_order =  1
 
-
-// modes
-
 // ASSUMES: AMODE = 0
 // DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
 mode LOC32(reg32: loc32index) = reg32
@@ -49,7 +46,7 @@ mode LOC32(reg32: loc32index) = reg32
 				format("*−SP[%d]", reg32ff<2..7>)
 			case 0b11:
 				// UNTESTED
-				format("*+XAR%d[%d]", reg32ff<5..7>, reg32ff<2..4>)				
+				format("*+XAR%d[%d]", reg32ff<5..7>, reg32ff<2..4>)
 			case 0b10:
 				// UNTESTED
 				if reg32ff<2..2> == 0 then // 0b100
@@ -80,34 +77,17 @@ mode LOC32(reg32: loc32index) = reg32
 							if reg32ff<0..4> == 0b10110 then
 								format("*,ARP%d", reg32ff<5..7>)
 							else
-								// 32-bit mode
-								if isloc32 then
-									// case 0b10100AAA: "@XAR%d"
-									if reg32ff<0..4> == 0b10100 then
-										format("XAR%d", reg32ff<5..7>)
-									else switch(reg32) {
-										// 32-Bit Register Addressing Modes (XAR0 to XAR7, ACC, P, XT):
-										case 0b10101001: "ACC"
-										case 0b10101011: "P"
-										case 0b10101100: "XT"
-										default: "!!!"
-									}
-									endif
-								else // loc16 case
-									// case 0b10100AAA: "AR%d"
-									if reg32ff<0..4> == 0b10100 then
-										format("AR%d", reg32ff<5..7>)
-									else switch(reg32) {
-										// 16-Bit Register Addressing Modes (AR0 to AR7, AH, AL, PH, PL, TH, SP):
-										case 0b10101000: "AH"
-										case 0b10101001: "AL"
-										case 0b10101010: "PH"
-										case 0b10101011: "PL"
-										case 0b10101100: "TH"
-										case 0b10101101: "SP"
-										default: "!!!"
-									}
-									endif
+								// loc32 stuff
+								// case 0b10100AAA: "@XAR%d"
+								if reg32ff<0..4> == 0b10100 then
+									format("XAR%d", reg32ff<5..7>)
+								else switch(reg32) {
+									// 32-Bit Register Addressing Modes (XAR0 to XAR7, ACC, P, XT):
+									case 0b10101001: "ACC"
+									case 0b10101011: "P"
+									case 0b10101100: "XT"
+									default: "!!!"
+								}
 								endif
 							endif
 							// default case end
@@ -116,6 +96,77 @@ mode LOC32(reg32: loc32index) = reg32
 				endif
 		}
 	image = format("%8b", reg32)
+
+
+// ASSUMES: AMODE = 0
+// DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
+mode LOC16(reg16: loc16index) = reg16
+	num = reg16
+	reg16ff = reg16<0..7> // flipped reg16
+	syntax =
+		// TODO: check bit order of constants
+		switch(reg16ff<0..1>) {
+			case 0b00:
+				// UNTESTED
+				format("@0x%x", reg16ff<2..7>)
+			case 0b01:
+				// UNTESTED
+				format("*−SP[%d]", reg16ff<2..7>)
+			case 0b11:
+				// UNTESTED
+				format("*+XAR%d[%d]", reg16ff<5..7>, reg16ff<2..4>)
+			case 0b10:
+				// UNTESTED
+				if reg16ff<2..2> == 0 then // 0b100
+					switch(reg16ff<3..4>) {
+						case 0b00: format("*XAR%d++", reg16ff<5..7>)
+						case 0b01: format("*−−XAR%d", reg16ff<5..7>)
+						case 0b10: format("*+XAR%d[AR0]", reg16ff<5..7>)
+						case 0b11: format("*+XAR%d[AR1]", reg16ff<5..7>)
+					}
+				else // 0b101
+					// UNTESTED
+					switch(reg16) {
+						// Stack Addressing Modes (SP):
+						case 0b10111101: "*SP++"
+						case 0b10111110: "*--SP"
+						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
+						case 0b10111000: "*"
+						case 0b10111001: "*++"
+						case 0b10111010: "*−−"
+						case 0b10111011: "*0++"
+						case 0b10111100: "*0−−"
+						case 0b10101110: "*BR0++"
+						case 0b10101111: "*BR0−−"
+						// Circular Indirect Addressing Modes (XAR6, XAR1):
+						case 0b10111111: "*AR6%%++"
+						default:
+							// case 0b10110RRR: "*,ARP%d"
+							if reg16ff<0..4> == 0b10110 then
+								format("*,ARP%d", reg16ff<5..7>)
+							else
+								// loc16 stuff
+								// case 0b10100AAA: "AR%d"
+								if reg16ff<0..4> == 0b10100 then
+									format("AR%d", reg16ff<5..7>)
+								else switch(reg16) {
+									// 16-Bit Register Addressing Modes (AR0 to AR7, AH, AL, PH, PL, TH, SP):
+									case 0b10101000: "AH"
+									case 0b10101001: "AL"
+									case 0b10101010: "PH"
+									case 0b10101011: "PL"
+									case 0b10101100: "TH"
+									case 0b10101101: "SP"
+									default: "!!!"
+								}
+								endif
+							endif
+							// default case end
+						// switch case end
+					}
+				endif
+		}
+	image = format("%8b", reg16)
 
 // mode reg_t (r: index) = r
 // 	num = r
