@@ -159,12 +159,13 @@ op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
 op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
 
 // DOC: page 339
-op nop(arpn: card(8)) // wrong, this isn't LOC32
-	if arpn == 0x00 then // simple NOP
-		syntax = "NOP"
-	else
-		// NOT IMPLEMENTED
-		syntax = format("NOP ???, ???")
+op nop(arpn: card(8))
+	syntax =
+		if arpn == 0x00 then // simple NOP
+			"NOP"
+		else
+			// NOT IMPLEMENTED
+			"NOP ???, ???"
 	endif
 	image = format("0111 0111 %8b", arpn)
 	action = { } // ;
