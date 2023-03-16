@@ -65,7 +65,13 @@ op all_other =
 	| subb_XAR6
 	| subb_XAR7
 	| subu
+	| addb_XARn
 
+// DOC: page 137
+op addb_XARn(xarn: card(3), imm: card(7))
+	syntax = format("ADDB XAR%d, #%d", xarn, imm)
+	image = format("1101 1%3b 0%7b", xarn, imm)
+	action = { } //XARn = XARn + 0:7bit;
 
 // DOC: page 181
 op cmpl_ACC_loc32(src: LOC32)
@@ -192,6 +198,6 @@ op subb_XAR7(imm:card(7)) MakeSubbXarn("XAR7", "1101 1111 1 %7b")
 
 // DOC: page 433
 op subu(src: LOC16)
-	syntax = format("SUBU ACC, %s", src.syntax)
-	image = format("0000 0001 %s", src.image)
+	syntax = format("SUBU ACC, %s", src)
+	image = format("0000 0001 %s", src)
 	action = { } //ACC = ACC − 0:[loc16];
