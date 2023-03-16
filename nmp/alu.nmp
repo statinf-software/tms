@@ -50,6 +50,9 @@ op all_movl =
 	| movl_XAR7_22bit
 	| cmpl_ACC_loc32
 
+op all_other =
+	  nop
+
 // Integer Register-Register Operations
 op all_rri =
 	  addi
@@ -155,6 +158,18 @@ op movl_XAR5_22bit(imm: card(22)) MakeMovlXarn22bit("XAR5", "1000 1111 01 %22b")
 op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
 op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
 
+// DOC: page 339
+op nop(arpn: card(8)) // wrong, this isn't LOC32
+	if arpn == 0x00 then // simple NOP
+		syntax = "NOP"
+	else
+		// NOT IMPLEMENTED
+		syntax = format("NOP ???, ???")
+	endif
+	image = format("0111 0111 %8b", arpn)
+	action = { } // ;
+
+///////////////// RISCV stuff, to delete
 // addition + subtraction
 op add(src2: reg_t, src1: reg_t, dest: reg_t)
 	syntax = format("add %s, %s, %s", dest, src1, src2)

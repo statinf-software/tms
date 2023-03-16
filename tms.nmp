@@ -242,7 +242,8 @@ op instruction (x: allinstr)
 	}
 // op TMS16_instr =
 op allinstr =
-	all_movl
+	  all_movl
+	| all_other
 //	| all_rri
 //	| all_alu
 //	| all_branch
