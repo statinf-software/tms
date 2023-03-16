@@ -53,51 +53,6 @@ op all_movl =
 op all_other =
 	  nop
 
-// Integer Register-Register Operations
-op all_rri =
-	  addi
-	| andi
-	| ori
-	| slli
-	| slti
-	| sltiu
-	| srai
-	| srli
-	| xori
-
-// other ALU instructions
-op all_alu =
-	  lui
-	| auipc
-
-// RV32M Extension: multiplication and division
-op all_muldiv =
-	  mul
-	| mulh
-	| mulhsu
-	| mulhu
-	| div
-	| divu
-	| rem
-	| remu
-
-// RV64IM Extension
-op rv64im =
-	  addiw
-	| slliw
-	| srliw
-	| sraiw
-	| addw
-	| subw
-	| sllw
-	| srlw
-	| sraw
-	| mulw
-	| divw
-	| divuw
-	| remw
-	| remuw
-
 //DOC: page 181
 op cmpl_ACC_loc32(src: LOC32)
 	syntax = format("CMPL ACC, %s", src.syntax)
