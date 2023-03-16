@@ -1,0 +1,8 @@
+.vscode
+disasm/Makefile
+disasm/tms-disasm*
+include
+sim
+src
+tms.irg
+tms.nml
