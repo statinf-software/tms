@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+name: NMP Build Results
+file_extensions: []
+scope: source.ocaml
+contexts:
+  main:
+    - match: \[(Finished in|shell_cmd:|dir:|path:) .*\]
+      scope: comment.block.c
+    - match: "(ERROR: .*)"
+      scope: keyword.other.ocaml
+    - match: "(Warning: .*)"
+      scope: constant.numeric.base.ocaml
