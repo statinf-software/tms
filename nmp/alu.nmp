@@ -52,6 +52,7 @@ op all_movl =
 
 op all_other =
 	  nop
+	| subb_ACC
 
 //DOC: page 181
 op cmpl_ACC_loc32(src: LOC32)
@@ -124,6 +125,13 @@ op nop(arpn: card(8))
 	endif
 	image = format("0111 0111 %8b", arpn)
 	action = { } // ;
+
+//DOC: page 420
+op subb_ACC(src: card(8))
+	syntax = format("SUBB ACC,#%d", src)
+	image = format("0001 1001 %8b", src)
+	action = { } //ACC = ACC - 0:8bit;
+
 
 ///////////////// RISCV stuff, to delete
 // addition + subtraction
