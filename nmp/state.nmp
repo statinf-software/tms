@@ -52,13 +52,16 @@ mem M32	[32,  word] alias = M
 mem M64	[32, dword] alias = M
 
 reg PC  	[ 1, address] is_pc = 1
+reg SP      [1,  address]
+reg RPC     [ 1, address]
 reg NPC 	[ 1, address]
 reg R		[32, word]
-reg F		[32, float(23,9)]
-reg LLbit	[ 1, card(1)]
+// reg F		[32, float(23,9)]
+// reg LLbit	[ 1, card(1)]
 
 
 // temporaries
+var TMP   [1, word]
 var TMP_D [1, dword]
 var TMP_S [1, dword]
 var TMP_T [1, dword]

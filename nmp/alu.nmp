@@ -48,17 +48,32 @@ op all_movl =
 	| movl_XAR5_22bit
 	| movl_XAR6_22bit
 	| movl_XAR7_22bit
-	| cmpl_ACC_loc32
 
 op all_other =
 	  nop
 	| subb_ACC
+	| cmpl_ACC_loc32
+	| lretr
 
 //DOC: page 181
 op cmpl_ACC_loc32(src: LOC32)
 	syntax = format("CMPL ACC, %s", src.syntax)
 	image = format("0000 1111 %s", src.image)
 	action = { } //Modify flags on (ACC - [loc32]);
+
+// DOC: page 229
+op lretr()
+	syntax = "LRETR"
+	image = "0000 0000 0000 0110"
+	action = {
+		// UNTESTED
+		PC = RPC;
+		SP = SP - 1;
+		TMP<31..16> = M32[SP];
+		SP = SP - 1;
+		TMP<15..0> = M32[SP];
+		RPC = TMP<21..0>;
+	}
 
 // DOC: page 298
 op movl_ACC_loc32(src: LOC32)
@@ -126,7 +141,7 @@ op nop(arpn: card(8))
 	image = format("0111 0111 %8b", arpn)
 	action = { } // ;
 
-//DOC: page 420
+// DOC: page 420
 op subb_ACC(src: card(8))
 	syntax = format("SUBB ACC,#%d", src)
 	image = format("0001 1001 %8b", src)
