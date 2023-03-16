@@ -1,0 +1,4 @@
+{
+	"shell_cmd": "(make || cd ..; make) && (make test_disasm || cd ..; make test_disasm)",
+	"syntax": "nmp_build_results.sublime-syntax"
+}
