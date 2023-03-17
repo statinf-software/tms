@@ -74,15 +74,10 @@ op movb_ACC(imm: card(8))
 	action = { } // ACC = 0:8bit;
 
 // DOC: page 283
-op movb_AL(imm: card(8))
-	syntax = format("MOVB AL, #0x%01x", imm)
-	image = format("1001 1010 %8b", imm)
-	action = { } // AX = 0:8bit;
-
-// DOC: page 283
-op movb_AH(imm: card(8))
-	syntax = format("MOVB AH, #0x%01x", imm)
-	image = format("1001 1011 %8b", imm)
+op movb_AX(acc_type: bit, imm: card(8))
+	inst_name = if acc_type == 0 then "AL" else "AH" endif
+	syntax = format("MOVB %s, #0x%01x", inst_name, imm)
+	image = format("1001 101%1b %8b", acc_type, imm)
 	action = { } // AX = 0:8bit;
 
 //this format only works for XAR0..5, 6 and 7 must be handled separately
@@ -91,13 +86,11 @@ op movb_XARn(xarn: card(3), imm: card(8))
 	syntax = format("MOVB XAR%d, #0x%01x", xarn, imm)
 	image = format("1101 0%3b %8b", xarn, imm)
 	action = { } //XARn = 0:8bit;
-
 // DOC: page 294
 op movb_XAR6(imm: card(8))
 	syntax = format("MOVB XAR6, #0x%01x", imm)
 	image = format("1011 1110 %8b", imm)
 	action = { } //XAR6 = 0:8bit;
-
 // DOC: page 294
 op movb_XAR7(imm: card(8))
 	syntax = format("MOVB XAR7, #0x%01x", imm)
@@ -199,8 +192,7 @@ op subb_ACC(src: card(8))
 	image = format("0001 1001 %8b", src)
 	action = { } //ACC = ACC - 0:8bit;
 
-// catches dc02, ADDB must be implemented
-// DOC: page 422
+// DOC: page 422. catches dc02, ADDB must be implemented
 op subb_XARn(xarn: card(3), imm: card(7))
 	syntax = format("SUBB XAR%d, #%d", xarn, imm)
 	image = format("1101 1%3b 1 %7b", xarn, imm)

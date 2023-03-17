@@ -39,7 +39,7 @@ mode COND(cond: card(4)) = cond
 			case 0b0011: "GEQ" // Greater Than or Equal To N=0
 			case 0b0100: "LT" // Less Than N=1
 			case 0b0101: "LEQ" // Less Than or Equal To Z = 1 OR N = 1
-			case 0b0110: "HI" // HigherC = 1 AND Z = 0
+			case 0b0110: "HI" // Higher C = 1 AND Z = 0
 			case 0b0111: "HIS, C" // Higher or Same, Carry Set C=1
 			case 0b1000: "LO, NC" // Lower, Carry Clear C=0
 			case 0b1001: "LOS" // Lower or Same C = 0 OR Z = 1
