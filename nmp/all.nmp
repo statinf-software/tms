@@ -60,6 +60,7 @@ op all_other =
 	| addb_XARn
 	| subb_XARn
 	| sb
+	| movb_ACC
 
 // DOC: page 137
 op addb_XARn(xarn: card(3), imm: card(7))
@@ -102,6 +103,11 @@ op mov_ph_loc16(src: LOC16)
 	action = {
 		// PH = [loc16];
 	}
+// DOC: page 281
+op movb_ACC(imm: card(8))
+	syntax = format("MOVB ACC, %d", imm)
+	image = format("0000 0010 %8b", imm)
+	action = { } // ACC = 0:8bit;
 
 // DOC: page 298
 op movl_ACC_loc32(src: LOC32)
