@@ -58,6 +58,12 @@ op lretr()
 		RPC = TMP<21..0>;
 	}
 
+// DOC: page 237
+op lsr_AX(ax: ACC, shift: card(4))
+	syntax = format("LSR %s, %d", ax, shift+1)
+	image = format("1111 1111 110%1b %4b", ax, shift)
+	action = { } //
+
 // DOC: page 252
 op mov_16bit_loc16(imm: card(16), src: LOC16)
 	syntax = format("MOV @0x%x, %s", imm, src)
