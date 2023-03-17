@@ -58,6 +58,13 @@ op lretr()
 		RPC = TMP<21..0>;
 	}
 
+// DOC: page 257
+op mov_AX_loc16(src: LOC16, acc_type: bit)
+	inst_name = if acc_type == 0 then "AL" else "AH" endif
+	syntax = format("MOV %s, %s", inst_name, src)
+	image = format("1001 001%1b %8b", acc_type, src)
+	action = { } // AX = [loc16];
+
 // DOC: page 258
 op mov_loc16_ARn(arn: card(3), dest:LOC16)
 	syntax = format("MOV %s, AR%d", dest, arn)
