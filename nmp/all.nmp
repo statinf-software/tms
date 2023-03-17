@@ -58,11 +58,18 @@ op lretr()
 		RPC = TMP<21..0>;
 	}
 
+// DOC: page 252
+op mov_16bit_loc16(imm: card(16), src: LOC16)
+	syntax = format("MOV @0x%x, %s", imm, src)
+	image = format("1111 0100 %s %16b", src, imm)
+	action = {
+		// [0x0000:16bit] = [loc16];
+	}
+
 // DOC: page 257
-op mov_AX_loc16(src: LOC16, acc_type: bit)
-	inst_name = if acc_type == 0 then "AL" else "AH" endif
-	syntax = format("MOV %s, %s", inst_name, src)
-	image = format("1001 001%1b %8b", acc_type, src)
+op mov_AX(ax: ACC, src: LOC16)
+	syntax = format("MOV %s, %s", ax, src)
+	image = format("1001 001%s %s", ax, src)
 	action = { } // AX = [loc16];
 
 // DOC: page 258
@@ -81,10 +88,9 @@ op mov_loc16_0(dest: LOC16)
 	}
 
 // DOC: page 265
-op mov_loc16_AX(dest: LOC16, acc_type: bit)
-	inst_name = if acc_type == 0 then "AL" else "AH" endif
-	syntax = format("MOV %s, %s", dest, inst_name)
-	image = format("1001 011%1b %8b", acc_type, dest)
+op mov_loc16_AX(dest: LOC16, ax: ACC)
+	syntax = format("MOV %s, %s", dest, ax)
+	image = format("1001 011%s %8b", ax, dest)
 	action = { } // [loc16] = AX;
 
 // DOC: page 273

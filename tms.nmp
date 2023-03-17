@@ -29,6 +29,11 @@ let bit_order = "uppermost"
 let gliss_isize = "16,32"
 //let bit_image_order =  1
 
+mode ACC(acc_type: bit) = acc_type
+	syntax = if acc_type == 0 then "AL" else "AH" endif
+	image = format("%1b", acc_type)
+	action = { }
+
 mode COND(cond: card(4)) = cond
 	num = cond
 	syntax =
@@ -51,6 +56,7 @@ mode COND(cond: card(4)) = cond
 			case 0b1111: "UNC" // Unconditional –
 		}
 	image = format("%4b", cond)
+	action = { }
 
 // ASSUMES: AMODE = 0
 // DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
