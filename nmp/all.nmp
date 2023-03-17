@@ -18,6 +18,11 @@
  *	along with GLISS; if not, write to the Free Software
  *	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+// DOC: page 135
+op addb_AX(ax: ACC, imm: int(8))
+	syntax = format("ADDB %s, #%d", ax, imm)
+	image = format("1001 110%1b %8b", ax, imm)
+	action = { } // AX = AX + S:8bit;
 
 // DOC: page 137
 op addb_XARn(xarn: card(3), imm: card(7))
