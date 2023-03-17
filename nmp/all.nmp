@@ -66,6 +66,10 @@ op all_other =
 	| movb_XAR7
 	| movb_AL
 	| movb_AH
+	| movz_ARn
+	| movz_AR6
+	| movz_AR7
+
 
 // DOC: page 137
 op addb_XARn(xarn: card(3), imm: card(7))
@@ -205,6 +209,20 @@ op movl_XAR4_22bit(imm: card(22)) MakeMovlXarn22bit("XAR4", "1000 1111 00 %22b")
 op movl_XAR5_22bit(imm: card(22)) MakeMovlXarn22bit("XAR5", "1000 1111 01 %22b")
 op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
 op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
+
+// DOC: page 318
+op movz_ARn(xarn: card(3), src: LOC16)
+	syntax = format("MOVZ AR%d, %s", xarn, src)
+	image = format("0101 1%3b %s", xarn, src)
+	action = { } //ARn = [loc16]; ARnH = 0;
+op movz_AR6(src: LOC16)
+	syntax = format("MOVZ AR6, %s", src)
+	image = format("1000 1000 %s", src)
+	action = { } // AR6 = [loc16]; AR6H = 0;
+op movz_AR7(src: LOC16)
+	syntax = format("MOVZ AR7 %s", src)
+	image = format("1000 0000 %s", src)
+	action = { } // AR7 = [loc16]; AR7H = 0;
 
 // DOC: page 339
 op nop(arpn: card(8))
