@@ -104,13 +104,6 @@ op movb_XAR7(imm: card(8))
 	image = format("1011 0110 %8b", imm)
 	action = { } //XAR7 = 0:8bit;
 
-
-// DOC: page 294
-op movb_XAR4(imm: card(8))
-	syntax = format("MOVB XAR4, #0x%01x", imm)
-	image = format("1101 0100 %8b", imm)
-	action = { }// XAR4 = 0:8bit;
-
 // DOC: page 298
 op movl_ACC_loc32(src: LOC32)
 	syntax = format("MOVL ACC, %s", src.syntax)
