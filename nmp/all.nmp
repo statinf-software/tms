@@ -74,9 +74,10 @@ op mov_ph_loc16(src: LOC16)
 	action = {
 		// PH = [loc16];
 	}
+
 // DOC: page 281
 op movb_ACC(imm: card(8))
-	syntax = format("MOVB ACC, %d", imm)
+	syntax = format("MOVB ACC, #%d", imm)
 	image = format("0000 0010 %8b", imm)
 	action = { } // ACC = 0:8bit;
 
