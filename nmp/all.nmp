@@ -19,59 +19,6 @@
  *	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// MOVL operations
-op all_movl =
-	  movl_loc32_XAR0
-	| movl_loc32_XAR1
-	| movl_loc32_XAR2
-	| movl_loc32_XAR3
-	| movl_loc32_XAR4
-	| movl_loc32_XAR5
-	| movl_loc32_XAR6
-	| movl_loc32_XAR7
-	| movl_ACC_loc32
-	| movl_loc32_ACC
-	| movl_XAR0_loc32
-	| movl_XAR1_loc32
-	| movl_XAR2_loc32
-	| movl_XAR3_loc32
-	| movl_XAR4_loc32
-	| movl_XAR5_loc32
-	| movl_XAR6_loc32
-	| movl_XAR7_loc32
-	// 32 bit instructions
-	| movl_XAR0_22bit
-	| movl_XAR1_22bit
-	| movl_XAR2_22bit
-	| movl_XAR3_22bit
-	| movl_XAR4_22bit
-	| movl_XAR5_22bit
-	| movl_XAR6_22bit
-	| movl_XAR7_22bit
-
-op all_other =
-	  nop
-	| cmpl_ACC_loc32
-	| lretr
-	| mov_loc16_0
-	| mov_ph_loc16
-	| subb_ACC
-	| subu
-	| addb_XARn
-	| subb_XARn
-	| sb
-	| movb_ACC
-	| movb_XARn
-	| movb_XAR6
-	| movb_XAR7
-	| movb_AL
-	| movb_AH
-	| movz_ARn
-	| movz_AR6
-	| movz_AR7
-	| mov_loc16_ARn
-
-
 // DOC: page 137
 op addb_XARn(xarn: card(3), imm: card(7))
 	syntax = format("ADDB XAR%d, #%d", xarn, imm)
@@ -259,8 +206,8 @@ op subb_ACC(src: card(8))
 	image = format("0001 1001 %8b", src)
 	action = { } //ACC = ACC - 0:8bit;
 
-// DOC: page 422
 // catches dc02, ADDB must be implemented
+// DOC: page 422
 op subb_XARn(xarn: card(3), imm: card(7))
 	syntax = format("SUBB XAR%d, #%d", xarn, imm)
 	image = format("1101 1%3b 1 %7b", xarn, imm)

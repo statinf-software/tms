@@ -210,9 +210,9 @@ op instruction (x: allinstr)
 		PC = NPC;
 	}
 
-op allinstr =
-	  all_movl
-	| all_other
+// op allinstr =
+// 	  all_movl
+// 	| all_other
 
 op init ()
 	action = {
@@ -220,8 +220,4 @@ op init ()
 	}
 
 include "nmp/all.nmp"
-// include "nmp/alu.nmp"
-// include "nmp/control.nmp"
-// include "nmp/special.nmp"
-// include "nmp/mem.nmp"
-// include "nmp/floatingpoint.nmp"
+include "tms_list.nmp"

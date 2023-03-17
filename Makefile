@@ -3,6 +3,7 @@
 # configuration
 ARCH=tms
 GLISS_PREFIX	=../gliss2/gliss2
+GEN_LIST 		= ./gen_list.py
 WITH_DISASM		= 1	# comment it to prevent disassembler building
 # WITH_SIM		= 1	# comment it to prevent simulator building
 #WITH_DYNLIB	= 1	# uncomment it to build dynamicaly linkable library
@@ -14,10 +15,11 @@ MEMORY=vfast_mem			# select here the memory module
 LOADER=old_elf				# select here the loaded module
 DECODER=decode32_dtrace		# modify this with CAUTION
 
+NMP_LIST_FILE = $(ARCH)_list.nmp
 # goals definition
 GOALS		=
 SUBDIRS		=	src
-CLEAN		=	$(ARCH).nml $(ARCH).irg include
+CLEAN		=	$(ARCH).nml $(NMP_LIST_FILE) $(ARCH).irg include
 DISTCLEAN	=	include src
 
 ifdef WITH_DISASM
@@ -59,10 +61,13 @@ GFLAGS = \
 #	-m fpi:extern/fpi \
 
 NMP_MAIN = $(ARCH).nmp
+NMP_OTHERS =\
+	nmp/all.nmp
 
 NMP =\
 	$(NMP_MAIN) \
-	nmp/all.nmp
+	$(NMP_LIST_FILE) \
+	$(NMP_OTHERS)
 
 
 # targets
@@ -79,6 +84,9 @@ ifeq ($(CPU_ENDIAN),big)
 else
 	echo "let BigEndianCPU = 0" >> $@
 endif
+
+$(NMP_LIST_FILE): $(NMP_OTHERS)
+	$(GEN_LIST) $^ > $@
 
 $(ARCH).nml: $(NMP)
 	$(GLISS_PREFIX)/gep/gliss-nmp2nml.pl $< $@
