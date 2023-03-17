@@ -31,6 +31,19 @@ op cmpl_ACC_loc32(src: LOC32)
 	image = format("0000 1111 %s", src.image)
 	action = { } //Modify flags on (ACC - [loc32]);
 
+// DOC: page 220
+op lcr(imm: card(22))
+	syntax = format("LCR 0x%06x", imm)
+	image = format("0111 0110 01 %22b", imm)
+	action = {
+		// [SP] = RPC(15:0);
+		// SP = SP + 1;
+		// [SP] = RPC(21:16);
+		// SP = SP + 1;
+		// RPC = PC + 2;
+		// PC = 22bit;
+	}
+
 // DOC: page 229
 op lretr()
 	syntax = "LRETR"
