@@ -61,6 +61,9 @@ op all_other =
 	| subb_XARn
 	| sb
 	| movb_ACC
+	| movb_XARn
+	| movb_XAR6
+	| movb_XAR7
 
 // DOC: page 137
 op addb_XARn(xarn: card(3), imm: card(7))
@@ -108,6 +111,32 @@ op movb_ACC(imm: card(8))
 	syntax = format("MOVB ACC, %d", imm)
 	image = format("0000 0010 %8b", imm)
 	action = { } // ACC = 0:8bit;
+
+//this format only works for XAR0..5, 6 and 7 must be handled separately
+// DOC: page 294
+op movb_XARn(xarn: card(3), imm: card(8))
+	syntax = format("MOVB XAR%d, #0x%01x", xarn, imm)
+	image = format("1101 0%3b %8b", xarn, imm)
+	action = { } //XARn = 0:8bit;
+
+// DOC: page 294
+op movb_XAR6(imm: card(8))
+	syntax = format("MOVB XAR6, #0x%01x", imm)
+	image = format("1011 1110 %8b", imm)
+	action = { } //XAR6 = 0:8bit;
+
+// DOC: page 294
+op movb_XAR7(imm: card(8))
+	syntax = format("MOVB XAR7, #0x%01x", imm)
+	image = format("1011 0110 %8b", imm)
+	action = { } //XAR7 = 0:8bit;
+
+
+// DOC: page 294
+op movb_XAR4(imm: card(8))
+	syntax = format("MOVB XAR4, #0x%01x", imm)
+	image = format("1101 0100 %8b", imm)
+	action = { }// XAR4 = 0:8bit;
 
 // DOC: page 298
 op movl_ACC_loc32(src: LOC32)
