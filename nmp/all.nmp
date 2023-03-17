@@ -69,6 +69,7 @@ op all_other =
 	| movz_ARn
 	| movz_AR6
 	| movz_AR7
+	| mov_loc16_ARn
 
 
 // DOC: page 137
@@ -96,6 +97,13 @@ op lretr()
 		TMP<15..0> = M32[SP];
 		RPC = TMP<21..0>;
 	}
+
+// DOC: page 258
+op mov_loc16_ARn(arn: card(3), dest:LOC16)
+	syntax = format("MOV %s, AR%d", dest, arn)
+	image = format("0111 1%3b %s", arn, dest)
+	action = { } // [loc16] = ARn;
+	
 
 // DOC: page 262
 op mov_loc16_0(dest: LOC16)
