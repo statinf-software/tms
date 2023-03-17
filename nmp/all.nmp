@@ -60,6 +60,13 @@ op mov_loc16_0(dest: LOC16)
 		// [loc16] = 0x0000;
 	}
 
+// DOC: page 265
+op mov_loc16_AX(dest: LOC16, acc_type: bit)
+	inst_name = if acc_type == 0 then "AL" else "AH" endif
+	syntax = format("MOV %s, %s", dest, inst_name)
+	image = format("1001 011%1b %8b", acc_type, dest)
+	action = { } // [loc16] = AX;
+
 // DOC: page 273
 op mov_ph_loc16(src: LOC16)
 	syntax = format("MOV PH, %s", src.syntax)
