@@ -137,6 +137,14 @@ op movl_XAR5_loc32(src: LOC32) MakeMovlXarnLoc32("XAR5", "1000 0011 %s")
 op movl_XAR6_loc32(src: LOC32) MakeMovlXarnLoc32("XAR6", "1100 0100 %s")
 op movl_XAR7_loc32(src: LOC32) MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
 
+// DOC: page 316
+op movw(imm: card(16))
+	syntax = format("MOVW DP, 0x%x", imm)
+	image = format("0111 0110 0001 1111 %16b", imm)
+	action = {
+		//DP<15..0> = imm;
+	}
+
 // DOC: page 309
 macro MakeMovlXarn22bit(xarn, fmt) = \
 	syntax = format("MOVL %s, #0x%06x", xarn, imm)\
@@ -152,7 +160,7 @@ op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
 op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
 
 // DOC: page 318
-op movz_ARn(xarn: card(3), src: LOC16)
+op movz_ARn_0to5(xarn: card(3), src: LOC16)
 	syntax = format("MOVZ AR%d, %s", xarn, src)
 	image = format("0101 1%3b %s", xarn, src)
 	action = { } //ARn = [loc16]; ARnH = 0;
