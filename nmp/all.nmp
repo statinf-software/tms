@@ -142,13 +142,13 @@ op movb_XAR7(imm: card(8))
 	image = format("1011 0110 %8b", imm)
 	action = { } //XAR7 = 0:8bit;
 
-// DOC: page 298
+// DOC: page 298; BUG? same opcode as POP ACC page 353
 op movl_ACC_loc32(src: LOC32)
 	syntax = format("MOVL ACC, %s", src.syntax)
 	image = format("0000 0110 %s", src.image)
 	action = { } // ACC = [loc32];
 
-// DOC: page 300
+// DOC: page 300; BUG? same opcode as PUSH ACC page 369
 op movl_loc32_ACC(src: LOC32)
 	syntax = format("MOVL %s, ACC", src.syntax)
 	image = format("0001 1110 %s", src.image)
@@ -184,7 +184,7 @@ op movl_XAR7_loc32(src: LOC32) MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
 
 // DOC: page 316
 op movw(imm: card(16))
-	syntax = format("MOVW DP, 0x%x", imm)
+	syntax = format("MOVW DP, #0x%x", imm)
 	image = format("0111 0110 0001 1111 %16b", imm)
 	action = {
 		//DP<15..0> = imm;
@@ -219,16 +219,19 @@ op movz_AR7(src: LOC16)
 	action = { } // AR7 = [loc16]; AR7H = 0;
 
 // DOC: page 339
-op nop(arpn: card(8))
+op nop(arpn: LOC32)
 	syntax =
 		if arpn == 0x00 then // simple NOP
 			"NOP"
 		else
-			// NOT IMPLEMENTED
-			"NOP ???, ???"
+			// UNTESTED
+			format("NOP %s", arpn)
 	endif
-	image = format("0111 0111 %8b", arpn)
-	action = { } // ;	
+	image = format("0111 0111 %s", arpn)
+	action = {
+		// Modify the indirect address operand as specified and change the auxiliary register pointer (ARP) to the given auxiliary register.
+		// If no operands are given, then do nothing.
+	}
 
 // DOC: page 399
 op sb(off: int(8), cond: COND)
@@ -256,3 +259,1033 @@ op subu(src: LOC16)
 	syntax = format("SUBU ACC, %s", src)
 	image = format("0000 0001 %s", src)
 	action = { } //ACC = ACC − 0:[loc16];
+
+// DOC: page 436
+op tbit_loc16_4bit(src: LOC16, index: card(4))
+	syntax = format("TBIT %s, #0x%x", src, index)
+	image = format("0100 %4b %s", index, src)
+	action = {
+		// TC = [loc16(bit)];
+	}
+
+
+/////// UNTESTED INSTRUCTIONS /////////
+// DOC: page 340
+op norm_ACC_ind1()
+	syntax = "NORM ACC, *"
+	image = "0101 0110 0010 0100"
+	action = { }
+op norm_ACC_ind2()
+	syntax = "NORM ACC, *++"
+	image = "0101 0110 0101 1010"
+	action = { }
+op norm_ACC_ind3()
+	syntax = "NORM ACC, *- -"
+	image = "0101 0110 0010 0000"
+	action = { }
+op norm_ACC_ind4()
+	syntax = "NORM ACC, *0++"
+	image = "0101 0110 0111 0111"
+	action = { }
+op norm_ACC_ind5()
+	syntax = "NORM ACC, *0- -"
+	image = "0101 0110 0011 0000"
+	action = { }
+
+// DOC: page 341
+op norm_ACC_XARn(xarn: card(3), operator: bit)
+	operator_str = if operator == 1 then "++" else "--" endif
+	syntax = format("NORM, ACC, XAR%d%s", xarn, operator_str)
+	image = format("1111 1111 0111 %1b%3b", operator, xarn)
+	action = { }
+
+// DOC: page 342
+op not_acc()
+	syntax = "NOT ACC"
+	image = "1111 1111 0101 0101"
+	action = { }
+
+// DOC: page 343
+op not_ax(ax: ACC)
+	syntax = format("NOT %s", ax)
+	image = format("1111 1111 0101 111%s", ax)
+	action = { }
+	
+// DOC: page 344
+op or_acc_loc16(src: LOC16)
+	syntax = format("OR ACC, %s", src)
+	image = format("1010 1111 %s", src)
+	action = { }
+
+// DOC: page 345
+op or_acc_16bit_0_15(imm: card(16), shift: card(4))
+	syntax = format("OR ACC, #0x%x << #%d", imm, shift)
+	image  = format("0011 1110 0001 %4b %16b", shift, imm)
+	action = {
+		// ACC = ACC OR (0:16bit << shift value);
+	}
+// DOC: page 345
+op or_acc_16bit_16(imm: card(16))
+	syntax = format("OR ACC, #0x%x << #16", imm)
+	image  = format("0101 0110 0100 1010 %16b", imm)
+	action = {
+		// ACC = ACC OR (0:16bit << 16);
+	}
+
+// DOC: page 346
+op or_ax_loc16(ax: ACC, src: LOC16)
+	syntax = format("OR %s, %s", ax, src)
+	image  = format("1100 101%s %s", ax, src)
+	action = {
+		// AX = AX OR [loc16];
+	}
+
+// DOC: page 347
+op or_ier_16bit(imm: card(16))
+	syntax = format("OR IER, #%d", imm)
+	image  = format("0111 0110 0010 0011 %16b", imm)
+	action = {
+		// IER = IER OR #16bit;
+	}
+
+// DOC: page 348
+op or_ifr_16bit(imm: card(16))
+	syntax = format("OR IFR, #%d", imm)
+	image  = format("0111 0110 0010 0111 %16b", imm)
+	action = {
+		// IFR = IFR OR #16bit;
+	}
+
+// DOC: page 349
+op or_loc16_16bit(dest: LOC16, imm: card(16))
+	syntax = format("OR %s, #%d", dest, imm)
+	image  = format("0001 1010 %s %16b", dest, imm)
+	action = {
+		// [loc16] = [loc16] OR 16bit;
+	}
+
+// DOC: page 350
+op or_loc16_ax(dest: LOC16, ax: ACC)
+	syntax = format("OR %s, %s", dest, ax)
+	image  = format("1001 100%s %s", ax ,dest)
+	action = {
+		// [loc16] = [loc16] OR AX;
+	}
+
+// DOC: page 351
+op orb_ax_8bit(ax: ACC, imm: card(8))
+	syntax = format("ORB %s, #%d", ax, imm)
+	image  = format("0101 000%s %8b", ax, imm)
+	action = {
+		// AX = AX OR 0x00:8bit;
+	}
+
+// DOC: page 352
+op out_pa_loc16(src: LOC16, addr: card(16))
+	syntax = format("OUT *(0x%04x), %s", addr, src)
+	image  = format("1011 1100 %s %16b", src, addr)
+	action = {
+		// IOspace[0x0000PA] = [loc16];
+	}
+
+// DOC: page 353
+// op pop_acc()
+// 	syntax = "POP ACC"
+// 	image = "0000 0110 1011 1110"
+// 	action = {
+// 		// SP −= 2;
+// 		// ACC = [SP];
+// }
+
+// DOC: page 354
+// op pop_arn_arm
+// 	syntax =
+// 	image =
+// 	action = { }
+
+// DOC: page 355
+op pop_ar1h_ar0h()
+	syntax = "POP AR1H:AR0H"
+	image = "0000 0000 0000 0011"
+	action = {
+		// SP
+		// −= 2; AR0H
+		// = [SP]; AR1H =
+		// [SP+1];
+		// AR1:AR0 = unchanged;
+	}
+
+// DOC: page 356
+op pop_dbgier()
+	syntax = "POP DBGIER"
+	image = "0111 0110 0001 0010"
+	action = {
+		// SP −= 1;
+		// DBGIER = [SP];
+	}
+
+// DOC: page 357
+op pop_dp()
+	syntax = "POP DP"
+	image = "0111 0110 0000 0011"
+	action = { 
+		// SP −= 1;
+		// DP = [SP];
+	}
+
+// DOC: page 358
+op pop_dp_st1()
+	syntax = "POP DP:ST1"
+	image = "0111 0110 0000 0001"
+	action = {
+		// SP −= 2;
+		// ST1 = [SP];
+		// DP = [SP+1];
+	}
+
+// DOC: page 359
+op pop_ifr()
+	syntax = "POP IFR"
+	image = "0000 0000 0000 0010"
+	action = {
+		// SP −= 1;
+		// IFR = [SP];
+	}
+
+// DOC: page 360
+op pop_loc16(src: LOC16)
+	syntax = format("POP %s", src)
+	image = format("0010 1010 %s", src)
+	action = {
+		// SP -= 1;
+		// [loc16] = [SP];
+	}
+
+// DOC: page 361
+op pop_p()
+	syntax = "POP P"
+	image = "0111 0110 0001 0001"
+	action = {
+		// SP −= 2;
+		// P = [SP];
+	}
+
+// DOC: page 362
+op pop_rpc()
+	syntax = "POP RPC"
+	image = "0000 0000 0000 0111"
+	action = {
+		// SP −= 2;
+		// RPC = [SP];
+	}
+
+// DOC: page 363
+op pop_st0()
+	syntax = "POP ST0"
+	image = "0111 0110 0001 0011"
+	action = {
+		// SP −= 1;
+		// ST0 = [SP];
+	}
+
+// DOC: page 364
+op pop_st1()
+	syntax = "POP ST1"
+	image = "0111 0110 0000 0000"
+	action = {
+		// SP −= 1;
+		// ST1 = [SP];
+	}
+
+// DOC: page 365
+op pop_t_st0()
+	syntax = "POP T:ST0"
+	image = "0111 0110 0001 0101"
+	action = {
+		// SP −= 2;
+		// T = [SP];
+		// ST0 = [SP+1];
+		// TL = unchanged;
+	}
+
+// DOC: page 366; BUG??
+// macro MakePopXarn(xarn, fmt) = \
+// 	syntax = format("POP %s", xarn)\
+// 	image = fmt\
+// 	action = {\
+// 		// SP −= 2;\
+// 		// XARn = [SP];\
+// 	}
+// op pop_XAR0() MakePopXarn("XAR0", "1000 1110 1011 1110")
+// op pop_XAR1() MakePopXarn("XAR1", "1000 1011 1011 1110")
+// op pop_XAR2() MakePopXarn("XAR2", "1000 0110 1011 1110")
+// op pop_XAR3() MakePopXarn("XAR3", "1000 0010 1011 1110")
+// op pop_XAR4() MakePopXarn("XAR4", "1000 1010 1011 1110")
+// op pop_XAR5() MakePopXarn("XAR5", "1000 0011 1011 1110")
+// op pop_XAR6() MakePopXarn("XAR6", "1100 0100 1011 1110")
+// op pop_XAR7() MakePopXarn("XAR7", "1100 0101 1011 1110")
+
+// DOC: page 367
+op pop_xt()
+	syntax = "POP XT"
+	image = "1000 0111 1011 1110"
+	action = {
+		// SP −= 2;
+		// XT = [SP];
+	}
+
+// DOC: page 368
+op pread_loc16_xar7(dest: LOC16)
+	syntax = format("PREAD %s, *XAR7", dest)
+	image = format("0010 0100 %s", dest)
+	action = {
+		// [loc16] = Prog[*XAR7];
+	}
+
+// DOC: page 369; BUG?? same opcode as page 300!
+// op push_acc()
+// 	syntax = "PUSH ACC"
+// 	image = "0001 1110 1011 1101"
+// 	action = {
+// 		// [SP] = ACC;
+// 		// SP += 2;
+// 	}
+
+// DOC: page 370
+// op push_arn_arm
+// 	syntax = 
+// 	image = 
+// 	action = {
+
+// 	}
+
+// DOC: page 371
+op push_ar1h_ar0h()
+	syntax = "PUSH AR1H:AR0H"
+	image = "0000 0000 0000 0101"
+	action = {
+		// [SP] = AR0H;
+		// [SP+1] = AR1H;
+		// SP += 2;
+	}
+
+// DOC: page 372
+op push_dbgier()
+	syntax = "PUSH DBGIER"
+	image = "0111 0110 0000 1110"
+	action = {
+		// [SP] = DBGIER;
+		// SP += 1;
+	}
+
+// DOC: page 373
+op push_dp()
+	syntax = "PUSH DP"
+	image = "0111 0110 0000 1011"
+	action = {
+		// [SP] = DP;
+		// SP += 1;
+	}
+
+// DOC: page 374
+op push_dp_st1()
+	syntax = "PUSH DP:ST1"
+	image = "0111 0110 0000 1001"
+	action = {
+		// [SP] = ST1;
+		// [SP+1] = DP;
+		// SP += 2;
+	}
+
+// DOC: page 375
+op push_ifr()
+	syntax = "PUSH IFR"
+	image = "0111 0110 0000 1010"
+	action = {
+		// [SP] = IFR;
+		// SP += 1;
+	}
+
+// DOC: page 376
+op push_loc16(src: LOC16)
+	syntax = format("PUSH %s", src)
+	image = format("0010 0010 %s", src)
+	action = {
+		// [SP] = [loc16];
+		// SP += 1;
+	}
+
+// DOC: page 377
+op push_p()
+	syntax = "PUSH P"
+	image = "0111 0110 0001 1101"
+	action = {
+		// [SP] = P;
+		// SP += 2;
+	}
+
+// DOC: page 378
+op push_rpc()
+	syntax = "PUSH RPC"
+	image = "0000 0000 0000 0100"
+	action = {
+		// [SP] = RPC;
+		// SP += 2;
+	}
+
+// DOC: page 379
+op push_st0()
+	syntax = "PUSH ST0"
+	image = "0111 0110 0001 1000"
+	action = {
+		// [SP] = ST0;
+		// SP += 1;
+	}
+
+// DOC: page 380
+op push_st1()
+	syntax = "PUSH ST1"
+	image = "0111 0110 0000 1000"
+	action = {
+		// [SP] = ST1;
+		// SP += 1;
+	}
+
+// DOC: page 381
+op push_t_st0()
+	syntax = "PUSH T:ST0"
+	image = "0111 0110 0001 1001"
+	action = {
+		// [SP] = ST0;
+		// [SP+1] = T;
+		// SP += 2;
+	}
+
+// DOC: page 382
+// op 
+// 	syntax = "PUSH XARn"
+// 	image = 
+// 	action = {
+
+// 	}
+
+// DOC: page 383
+op push_xt()
+	syntax = "PUSH XT"
+	image = "1010 1011 1011 1101"
+	action = {
+		// [SP] = XT;
+		// SP += 2;
+	}
+
+// DOC: page 384
+op pwrite_xar7(src: LOC16)
+	syntax = format("PWRITE *XAR7, %s", src)
+	image = format("0010 0110 %s", src)
+	action = {
+
+	}
+
+// DOC: page 385
+// op 
+// 	syntax = 
+// 	image = 
+// 	action = {
+
+// 	}
+
+// DOC: page 387
+op qmpyal_p_xt_loc32(src: LOC32)
+	syntax = format("QMPYAL P, XT, %s", src)
+	image = format("0101 0110 0100 0110 0000 0000 %s", src)
+	action = {
+		// ACC = ACC + P << PM;
+		// P = (signed T * signed [loc32]) >> 32;
+	}
+
+// DOC: page 388
+op qmpyl_p(src: LOC32)
+	syntax = format("QMPYL P, XT, %s", src)
+	image = format("0101 0110 0110 0111 0000 0000 %s", src)
+	action = {
+		// P = (signed XT * signed [loc32]) >> 32;
+	}
+
+// DOC: page 389
+op qmpyl_acc(src: LOC32)
+	syntax = format("QMPYL ACC, XT, %s", src)
+	image = format("0101 0110 0110 0011 0000 0000 %s", src)
+	action = {
+		// ACC = (signed XT * signed [loc32]) >> 32;
+	}
+
+// DOC: page 390
+op qmpysl(src: LOC32)
+	syntax = format("QMPYSL P, XT, %s", src)
+	image = format("0101 0110 0100 0101 0000 0000 %s", src)
+	action = {
+		// ACC = ACC − P << PM;
+		// P = (signed T * signed [loc32]) >> 32;
+	}
+
+// DOC: page 391
+op qmpyul(src: LOC32)
+	syntax = format("QMPYUL P, XT, %s", src)
+	image = format("0101 0110 0100 0111 0000 0000 %s", src)
+	action = {
+		// P = (unsigned XT * unsigned [loc32]) >> 32;
+	}
+
+// DOC: page 392
+op qmpyxul(src: LOC32)
+	syntax = format("QMPYXUL P, XT, %s", src)
+	image = format("0101 0110 0100 0010 0000 0000 %s", src)
+	action = {
+		// P = (signed XT * unsigned [loc32]) >> 32;
+	}
+
+// DOC: page 393
+op rol_acc()
+	syntax = "ROL ACC"
+	image = "1111 1111 0101 0011"
+	action = {
+
+	}
+
+// DOC: page 394
+op ror_acc()
+	syntax = "ROR ACC"
+	image = "1111 1111 0101 0010"
+	action = {
+
+	}
+
+// DOC: page 395
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 396
+op sat_acc()
+	syntax = "SAT ACC"
+	image = "1111 1111 0101 0111"
+	action = {
+
+	}
+
+// DOC: page 397
+op sat64()
+	syntax = "SAT64 ACC:P"
+	image = "0101 0110 0011 1110"
+	action = {
+
+	}
+
+// DOC: page 400
+op sbbu(src: LOC16)
+	syntax = format("SBBU ACC, %s", src)
+	image = format("0001 1101 %s", src)
+	action = {
+		// ACC = ACC − 0:[loc16] − ~C;
+	}
+
+// DOC: page 401
+// op 
+// 	syntax = "SBF 8bitOffset, EQ/NEQ/TC/NTC"
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 402
+op sbrk_8bit(imm: card(8))
+	syntax = format("SBRK #%d", imm)
+	image = format("1111 1101 %8b", imm)
+	action = {
+		// XAR(ARP) = XAR(ARP) − 0:8bit;
+	}
+
+// DOC: page 403
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 405
+op setc_M0M1MAP()
+	syntax = "SETC M0M1MAP"
+	image = "0101 0110 0001 1010"
+	action = {
+
+	}
+
+// DOC: page 406
+op setc_objmode()
+	syntax = "SETC Objmode"
+	image = "0101 0110 0001 1111"
+	action = {
+		// Set the Objmode status bit, putting the device in C28x object mode (supports C2XLP source).
+	}
+
+// DOC: page 407
+op setc_xf()
+	syntax = "SETC XF"
+	image = "0101 0110 0010 0110"
+	action = {
+		// Set the XF status bit and pull the corresponding output signal high.
+	}
+
+// DOC: page 408
+op sfr_acc(shift: card(4))
+	syntax = format("SFR ACC, #%d", shift+1)
+	image = format("1111 1111 0100 %4b", shift)
+	action = {
+		// if(SXM = 1) // sign extension mode enabled
+		// ACC = S:ACC >> shift value; // arithmetic shift right
+		// else //sign extension mode disabled
+		// ACC = 0:ACC >> shift value;// logical shift right
+	}
+
+// // DOC: page 409
+// op 
+// 	syntax = "SFR ACC, T"
+// 	image = "1111 1111 0101 0001"
+// 	action = {
+
+// 	}
+
+// // DOC: page 410
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 412
+op sqra(src: LOC16)
+	syntax = format("SQRA %s", src)
+	image = format("0101 0110 0001 0101 0000 0000 %s", src)
+	action = {
+		// ACC = ACC + P << PM;
+		// T = [loc16];
+		// P = T * [loc16];
+	}
+
+// DOC: page 413
+op sqrs(src: LOC16)
+	syntax = format("SQRS %s", src)
+	image = format("0101 0110 0001 0001 xxxx xxxx %s", src)
+	action = {
+		// ACC = ACC − P << PM;
+		// T = [loc16];
+		// P = T * [loc16];
+	}
+
+// // DOC: page 414
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// // DOC: page 416
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// // DOC: page 417
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 418
+op sub_ax_loc16(ax: ACC, src: LOC16)
+	syntax = format("SUB %s, %s", ax, src)
+	image = format("1001 111%s %s", ax, src)
+	action = {
+		// AX = AX − [loc16];
+	}
+
+// DOC: page 419
+op sub_loc16_ax(ax: ACC, src: LOC16)
+	syntax = format("SUB %s, %s", src, ax)
+	image = format("0111 010%s %s", ax, src)
+	action = {
+		// [loc16] = [loc16] − AX;
+	}
+
+// DOC: page 421
+op subb_sp_7bit(imm: card(7))
+	syntax = format("SUBB SP, #%d", imm)
+	image = format("1111 1110 1%7b", imm)
+	action = {
+		// SP = SP − 0:7bit;
+	}
+
+// DOC: page 423
+op subbl_acc_loc32(src: LOC32)
+	syntax = format("SUBBL ACC, %s", src)
+	image = format("0101 0110 0101 0100 0000 0000 %s", src)
+	action = {
+		// ACC = ACC − [loc32] − ~C;
+	}
+
+// DOC: page 424
+op subcu_acc_loc16(src: LOC16)
+	syntax = format("SUBCU ACC, %s", src)
+	image = format("0001 1111 %s", src)
+	action = {
+		// temp(32:0) = ACC << 1 − [loc16] << 16
+		// if( temp(32:0) > 0 )
+		// ACC = temp(31:0) + 1
+		// else
+		// ACC = ACC << 1
+	}
+
+// DOC: page 426
+op subcul_acc_loc32(src: LOC32)
+	syntax = format("SUBCUL ACC, %s", src)
+	image = format("0101 0110 0001 0111 0000 0000 %s", src)
+	action = {
+		// temp(32:0) = ACC << 1 + P(31) − [loc32];
+		// if( temp(32:0) >= if( temp(32:0) >= 0 )
+		// ACC = temp(31:0);
+		// P = (P << 1) + 1;
+		// else
+		// ACC:P = ACC:P << 1;
+	}
+
+// DOC: page 428
+op subl_acc_loc32(src: LOC32)
+	syntax = format("SUBL ACC, %s", src)
+	image = format("0000 0011 %s", src)
+	action = {
+		// ACC = ACC − [loc32];
+	}
+
+// // DOC: page 429
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 430
+op subl_loc32_acc(dest: LOC32)
+	syntax = format("SUBL %s, ACC", dest)
+	image = format("0101 0110 0100 0001 0000 0000 %s", dest)
+	action = {
+		// [loc32] = [loc32] − ACC;
+	}
+
+// DOC: page 431
+op subr_loc16_ax(dest: LOC16, ax: ACC)
+	syntax = format("SUBR %s, %s", dest, ax)
+	image = format("1110 101%s %s", ax, dest)
+	action = {
+		// [loc16] = AX − [loc16]
+	}
+
+// DOC: page 432
+op subrl_loc32_acc(dest: LOC32)
+	syntax = format("SUBRL %s, ACC", dest)
+	image = format("0101 0110 0100 1001 0000 0000 %s", dest)
+	action = {
+		// [loc32] = ACC − [loc32];
+	}
+
+// DOC: page 434
+op subul_acc_loc32(src: LOC32)
+	syntax = format("SUBUL ACC, %s", src)
+	image = format("0101 0110 0101 0101 0000 0000 %s", src)
+	action = {
+		// ACC = ACC − [loc32]; // unsigned subtraction
+	}
+
+// DOC: page 435
+op subul_p_loc32(src: LOC32)
+	syntax = format("SUBUL P, %s", src)
+	image = format("0101 0110 0101 1101 0000 0000 %s", src)
+	action = {
+		// P = P − [loc32]; // unsigned subtract
+	}
+
+// DOC: page 437
+op tbit_loc16_t(src: LOC16)
+	syntax = format("TBIT %s, T", src)
+	image = format("0101 0110 0010 0101 0000 0000 %s", src)
+	action = {
+		// bit = 15 − T(3:0);
+		// TC = [loc16(bit)];
+	}
+
+// DOC: page 438
+op tclr(dest: LOC16, imm: card(4))
+	syntax = format("TCLR %s, #%d", dest, imm)
+	image = format("0101 0110 0000 1001 0000 %4b %s", imm, dest)
+	action = {
+		// TC = [loc16(bit)];
+		// [loc16(bit)] = 0;
+	}
+
+// DOC: page 439
+op test_acc()
+	syntax = "TEST ACC"
+	image = "1111 1111 0101 1000"
+	action = {
+		// Modify flags on (ACC − 0x00000000);
+	}
+
+// DOC: page 440
+// op 
+// 	syntax = "TRAP #VectorNumber"
+// 	image = "0000 0000 001C CCCC"
+// 	action = {
+
+// 	}
+
+// DOC: page 442; BUG?!!!
+// op tset_loc16_16bit(dest: LOC16, imm: card(16))
+// 	syntax = format("TSET %s, #%d", dest, imm)
+// 	image = format("0101 0110 0000 1101 0000 BBBB LLLL LLLL", ???)
+// 	action = {
+// 		// TC = [loc16(bit)];
+// 		// [loc16(bit)] = 1;
+// 	}
+
+// DOC: page 443
+// op 
+// 	syntax = "UOUT *(PA),loc16"
+// 	image = "1011 0000 LLLL LLLL CCCC CCCC CCCC CCCC"
+// 	action = {
+// 		// IOspace[0x000:PA] = loc16;
+// 	}
+
+// DOC: page 444
+op xb_al()
+	syntax = "XB *AL"
+	image = "0101 0110 0001 0100"
+	action = {
+		// PC = 0x3F:AL;
+	}
+
+// DOC: page 445
+// op 
+// 	syntax = "XB pma,*, ARPn"
+// 	image = "0011 1110 0111 0nnn CCCC CCCC CCCC CCCC"
+// 	action = {
+// 		// PC = 0x3F:pma;
+// 		// ARP = n;
+// 	}
+
+// DOC: page 446
+// op 
+// 	syntax = "XB pma,COND"
+// 	image = "0101 0110 1101 COND CCCC CCCC CCCC CCCC"
+// 	action = {
+// 		// If (COND = true) PC(15:0) = pma;
+// 		// If (COND = false) PC(15:0) = PC(15:0) + 2;
+// 		// PC(21:16) = 0x3F;
+// 	}
+
+// DOC: page 448
+// op 
+// 	syntax = "XBANZ pma,*ind{,ARPn}"
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 450
+op xcall_al()
+	syntax = "XCALL *AL"
+	image = "0101 0110 0011 0100"
+	action = {
+		// temp(21:0) = PC + 1;
+		// [SP] = temp(15:0);
+		// SP = SP + 1;
+		// C = 0x3F:AL;
+	}
+
+// DOC: page 451
+// op 
+// 	syntax = "XCALL pma,*,ARPn"
+// 	image = "0011 1110 0110 1nnn CCCC CCCC CCCC CCCC"
+// 	action = {
+
+// 	}
+
+// // DOC: page 452
+// op 
+// 	syntax = "XCALL pma,COND"
+// 	image = "0101 0110 1110 COND CCCC CCCC CCCC CCCC"
+// 	action = {
+// 		// if(COND = true)
+// 		// {
+// 		// temp(21:0) = PC + 2;
+// 		// [SP] = temp(15:0);
+// 		// SP = SP + 1;
+// 		// PC
+// 		// = 0x3F:pma;
+// 		// }
+// 		// else
+// 		// PC = PC + 2;
+// 	}
+
+// // DOC: page 454
+// op 
+// 	syntax = "XMAC P,loc16,*(pma)"
+// 	image = "1000 0100 LLLL LLLL CCCC CCCC CCCC CCCC"
+// 	action = {
+// 		// ACC = ACC + P << PM;
+// 		// T = [loc16];
+// 		// P = signed T * signed Prog[0x3F:pma];
+// 	}
+
+// // DOC: page 456
+// op 
+// 	syntax = "XMACD P, loc16, *(pma)"
+// 	image = "1010 0100 LLLL LLLL CCCC CCCC CCCC CCCC"
+// 	action = {
+// 		// ACC = ACC + P << PM;
+// 		// T = [loc16];
+// 		// P = signed T * signed Prog[0x3F:pma];
+// 		// [loc16 + 1] = T;
+// 	}
+
+// DOC: page 458
+op xor_acc_loc16(src: LOC16)
+	syntax = format("XOR ACC, %s", src)
+	image = format("1011 0111 %s", src)
+	action = {
+		// 1011 0111 LLLL LLLL
+	}
+
+// // DOC: page 459
+// op 
+// 	syntax = ""
+// 	image = ""
+// 	action = {
+
+// 	}
+
+// DOC: page 460
+op xor_ax_loc16(src: LOC16, ax: ACC)
+	syntax = format("XOR %s, %s", ax, src)
+	image = format("0111 000%s %s", ax, src)
+	action = {
+		// AX = AX XOR [loc16];
+	}
+
+// DOC: page 461
+op xor_loc16_ax(dest: LOC16, ax: ACC)
+	syntax = format("XOR %s, %s", dest, ax)
+	image = format("1111 001%s %s", ax, dest)
+	action = {
+		// [loc16] = [loc16] XOR AX;
+	}
+
+// DOC: page 462
+op xor_loc16_16bit(dest: LOC16, imm: card(16))
+	syntax = format("XOR %s, #%d", dest, imm)
+	image = format("0001 1100 %s %16b", dest, imm)
+	action = {
+		// [loc16] = [loc16] XOR 16bit;
+	}
+
+// DOC: page 463
+op xorb(ax: ACC, imm: card(8))
+	syntax = format("XORB %s, #%d", ax, imm)
+	image = format("1111 000%s %8b", ax, imm)
+	action = {
+		// AX = AX XOR 0x00:8bit;
+	}
+
+// DOC: page 464; BUG? WRONG DESCRIPTION? NEEDS TESTING
+// op xpread_loc16_pma()
+// 	syntax = format("XPREAD loc16, *(pma)")
+// 	image = format("1010 1100 MMMM MMM LLLL LLLL LLLL LLLL")
+// 	action = {
+// 		// [loc16] = Prog[0x3F:pma];
+// 	}
+
+// DOC: page 465
+op xpread_loc16_al(dest: LOC16)
+	syntax = format("XPREAD %s, *AL", dest)
+	image = format("0101 0110 0011 1100 0000 0000 %s", dest)
+	action = {
+		// [loc16] = Prog[0x3F:AL];
+	}
+
+// DOC: page 466
+op xpwrite(src: LOC16)
+	syntax = format("XPWRITE *A, %s", src)
+	image = format("0101 0110 0011 1101 0000 0000 %s", src)
+	action = {
+		// Prog[0x3F:AL] = [loc16];
+	}
+
+// DOC: page 467
+op xret()
+	syntax = "XRET"
+	image = "0101 0110 1111 1111"
+	action = {
+		// if(COND = true)
+		// SP = SP − 1;
+		// PC = 0x3F:[SP];
+	}
+
+// DOC: page 468; BUG??
+// op xretc_cond(c: COND)
+// 	syntax = format("XRETC %s", c)
+// 	image = format("0101 0110 1111 %s", c)
+// 	action = {
+// 		// if(COND = true)
+// 		// {
+// 		// SP = SP − 1;
+// 		// PC = 0x3F:[SP];
+// 		// }
+// 		// else
+// 		// PC = PC + 1;
+// 	}
+
+// DOC: page 470
+op zalr(src: LOC16)
+	syntax = format("ZALR ACC, %s", src)
+	image = format("0101 0110 0001 0011 0000 0000 %s", src)
+	action = {
+		// AH = [loc16];
+		// AL = 0x8000;
+	}
+
+// DOC: page 471
+op zap_ovc()
+	syntax = "ZAP OVC"
+	image = "0101 0110 0101 1100"
+	action = {
+		// Clear the overflow counter (OVC) bits in Status Register 0 (ST0).
+	}
+
+// DOC: page 472
+op zapa()
+	syntax = "ZAPA"
+	image = "0101 0110 0011 0011"
+	action = {
+		// ACC = 0;
+		// P = 0;
+		// OVC = 0;
+	}
