@@ -111,9 +111,9 @@ mode LOC32(reg32: loc32index) = reg32
 									format("XAR%d", reg32ff<5..7>)
 								else switch(reg32) {
 									// 32-Bit Register Addressing Modes (XAR0 to XAR7, ACC, P, XT):
-									case 0b10101001: "ACC"
-									case 0b10101011: "P"
-									case 0b10101100: "XT"
+									case 0b10101001: "@ACC"
+									case 0b10101011: "@P"
+									case 0b10101100: "@XT"
 									default: "!!!"
 								}
 								endif
@@ -176,15 +176,15 @@ mode LOC16(reg16: loc16index) = reg16
 								// loc16 stuff
 								// case 0b10100AAA: "AR%d"
 								if reg16ff<0..4> == 0b10100 then
-									format("AR%d", reg16ff<5..7>)
+									format("@AR%d", reg16ff<5..7>)
 								else switch(reg16) {
 									// 16-Bit Register Addressing Modes (AR0 to AR7, AH, AL, PH, PL, TH, SP):
-									case 0b10101000: "AH"
-									case 0b10101001: "AL"
-									case 0b10101010: "PH"
-									case 0b10101011: "PL"
-									case 0b10101100: "TH"
-									case 0b10101101: "SP"
+									case 0b10101000: "@AH"
+									case 0b10101001: "@AL"
+									case 0b10101010: "@PH"
+									case 0b10101011: "@PL"
+									case 0b10101100: "@TH"
+									case 0b10101101: "@SP"
 									default: "!!!"
 								}
 								endif
