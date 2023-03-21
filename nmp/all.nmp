@@ -119,10 +119,9 @@ op movb_ACC(imm: card(8))
 	action = { } // ACC = 0:8bit;
 
 // DOC: page 283
-op movb_AX(acc_type: bit, imm: card(8))
-	inst_name = if acc_type == 0 then "AL" else "AH" endif
-	syntax = format("MOVB %s, #0x%01x", inst_name, imm)
-	image = format("1001 101%1b %8b", acc_type, imm)
+op movb_AX(ax: ACC, imm: card(8))
+	syntax = format("MOVB %s, #0x%01x", ax, imm)
+	image = format("1001 101%s %8b", ax, imm)
 	action = { } // AX = 0:8bit;
 
 //this format only works for XAR0..5, 6 and 7 must be handled separately

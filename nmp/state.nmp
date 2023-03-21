@@ -31,7 +31,6 @@ type word      = int (32)
 type dword     = int (64)
 type address   = card(32)
 type index     = card( 5)
-type rindex    = card( 4) // remove?
 type loc16index = card( 8)
 type loc32index = card( 8)
 
