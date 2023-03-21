@@ -67,7 +67,7 @@ op lretr()
 // DOC: page 237
 op lsr_AX(ax: ACC, shift: card(4))
 	syntax = format("LSR %s, %d", ax, shift+1)
-	image = format("1111 1111 110%1b %4b", ax, shift)
+	image = format("1111 1111 110%s %4b", ax, shift)
 	action = { } //
 
 // DOC: page 252
@@ -324,7 +324,7 @@ op add_ACC_16bit(imm: card(16), shift: card(4))
 // DOC: page 131
 op add_AX_loc16(ax: ACC, dest: LOC16)
     syntax = format("ADD %s, %s", ax, dest)
-    image = format("1001 010%1b %s", ax, dest)
+    image = format("1001 010%s %s", ax, dest)
     action = {
 
     }
@@ -332,7 +332,7 @@ op add_AX_loc16(ax: ACC, dest: LOC16)
 // DOC: page 132
 op add_loc16_AX(ax: ACC, src: LOC16)
     syntax = format("ADD %s, %s", src, ax)
-    image = format("0111 001%1b %s", ax, src)
+    image = format("0111 001%s %s", ax, src)
     action = {
 
     }
