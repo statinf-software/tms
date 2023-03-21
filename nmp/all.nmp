@@ -84,13 +84,6 @@ op mov_AX(ax: ACC, src: LOC16)
 	image = format("1001 001%s %s", ax, src)
 	action = { } // AX = [loc16];
 
-// DOC: page 258
-op mov_loc16_ARn(arn: card(3), dest:LOC16)
-	syntax = format("MOV %s, AR%d", dest, arn)
-	image = format("0111 1%3b %s", arn, dest)
-	action = { } // [loc16] = ARn;
-	
-
 // DOC: page 262
 op mov_loc16_0(dest: LOC16)
 	syntax = format("MOV %s, #0", dest.syntax)
@@ -98,6 +91,12 @@ op mov_loc16_0(dest: LOC16)
 	action = {
 		// [loc16] = 0x0000;
 	}
+
+// DOC: page 264
+op mov_loc16_ARn(arn: card(3), dest:LOC16)
+	syntax = format("MOV %s, AR%d", dest, arn)
+	image = format("0111 1%3b %s", arn, dest)
+	action = { } // [loc16] = ARn;
 
 // DOC: page 265
 op mov_loc16_AX(dest: LOC16, ax: ACC)
@@ -1176,8 +1175,81 @@ op mov_acc_loc16(addr: LOC16)
 // 		//AR6/7 = [loc16]; AR6/7H = unchanged;
 // 	}
 
-
 // DOC: page 258
+op mov_dp(imm: card(10))
+	syntax = format("MOV DP, %d", imm)
+	image = format("1111 10%10b", imm)
+	action = { 
+
+	}
+
+// DOC: page 259
+op mov_ier(src: LOC16)
+	syntax = format("MOV IER, %s", src)
+	image = format("0010 0011 %s", src)
+	action = {
+		//IER = [loc16];
+	}
+
+// DOC: page 260
+op mov_loc16_const(dest: LOC16, imm:card(16))
+	syntax = format("MOV %s, #%d", dest, imm)
+	image = format("0010 1000 %s %16b", dest, imm)
+	action = {
+		//[loc16] = 16bit;
+	}
+
+// DOC: page 261
+op mov_loc16_val(dest: LOC16, val: card(16))
+	syntax = format("MOV %s, *(0x%x)", dest, val)
+	image = format("1111 0101 %s %16b", dest, val)
+	action = {
+		//[loc16] = [0x0000:16bit];
+	}
+
+// // DOC: page 263
+// op mov_loc16_acc()
+// 	syntax =
+// 	image = 
+// 	action = {
+// 		//
+// 	}
+
+// // DOC: page 266
+// op mov_loc16_ax_cond()
+// 	syntax =
+// 	image = 
+// 	action = {
+// 		//
+// 	}
+
+// DOC: page 268
+//broken, conflicts with page 436, which is in the tested section. 
+//I reckon it's the other one that is too broad in its
+// op mov_loc16_IER(dest: LOC16)
+// 	syntax = format("MOV %s, IER", dest)
+// 	image = format("0100 0000 %s", dest)
+// 	action = {
+// 		//[loc16] = IER;
+// 	}
+
+// DOC: page 269
+op mov_loc16_ovc(dest: LOC16)
+	syntax = format("MOV %s, OVC", dest)
+	image = format("0101 0110 0010 1001 0000 0000 %s", dest)
+	action = {
+		//[loc16(15:10)] = OVC; [loc16(9:0)] = 0;
+	}
+
+// DOC: page 270
+op mov_loc16_p(dest: LOC16)
+	syntax = format("MOV %s, P", dest)
+	image = format("0011 1111 %s", dest)
+	action = {
+		//[loc16] = P << PM;
+	}
+
+
 // op 
 // 	syntax =
 // 	image = 
