@@ -1249,13 +1249,434 @@ op mov_loc16_p(dest: LOC16)
 		//[loc16] = P << PM;
 	}
 
+// DOC: page 271
+op mov_loc16_T(dest: LOC16)
+	syntax = format("MOV %s, T", dest)
+	image = format("0010 0001 %s", dest)
+	action = { 
+		//[loc16] = T;
+	}
 
-// op 
-// 	syntax =
-// 	image = 
+// DOC: page 272
+op mov_OVC_loc16(src: LOC16)
+	syntax = format("MOV OVC, %s", src)
+	image = format("0101 0110 0000 0010 0000 0000 %s", src)
+	action = { 
+		//OVC = [loc16(15:10)];
+	}
+
+// DOC: page 274
+op mov_pl_loc16(src: LOC16)
+	syntax = format("MOV PL, %s", src)
+	image = format("0010 0111 %s", src)
+	action = { 
+		//PL = [loc16];
+		//PH = unchanged;
+	}
+
+// DOC: page 275
+op mov_pm_ax(ax: ACC)
+	syntax = format("MOV PM, %s", ax)
+	image = format("0101 0110 0011 100%s", ax)
+	action = { 
+		//PM = AX(2:0);
+	}
+
+// DOC: page 276
+op mov_T_loc16(src: LOC16)
+	syntax = format("MOV T, %s", src)
+	image = format("0010 1101 %s", src)
+	action = { 
+		//T = [loc16];
+	}
+
+// DOC: page 277
+op mov_TL()
+	syntax = "MOV TL, #0"
+	image = "0101 0110 0101 0110"
+	action = { 
+		//TL = 0x0000;
+		//T = unchanged;
+	}
+
+// DOC: page 278
+op mov_xarn_pc(xarn: card(3))
+	syntax = format("MOV XAR%d, PC", xarn)
+	image = format("0011 1110 0101 1%3b", xarn)
+	action = { 
+		//XARn = 0:PC;
+	}
+
+// DOC: page 279
+//conflicts with ADDL_ACC, page 141
+//op mova(src: LOC16)
+//	syntax = format("MOVA T, %s", src)
+//	image = format("0001 0000 %s", src)
+	// action = { 
+	// 	//T = [loc16];
+	// 	//ACC = ACC + P << PM;
+	// }
+
+// DOC: page 280
+op movad(src: LOC16)
+	syntax = format("MOVAD T, %s", src)
+	image = format("1010 0111 %s", src)
+	action = { 
+		//
+	}
+
+// DOC: page 282
+// issues with movb_XARn, see page 294
+// op movb_arn(arn: bit, imm: card(8))
+// 	arnstr = if arn == 0 then "6" else "7" endif
+// 	syntax = format("MOVB AR%s, #%d", arnstr, imm)
+// 	image = format("1101 011%1b %8b", arn, imm)
+// 	action = { 
+// 		//
+// 	}
+
+// DOC: page 284
+op movb_ax_lsb(ax: ACC, loc: LOC16)
+	syntax = format("MOVB %s.LSB, %s", ax, loc)
+	image = format("1100 011%s %s", ax, loc)
+	action = { 
+		//
+	}
+
+// DOC: page 286
+op movb_ax_msb(ax: ACC, loc:LOC16)
+	syntax = format("MOVB %s.MSB, %s", ax, loc)
+	image = format("0011 100%s %s", ax, loc)
+	action = { 
+		//
+	}
+
+// // DOC: page 288
+// op movb_loc16_8bit_cond
+// 	syntax = 
+// 	image =
+// 	action = { 
+// 		//
+// 	}
+
+// DOC: page 290
+op movb_loc16_ax_lsb(ax: ACC, loc: LOC16)
+	syntax = format("MOVB %s, %s.LSB", ax, loc)
+	image = format("0011 110%s %s", ax, loc)
+	action = { 
+		//
+	}
+
+// DOC: page 292
+op movb_loc16_ax_msb(ax: ACC, loc: LOC16)
+	syntax = format("MOVB %s, %s.MSB", loc, ax)
+	image = format("1100 100%s %s", ax, loc)
+	action = { 
+		//
+	}
+
+// DOC: page 295
+op movdl_xt_loc32(src: LOC32)
+	syntax = format("MOVDL XT, %s", src)
+	image = format("1010 0110 %s", src)
+	action = { 
+		//XT = [loc32];
+		//[loc32 + 2] = XT;
+	}
+
+// DOC: page 296
+// op movh_loc16_acc
+// 	syntax = 
+// 	image =
+// 	action = { 
+// 		//
+// 	}
+
+// DOC: page 297
+op movh_loc16_p(loc: LOC16)
+	syntax = format("MOVH %s, P", loc)
+	image = format("0101 0111 %s", loc)
+	action = { 
+		//[loc16] = (P << PM) >> 16;
+	}
+
+
+// DOC: page 299
+op movl_acc_p()
+	syntax = "MOVL ACC, P << PM"
+	image = "0001 0110 1010 1100"
+	action = { 
+		//ACC = P << PM;
+	}
+
+// DOC: page 301
+// op movl_loc32_acc_cond
+// 	syntax = 
+// 	image =
+// 	action = { 
+// 		//
+// 	}
+
+// DOC: page 303
+op movl_loc32_p(dest: LOC32)
+	syntax = format("MOVL %s, P", dest)
+	image = format("1010 1001 %s", dest)
+	action = { 
+		//[loc32] = P;
+	}
+
+// // DOC: page 304
+// op movl_loc32_xarn
+// 	syntax = format("")
+// 	image = format("")
 // 	action = {
 // 		//
 // 	}
+
+// DOC: page 305
+//conflicts with push_xt, see page 383
+// op movl_loc32_xt(dest: LOC32)
+// 	syntax = format("movl %s, XT", dest)
+// 	image = format("1010 1011 %s", dest)
+// 	action = {
+// 		//[loc32] = XT;
+// 	}
+
+// DOC: page 306
+op movl_p_ACC()
+	syntax = "MOVL P, ACC"
+	image = "1111 1111 0101 1010"
+	action = {
+		//P = ACC;
+	}
+
+// DOC: page 307
+op movl_p_loc32(src: LOC32)
+	syntax = format("MOVL P, %s", src)
+	image = format("1010 0011 %s", src)
+	action = {
+		//P = [loc32];
+	}
+
+// // DOC: page 310
+// conflicts with pop xt, page 367
+// op movl_xt_loc32(src: LOC32)
+// 	syntax = format("MOVL XT, %s", src)
+// 	image = format("1000 0111 %s", src)
+// 	action = {
+// 		//XT = [loc32];
+// 	}
+
+// // DOC: page 311
+//conflicts with movl_acc_p, see page 299
+// op movp(src: LOC16)
+// 	syntax = format("MOVP T, %s", src)
+// 	image = format("0001 0110 %s", src)
+// 	action = {
+// 		//T = [loc16];
+// 		//ACC = P << PM;
+// 	}
+
+// DOC: page 312
+op movs(src: LOC16)
+	syntax = format("MOVS T, %s", src)
+	image = format("0001 0001 %s", src)
+	action = {
+		//T = [loc16];
+		//ACC = ACC − P << PM;
+	}
+
+// DOC: page 313
+op movu_acc_loc16(src: LOC16)
+	syntax = format("MOVU ACC, %s", src)
+	image = format("0000 1110 %s", src)
+	action = {
+		//AL = [loc16];
+		//AH = 0x0000;
+	}
+
+// DOC: page 314
+op movu_loc16_OVC(dest: LOC16)
+	syntax = format("MOVU %s, OVC", dest)
+	image = format("0101 0110 0010 1000 0000 0000 %s", dest)
+	action = {
+		//[loc16(15:6)] = 0;
+		//[loc16(5:0)] = OVC;
+	}
+
+// DOC: page 315
+op movu_OVC_loc16(src: LOC16)
+	syntax = format("MOVU OVC, %s", src)
+	image = format("0101 0110 0110 0010 0000 0000 %s", src)
+	action = {
+		//OVC = [loc16(5:0)]
+	}
+
+
+// DOC: page 317
+// op movx()
+// 	syntax = format()
+// 	image = format()
+// 	action = {
+// 		//
+// 	}
+
+// DOC: page 319
+op movz_dp(imm: card(10))
+	syntax = format("MOVZ DP, #%d", imm)
+	image = format("1011 10%10b", imm)
+	action = {
+		//DP(9:0) = 10bit;
+		//DP(15:10) = 0;
+	}
+
+// DOC: page 320
+op mpy_ACC(loc: LOC16, imm:card(16))
+	syntax = format("MPY ACC, %s, #%d", loc, imm)
+	image = format("0011 0100 %s %16b", loc, imm)
+	action = {
+		//T = [loc16];
+		//ACC = signed T * signed 16bit;
+	}
+
+// DOC: page 321
+op mpy_ACC_T(loc: LOC16)
+	syntax = format("MPY ACC, T, %s", loc)
+	image = format("0001 0010 %s", loc)
+	action = {
+		//ACC = signed T * signed [loc16];
+	}
+
+// DOC: page 322
+op mpy_P(loc: LOC16, imm: card(16))
+	syntax = format("MPY P, %s, #%d", loc, imm)
+	image = format("1000 1100 %s %16b", loc, imm)
+	action = {
+		//P = signed [loc16] * signed 16bit;
+	}
+
+// DOC: page 323
+op mpy_P_T(loc: LOC16)
+	syntax = format("MPY P, T, %s", loc)
+	image = format("0011 0011 %s", loc)
+	action = {
+		//P = signed T * signed [loc16];
+	}
+
+// DOC: page 324
+op mpya_P(loc: LOC16, imm: card(16))
+	syntax = format("MPYA P, %s, #%d", loc, imm)
+	image = format("0001 0101 %s %16b", loc, imm)
+	action = {
+		//ACC = ACC + P << PM;
+		//T = [loc16];
+		//P = signed T * signed 16bit;
+	}
+
+// DOC: page 325
+op mpya_P_T(loc: LOC16)
+	syntax = format("MPYA P, T, %s", loc)
+	image = format("0001 0111 %s", loc)
+	action = {
+		//ACC = ACC + P << PM;
+		//P = signed T * signed [loc16];
+	}
+
+// DOC: page 326
+op mpyb_ACC(imm: card(8))
+	syntax = format("MPYB ACC, T, #%d", imm)
+	image = format("0011 0101 %8b", imm)
+	action = {
+		//ACC = signed T * 0:8bit
+	}
+
+// DOC: page 327
+op mpyb_P(imm: card(8))
+	syntax = format("MPYB P, T, %d", imm)
+	image = format("0011 0001 %8b", imm)
+	action = {
+		//P = signed T * 0:8bit;
+	}
+
+// DOC: page 328
+op mpys_P(loc: LOC16)
+	syntax = format("MPYS P, T, %s", loc)
+	image = format("0001 0011 %8b", loc)
+	action = {
+		//
+	}
+
+// DOC: page 329
+op mpyu_p(loc: LOC16)
+	syntax = format("MPYU P, T, %s", loc)
+	image = format("0011 0111 %s", loc)
+	action = {
+		//P = unsigned T * unsigned [loc16];
+	}
+
+// DOC: page 330
+op mpyu_ACC(loc: LOC16)
+	syntax = format("MPYU ACC, T, %s", loc)
+	image = format("0011 0110 %s", loc)
+	action = {
+		//ACC = unsigned T * unsigned [loc16];
+	}
+
+// DOC: page 331
+op mpyxu_ACC(loc: LOC16)
+	syntax = format("MPYXU ACC, T, %s", loc)
+	image = format("0011 0000 %s", loc)
+	action = {
+		//ACC = signed T * unsigned [loc16];
+	}
+
+// DOC: page 332
+op mpyxu_P(loc: LOC16)
+	syntax = format("MPYXU P, T, %s", loc)
+	image = format("0011 0010 %s", loc)
+	action = {
+		//P = signed T * unsigned [loc16];
+	}
+
+// DOC: page 333
+op nasp()
+	syntax = "NASP"
+	image = "0111 0110 0001 0111"
+	action = {
+		//
+	}
+
+// DOC: page 334
+op neg_ACC()
+	syntax = "NEG ACC"
+	image = "1111 1111 0101 0100"
+	action = {
+		//
+	}
+
+// DOC: page 335
+op neg_ax(ax: ACC)
+	syntax = format("NEG %s", ax)
+	image = format("1111 1111 0101 110%s", ax)
+	action = {
+		//
+	}
+
+// DOC: page 336
+op neg64_ax()
+	syntax = "NEG64 ACC:P"
+	image = "0101 0110 0101 1000"
+	action = {
+		//
+	}
+
+// DOC: page 337
+op negtc_acc()
+	syntax = "NEGTC ACC"
+	image = "0101 0110 0011 0010"
+	action = {
+		//
+	}
 
 // DOC: page 340
 op norm_ACC_ind1()
