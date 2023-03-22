@@ -2301,21 +2301,31 @@ op sfr_acc(shift: card(4))
 		// ACC = 0:ACC >> shift value;// logical shift right
 	}
 
-// // DOC: page 409
-// op 
-// 	syntax = "SFR ACC, T"
-// 	image = "1111 1111 0101 0001"
-// 	action = {
+// DOC: page 409
+op sfr_acc_t()
+	syntax = "SFR ACC, T"
+	image = "1111 1111 0101 0001"
+	action = {
 
-// 	}
+	}
 
-// // DOC: page 410
-// op 
-// 	syntax = ""
-// 	image = ""
-// 	action = {
+// DOC: page 410 // ASSUMES: AMODE = 0
+op spm(pm_bits: card(3))
+	pm_str = switch(pm_bits) {
+		case 0b000: "+1"
+		case 0b001: "0"
+		case 0b010: "-1"
+		case 0b011: "-2"
+		case 0b100: "-3"
+		case 0b101: "-4"
+		case 0b110: "-5"
+		case 0b111: "-6"
+	}
+	syntax = format("SPM %s", pm_str)
+	image = format("1111 1111 0110 1%3b", pm_bits)
+	action = {
 
-// 	}
+	}
 
 // DOC: page 412
 op sqra(src: LOC16)
@@ -2338,6 +2348,7 @@ op sqrs(src: LOC16)
 	}
 
 // // DOC: page 414
+// HARD
 // op 
 // 	syntax = ""
 // 	image = ""
@@ -2346,6 +2357,7 @@ op sqrs(src: LOC16)
 // 	}
 
 // // DOC: page 416
+// NP
 // op 
 // 	syntax = ""
 // 	image = ""
@@ -2354,6 +2366,7 @@ op sqrs(src: LOC16)
 // 	}
 
 // // DOC: page 417
+// NP
 // op 
 // 	syntax = ""
 // 	image = ""
@@ -2426,12 +2439,13 @@ op subl_acc_loc32(src: LOC32)
 		// ACC = ACC − [loc32];
 	}
 
-// // DOC: page 429
-// op 
-// 	syntax = ""
-// 	image = ""
+// DOC: page 429
+// NP: clashes with MOVS T, %s
+// op subl_acc_p_pm()
+// 	syntax = "SUBL ACC,P << PM"
+// 	image = "0001 0001 1010 1100"
 // 	action = {
-
+// 		// ACC = ACC − P << PM;
 // 	}
 
 // DOC: page 430
@@ -2501,14 +2515,48 @@ op test_acc()
 	}
 
 // DOC: page 440
-// op 
-// 	syntax = "TRAP #VectorNumber"
-// 	image = "0000 0000 001C CCCC"
-// 	action = {
-
+// HARD
+// op trap(vector_no: card(5))
+// 	vector_str = switch(vector_no) {
+// 		case 0: "RESET"
+// 		case 1: "INT1"
+// 		case 2: "INT2"
+// 		case 3: "INT3"
+// 		case 4: "INT4"
+// 		case 5: "INT5"
+// 		case 6: "INT6"
+// 		case 7: "INT7"
+// 		case 8: "INT8"
+// 		case 9: "INT9"
+// 		case 10: "INT10"
+// 		case 11: "INT11"
+// 		case 12: "INT12"
+// 		case 13: "INT13"
+// 		case 14: "INT14"
+// 		case 15: "DLOGINT"
+// 		case 16: "RTOSINT"
+// 		case 17: "Reserved"
+// 		case 18: "NMI"
+// 		case 19: "ILLEGAL"
+// 		case 20: "USER1"
+// 		case 21: "USER2"
+// 		case 22: "USER3"
+// 		case 23: "USER4"
+// 		case 24: "USER5"
+// 		case 25: "USER6"
+// 		case 26: "USER7"
+// 		case 27: "USER8"
+// 		case 28: "USER9"
+// 		case 29: "USER10"
+// 		case 30: "USER11"
+// 		case 31: "USER12"
 // 	}
+// 	syntax = format("TRAP #VectorNumber", vector_str)
+// 	image = format("0000 0000 001 %5b", vector_no)
+// 	action = { }
 
 // DOC: page 442; BUG?!!!
+// NP clashes
 // op tset_loc16_16bit(dest: LOC16, imm: card(16))
 // 	syntax = format("TSET %s, #%d", dest, imm)
 // 	image = format("0101 0110 0000 1101 0000 BBBB LLLL LLLL", ???)
@@ -2518,6 +2566,7 @@ op test_acc()
 // 	}
 
 // DOC: page 443
+// NP: format with *(0x%04x)
 // op 
 // 	syntax = "UOUT *(PA),loc16"
 // 	image = "1011 0000 LLLL LLLL CCCC CCCC CCCC CCCC"
@@ -2534,6 +2583,7 @@ op xb_al()
 	}
 
 // DOC: page 445
+// NP: format 16bit address with 0x%04x
 // op 
 // 	syntax = "XB pma,*, ARPn"
 // 	image = "0011 1110 0111 0nnn CCCC CCCC CCCC CCCC"
@@ -2543,6 +2593,7 @@ op xb_al()
 // 	}
 
 // DOC: page 446
+// NP: COND
 // op 
 // 	syntax = "XB pma,COND"
 // 	image = "0101 0110 1101 COND CCCC CCCC CCCC CCCC"
@@ -2553,6 +2604,7 @@ op xb_al()
 // 	}
 
 // DOC: page 448
+// HARD
 // op 
 // 	syntax = "XBANZ pma,*ind{,ARPn}"
 // 	image = ""
@@ -2572,6 +2624,7 @@ op xcall_al()
 	}
 
 // DOC: page 451
+// NP
 // op 
 // 	syntax = "XCALL pma,*,ARPn"
 // 	image = "0011 1110 0110 1nnn CCCC CCCC CCCC CCCC"
@@ -2580,6 +2633,7 @@ op xcall_al()
 // 	}
 
 // // DOC: page 452
+// NP
 // op 
 // 	syntax = "XCALL pma,COND"
 // 	image = "0101 0110 1110 COND CCCC CCCC CCCC CCCC"
@@ -2597,6 +2651,7 @@ op xcall_al()
 // 	}
 
 // // DOC: page 454
+// NP
 // op 
 // 	syntax = "XMAC P,loc16,*(pma)"
 // 	image = "1000 0100 LLLL LLLL CCCC CCCC CCCC CCCC"
@@ -2607,6 +2662,7 @@ op xcall_al()
 // 	}
 
 // // DOC: page 456
+// NP
 // op 
 // 	syntax = "XMACD P, loc16, *(pma)"
 // 	image = "1010 0100 LLLL LLLL CCCC CCCC CCCC CCCC"
@@ -2626,6 +2682,7 @@ op xor_acc_loc16(src: LOC16)
 	}
 
 // // DOC: page 459
+// NP: 2 ops
 // op 
 // 	syntax = ""
 // 	image = ""
@@ -2665,7 +2722,8 @@ op xorb(ax: ACC, imm: card(8))
 		// AX = AX XOR 0x00:8bit;
 	}
 
-// DOC: page 464; BUG? WRONG DESCRIPTION? NEEDS TESTING
+// DOC: page 464
+// NP
 // op xpread_loc16_pma()
 // 	syntax = format("XPREAD loc16, *(pma)")
 // 	image = format("1010 1100 MMMM MMM LLLL LLLL LLLL LLLL")
@@ -2699,7 +2757,8 @@ op xret()
 		// PC = 0x3F:[SP];
 	}
 
-// DOC: page 468; BUG??
+// DOC: page 468
+// NP: conflicts
 // op xretc_cond(c: COND)
 // 	syntax = format("XRETC %s", c)
 // 	image = format("0101 0110 1111 %s", c)
