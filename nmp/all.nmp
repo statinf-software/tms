@@ -212,11 +212,37 @@ op movl_XAR5_22bit(imm: card(22)) MakeMovlXarn22bit("XAR5", "1000 1111 01 %22b")
 op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
 op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
 
-// DOC: page 318
-op movz_ARn_0to5(xarn: card(3), src: LOC16)
-	syntax = format("MOVZ AR%d, %s", xarn, src)
-	image = format("0101 1%3b %s", xarn, src)
-	action = { } //ARn = [loc16]; ARnH = 0;
+// DOC: page 256, 318w
+// NP: shares with MOVZ AR%d, %s
+
+op mov_AR_loc16__movz_ARn_0to5(xarn: card(3), addr: LOC16)
+	syntax = 
+		if xarn == 0b110 then 
+			format("MOV AR6, %s", addr)
+		else if xarn == 0b111 then 
+				format("MOV AR7, %s", addr)
+			else 
+				format("MOVZ AR%d, %s", xarn, addr)
+			endif
+		endif
+	image = format("0101 1%3b %s", xarn, addr)
+	action = { 
+
+	}
+
+
+// op mov_AR_loc16(arn: bit, addr: LOC16)
+// 	artype = if arn == 0 then "AR6" else "AR7" endif
+// 	syntax = format("MOV %s, %s", artype, addr)
+// 	image = format("0101 111%1b %s", arn, addr)
+// 	action = {
+// 		//AR6/7 = [loc16]; AR6/7H = unchanged;
+// 	}
+
+// op movz_ARn_0to5(xarn: card(3), src: LOC16)
+// 	syntax = format("MOVZ AR%d, %s", xarn, src)
+// 	image = format("0101 1%3b %s", xarn, src)
+// 	action = { } //ARn = [loc16]; ARnH = 0;
 op movz_AR6(src: LOC16)
 	syntax = format("MOVZ AR6, %s", src)
 	image = format("1000 1000 %s", src)
@@ -313,20 +339,38 @@ op add_ACC_16bit(imm: card(16), shift: card(4))
     }
 
 // DOC: page 129
-// NP
-// op add_ACC_loc16
-//    syntax = ""
-//    image = ""
-//    action = {
-//
-//    }
+op add_ACC_loc16(src: LOC16)
+   syntax = format("ADD ACC, %s, << T", src)
+   image = format("0101 0110 0010 0011 0000 0000 %s", src)
+   action = {
+
+   }
 
 // DOC: page 130
-// NP: 4 different ops
-//    syntax = ""
-//    image = ""
+op add_acc_loc16_0(src: LOC16)
+   syntax = format("ADD ACC, %s << #0", src)
+   image = format("1000 0001 %s", src)
+   action = {
+
+   }
+op add_acc_loc16_shift(src: LOC16, shift: card(4))
+   syntax = format("ADD ACC, %s, << #%d", src, shift)
+   image = format("0101 0110 0000 0100 0000 %4b %s", shift, src)
+   action = {
+
+   }
+op add_acc_loc16_shift16(src: LOC16)
+   syntax = format("ADD ACC, %s, << #16", src)
+   image = format("0000 0101 %s", src)
+   action = {
+
+   }
+// conflicts with possibly every other function on earth
+// op add_acc_loc16_0to15(src: LOC16, shift: card(4))
+//    syntax = format("ADD ACC, %s << %d", src, shift)
+//    image = format("1010 %4b %s", shift, src)
 //    action = {
-//
+
 //    }
 
 // DOC: page 131
@@ -421,13 +465,12 @@ op addul_P_loc32(src: LOC32)
     }
 
 // DOC: page 145
-// NP
-//op addul_ACC_loc32(src: LOC32)
-//   syntax = format("ADDUL ACC, %s", src)
-//    image = format("")
-//    action = {
-//
-//    }
+op addul_ACC_loc32(src: LOC32)
+  syntax = format("ADDUL ACC, %s", src)
+   image = format("0101 0110 0101 0011 xxxx xxxx %s", src)
+   action = {
+
+   }
 
 // DOC: page 146
 op adrk(imm: card(8))
@@ -438,13 +481,18 @@ op adrk(imm: card(8))
     }
 
 // DOC: page 147
-// NP: two ops
-//op and_ACC_16bit(shift: card(4), imm: card(16))
-//    syntax = ""
-//    image = ""
-//    action = {
+op and_ACC_16bit(shift: card(4), imm: card(16))
+   syntax = format("AND ACC, #%d << #%d", imm, shift)
+   image = format("0011 1110 0000 %4b %16b", shift, imm)
+   action = {
 
-//    }
+   }
+op and_ACC_16bit_16shift(imm: card(16))
+   syntax = format("AND ACC, #%d << #16", imm)
+   image = format("0101 0110 0000 1000 %16b", imm)
+   action = {
+
+   }
 
 // DOC: page 148
 op and_ACC_loc16(loc: LOC16)
@@ -586,13 +634,12 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
     }
 
 // DOC: page 165
-// NP: COND
-//op bf(cond: card(4), offset: int(16))
-//    syntax = format("BF %d, ")
-//    image = ""
-//    action = {
+op bf(cond: COND, offset: int(16))
+   syntax = format("BF %d, %s", offset, cond)
+   image = format("0101 0110 1100 %s %16b", cond, offset)
+   action = {
 
-//    }
+   }
 
 // DOC: page 166
 // ALIAS: page 172
@@ -912,14 +959,12 @@ op impyxul(loc: LOC32)
     }
 
 // DOC: page 209
-//does the port need special formatting?
-// NP: format 16bit port with *(0x%04x)
-//op in(addr: LOC16, )
-//   syntax = ""
-//   image = ""
-//   action = {
+op in_loc16(addr: LOC16, port: card(16))
+  syntax = format("IN %s, *(%d)", addr, port)
+  image = format("1011 0100 %s %16b", addr, port)
+  action = {
 
-//   }
+  }
 
 // DOC: page 211
 op inc(loc: LOC16)
@@ -1094,14 +1139,12 @@ op lsrl_ACC_T()
 		//
 	}
 // DOC: page 242
-// //how should this be formatted? 
-// NP: look at example, pma should be 0x%04x
-// op macp_loc16(loc: LOC16, imm: card(16))
-// 	syntax = format("MAC P, %s, 0:%")
-// 	image = 
-// 	action = {
-// 		//
-// 	}
+op macp_loc16(loc: LOC16, imm: card(16))
+	syntax = format("MAC P, %s, 0:0x%04x", loc, imm)
+	image = format("0001 0100 %s %16b", loc, imm)
+	action = {
+		//
+	}
 
 // DOC: page 244
 op macp_loc16_xar7(xartype: bit, loc: LOC16)
@@ -1146,14 +1189,12 @@ op min(ax: ACC, addr: LOC16)
 	}
 
 // DOC: page 250
-// potentially weird opcode
-// NP: use xxxx in syntax
-// op mincul(addr: LOC32)
-// 	syntax =
-// 	image = 
-// 	action = {
-// 		//
-// 	}
+op mincul(addr: LOC32)
+	syntax = format("MINCUL P, %s", addr)
+	image = format("0101 0110 0101 1001 xxxx xxxx %s", addr)
+	action = {
+		//
+	}
 
 // DOC: page 251
 op minl(addr: LOC32)
@@ -1187,17 +1228,6 @@ op mov_acc_loc16(addr: LOC16)
 // 	image = 
 // 	action = {
 // 		//
-// 	}
-
-// DOC: page 256
-//This shares an opcode with another function, but I can't work out which
-// NP: shares with MOVZ AR%d, %s
-// op mov_AR_loc16(arn: bit, addr: LOC16)
-// 	artype = if arn == 0 then "AR6" else "AR7" endif
-// 	syntax = format("MOV %s, %s", artype, addr)
-// 	image = format("0101 111%1b %s", arn, addr)
-// 	action = {
-// 		//AR6/7 = [loc16]; AR6/7H = unchanged;
 // 	}
 
 // DOC: page 258
@@ -1242,13 +1272,12 @@ op mov_loc16_val(dest: LOC16, val: card(16))
 // 	}
 
 // // DOC: page 266
-// NP: COND
-// op mov_loc16_ax_cond()
-// 	syntax =
-// 	image = 
-// 	action = {
-// 		//
-// 	}
+op mov_loc16_ax_cond(ax: ACC, cond: COND, addr: LOC16)
+	syntax = format("MOV %s, %s, %s", addr, ax, cond)
+	image = format("0101 0110 0010 101%s 0000 %s %s", ax, cond, addr)
+	action = {
+		//
+	}
 
 // DOC: page 268
 //broken, conflicts with page 436, which is in the tested section. 
