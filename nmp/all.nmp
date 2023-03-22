@@ -1380,16 +1380,6 @@ op movad(src: LOC16)
 		//
 	}
 
-// DOC: page 282
-// issues with movb_XARn, see page 294
-// NP
-// op movb_AR6_7(arn: bit, imm: card(8))
-// 	arnstr = if arn == 0 then "6" else "7" endif
-// 	syntax = format("MOVB AR%s, #%d", arnstr, imm)
-// 	image = format("1101 011%1b %8b", arn, imm)
-// 	action = { 
-// 		//
-// 	}
 // DOC: page 282, 294
 op movb_XARn__movb_ARn(arn: card(3), imm: card(8))
 	syntax = 
