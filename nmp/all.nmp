@@ -805,12 +805,13 @@ op dec(loc: LOC16)
     }
 
 // DOC: page 186
-op dint()
-    syntax = "DINT"
-    image = "0011 1011 0001 0000"
-    action = {
+// SEE: page 403
+// op dint()
+//     syntax = "DINT"
+//     image = "0011 1011 0001 0000"
+//     action = {
 
-    }
+//     }
 
 // DOC: page 187
 op dmac(dmactype: bit, dmacmode: LOC32)
@@ -2285,14 +2286,22 @@ op sbrk_8bit(imm: card(8))
 		// XAR(ARP) = XAR(ARP) − 0:8bit;
 	}
 
-// DOC: page 403
-// HARD
-// op 
-// 	syntax = ""
-// 	image = ""
-// 	action = {
-
-// 	}
+// DOC: page 403, 186
+op setc_mode(mode_bitset: card(8))
+	_m = mode_bitset
+	syntax = format("SETC %s%s%s%s%s%s%s%s",
+		if _m<0..0> then format("SXM%s",  if _m<1..7>  then ", " else "" endif) else "" endif,
+		if _m<1..1> then format("OVM%s",  if _m<2..7>  then ", " else "" endif) else "" endif,
+		if _m<2..2> then format("TC%s",   if _m<3..7>  then ", " else "" endif) else "" endif,
+		if _m<3..3> then format("C%s",    if _m<4..7>  then ", " else "" endif) else "" endif,
+		if _m<4..4> then format("INTM%s", if _m<5..7>  then ", " else "" endif) else "" endif,
+		if _m<5..5> then format("DBGM%s", if _m<6..7>  then ", " else "" endif) else "" endif,
+		if _m<6..6> then format("PAGE0%s",if _m<7..7>  then ", " else "" endif) else "" endif,
+		if _m<7..7> then "VMAP" else "" endif)
+	image = format("0011 1011 %8b", mode_bitset)
+	action = {
+		// Set the specified status bits.
+	}
 
 // DOC: page 405
 op setc_M0M1MAP()
