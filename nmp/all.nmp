@@ -2249,7 +2249,7 @@ op setc_xf()
 
 // DOC: page 408
 op sfr_acc(shift: card(4))
-	syntax = format("SFR ACC, #%d", shift+1)
+	syntax = format("SFR ACC, %d", shift+1)
 	image = format("1111 1111 0100 %4b", shift)
 	action = {
 		// if(SXM = 1) // sign extension mode enabled
