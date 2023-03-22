@@ -71,7 +71,7 @@ mode LOC32(reg32: loc32index) = reg32
 				format("@0x%x", reg32ff<2..7>)
 			case 0b01:
 				// UNTESTED
-				format("*−SP[%d]", reg32ff<2..7>)
+				format("*-SP[%d]", reg32ff<2..7>)
 			case 0b11:
 				// UNTESTED
 				format("*+XAR%d[%d]", reg32ff<5..7>, reg32ff<2..4>)
@@ -80,7 +80,7 @@ mode LOC32(reg32: loc32index) = reg32
 				if reg32ff<2..2> == 0 then // 0b100
 					switch(reg32ff<3..4>) {
 						case 0b00: format("*XAR%d++", reg32ff<5..7>)
-						case 0b01: format("*−−XAR%d", reg32ff<5..7>)
+						case 0b01: format("*--XAR%d", reg32ff<5..7>)
 						case 0b10: format("*+XAR%d[AR0]", reg32ff<5..7>)
 						case 0b11: format("*+XAR%d[AR1]", reg32ff<5..7>)
 					}
@@ -93,11 +93,11 @@ mode LOC32(reg32: loc32index) = reg32
 						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
 						case 0b10111000: "*"
 						case 0b10111001: "*++"
-						case 0b10111010: "*−−"
+						case 0b10111010: "*--"
 						case 0b10111011: "*0++"
-						case 0b10111100: "*0−−"
+						case 0b10111100: "*0--"
 						case 0b10101110: "*BR0++"
-						case 0b10101111: "*BR0−−"
+						case 0b10101111: "*BR0--"
 						// Circular Indirect Addressing Modes (XAR6, XAR1):
 						case 0b10111111: "*AR6%%++"
 						default:
@@ -139,7 +139,7 @@ mode LOC16(reg16: loc16index) = reg16
 				format("@0x%x", reg16ff<2..7>)
 			case 0b01:
 				// UNTESTED
-				format("*−SP[%d]", reg16ff<2..7>)
+				format("*-SP[%d]", reg16ff<2..7>)
 			case 0b11:
 				// UNTESTED
 				format("*+XAR%d[%d]", reg16ff<5..7>, reg16ff<2..4>)
@@ -148,7 +148,7 @@ mode LOC16(reg16: loc16index) = reg16
 				if reg16ff<2..2> == 0 then // 0b100
 					switch(reg16ff<3..4>) {
 						case 0b00: format("*XAR%d++", reg16ff<5..7>)
-						case 0b01: format("*−−XAR%d", reg16ff<5..7>)
+						case 0b01: format("*--XAR%d", reg16ff<5..7>)
 						case 0b10: format("*+XAR%d[AR0]", reg16ff<5..7>)
 						case 0b11: format("*+XAR%d[AR1]", reg16ff<5..7>)
 					}
@@ -161,11 +161,11 @@ mode LOC16(reg16: loc16index) = reg16
 						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
 						case 0b10111000: "*"
 						case 0b10111001: "*++"
-						case 0b10111010: "*−−"
+						case 0b10111010: "*--"
 						case 0b10111011: "*0++"
-						case 0b10111100: "*0−−"
+						case 0b10111100: "*0--"
 						case 0b10101110: "*BR0++"
-						case 0b10101111: "*BR0−−"
+						case 0b10101111: "*BR0--"
 						// Circular Indirect Addressing Modes (XAR6, XAR1):
 						case 0b10111111: "*AR6%%++"
 						default:
