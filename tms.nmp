@@ -63,6 +63,34 @@ mode COND(cond: card(4)) = cond
 mode LOC32(reg32: loc32index) = reg32
 	num = reg32
 	reg32ff = reg32<0..7> // flipped reg32
+	// not all reg32 bitfields are valid
+	// if they are not, we may need to treat additional cases
+	// that could represent other operations (e.g. MOVA/ADDL)
+	valid =
+		if reg32ff<0..1> != 0b101 then 1 else
+			switch(reg32) {
+				case 0b10111101: 1 //"*SP++"
+				case 0b10111110: 1 //"*--SP"
+				case 0b10111000: 1 //"*"
+				case 0b10111001: 1 //"*++"
+				case 0b10111010: 1 //"*--"
+				case 0b10111011: 1 //"*0++"
+				case 0b10111100: 1 //"*0--"
+				case 0b10101110: 1 //"*BR0++"
+				case 0b10101111: 1 //"*BR0--"
+				case 0b10111111: 1 //"*AR6%%++"
+				case 0b10101001: 1 // "ACC"
+				case 0b10101011: 1 // "P"
+				case 0b10101100: 1 // "XT"
+				default:
+					switch(reg32ff<0..4>) {
+						case 0b10110: 1 // *,ARP%d
+						case 0b10100: 1 // @XAR%d
+						default: 0
+					}
+			}
+		endif
+
 	syntax =
 		// TODO: check bit order of constants
 		switch(reg32ff<0..1>) {
@@ -131,6 +159,38 @@ mode LOC32(reg32: loc32index) = reg32
 mode LOC16(reg16: loc16index) = reg16
 	num = reg16
 	reg16ff = reg16<0..7> // flipped reg16
+	// not all reg16 bitfields are valid
+	// if they are not, we may need to treat additional cases
+	// that could represent other operations (e.g. MOVA/ADDL)
+	valid =
+		if reg16ff<0..1> != 0b101 then
+			1
+		else
+			switch(reg16) {
+				case 0b10111101: 1 //"*SP++"
+				case 0b10111110: 1 //"*--SP"
+				case 0b10111000: 1 //"*"
+				case 0b10111001: 1 //"*++"
+				case 0b10111010: 1 //"*--"
+				case 0b10111011: 1 //"*0++"
+				case 0b10111100: 1 //"*0--"
+				case 0b10101110: 1 //"*BR0++"
+				case 0b10101111: 1 //"*BR0--"
+				case 0b10111111: 1 //"*AR6%%++"
+				case 0b10101000: 1 // "AH"
+				case 0b10101001: 1 // "AL"
+				case 0b10101010: 1 // "PH"
+				case 0b10101011: 1 // "PL"
+				case 0b10101100: 1 // "TH"
+				case 0b10101101: 1 // "SP"
+				default:
+					switch(reg16ff<0..4>) {
+						case 0b10110: 1 // *,ARP%d
+						case 0b10100: 1 // AR%d
+						default: 0
+					}
+			}
+		endif
 	syntax =
 		// TODO: check bit order of constants
 		switch(reg16ff<0..1>) {
