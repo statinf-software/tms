@@ -129,7 +129,7 @@ op movb_ACC(imm: card(8))
 
 // DOC: page 283
 op movb_AX(ax: ACC, imm: card(8))
-	syntax = format("MOVB %s, #0x%02x", ax, imm)
+	syntax = format("MOVB %s, #0x%x", ax, imm)
 	image = format("1001 101%s %8b", ax, imm)
 	action = { } // AX = 0:8bit;
 
@@ -326,7 +326,7 @@ op abstc_ACC()
 
 // DOC: page 128
 op add_ACC_16bit(imm: card(16), shift: card(4))
-    syntax = format("ADD ACC, #%d<<#%d", imm, shift)
+    syntax = format("ADD ACC, #%d << #%d", imm, shift)
     image = format("1111 1111 0001 %4b %16b", shift, imm)
     action = {
 
@@ -334,7 +334,7 @@ op add_ACC_16bit(imm: card(16), shift: card(4))
 
 // DOC: page 129
 op add_ACC_loc16(src: LOC16)
-   syntax = format("ADD ACC, %s, << T", src)
+   syntax = format("ADD ACC, %s << T", src)
    image = format("0101 0110 0010 0011 0000 0000 %s", src)
    action = {
 
@@ -342,19 +342,19 @@ op add_ACC_loc16(src: LOC16)
 
 // DOC: page 130
 op add_acc_loc16_0(src: LOC16)
-   syntax = format("ADD ACC, %s << #0", src)
+   syntax = format("ADD ACC, %s", src)
    image = format("1000 0001 %s", src)
    action = {
 
    }
 op add_acc_loc16_shift(src: LOC16, shift: card(4))
-   syntax = format("ADD ACC, %s, << #%d", src, shift)
+   syntax = format("ADD ACC, %s << #%d", src, shift)
    image = format("0101 0110 0000 0100 0000 %4b %s", shift, src)
    action = {
 
    }
 op add_acc_loc16_shift16(src: LOC16)
-   syntax = format("ADD ACC, %s, << #16", src)
+   syntax = format("ADD ACC, %s << #16", src)
    image = format("0000 0101 %s", src)
    action = {
 
@@ -546,7 +546,7 @@ op and_loc16_16bitsigned(src: LOC16, imm: int(16))
 
 // DOC: page 155
 op andb_AX(ax: ACC, imm: card(8))
-    syntax = format("ANDB %s, #%d", ax, imm)
+    syntax = format("ANDB %s, #0x%x", ax, imm)
     image = format("1001 000%s %8b", ax, imm)
     action = {
     	//AX = AX AND 0:8bit;
