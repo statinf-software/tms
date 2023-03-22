@@ -562,7 +562,7 @@ op asp()
 
 // DOC: page 157
 op asr_ax(ax: ACC, shift: card(4))
-    syntax = format("ASR %s, #%d", ax, shift+1)
+    syntax = format("ASR %s, %d", ax, shift+1)
     image = format("1111 1111 101%s %4b", ax, shift)
     action = {
 
@@ -2286,7 +2286,7 @@ op sbrk_8bit(imm: card(8))
 		// XAR(ARP) = XAR(ARP) − 0:8bit;
 	}
 
-// DOC: page 403, 186
+// DOC: page 403,186
 op setc_mode(mode_bitset: card(8))
 	_m = mode_bitset
 	syntax = format("SETC %s%s%s%s%s%s%s%s",
