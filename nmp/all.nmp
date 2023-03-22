@@ -133,12 +133,6 @@ op movb_AX(ax: ACC, imm: card(8))
 	image = format("1001 101%s %8b", ax, imm)
 	action = { } // AX = 0:8bit;
 
-//this format only works for XAR0..5, 6 and 7 must be handled separately
-// DOC: page 294
-op movb_XARn(xarn: card(3), imm: card(8))
-	syntax = format("MOVB XAR%d, #0x%02x", xarn, imm)
-	image = format("1101 0%3b %8b", xarn, imm)
-	action = { } //XARn = 0:8bit;
 // DOC: page 294
 op movb_XAR6(imm: card(8))
 	syntax = format("MOVB XAR6, #0x%02x", imm)
@@ -1396,6 +1390,21 @@ op movad(src: LOC16)
 // 	action = { 
 // 		//
 // 	}
+// DOC: page 282, 294
+op movb_XARn__movb_ARn(arn: card(3), imm: card(8))
+	syntax = 
+		if arn == 0b110 then 
+			format("MOVB AR6, #%d", imm)
+			else if arn == 0b111 then 
+				format("MOVB AR7, #%d", imm)
+			else
+				format("MOVB XAR%d, #0x%02x", arn, imm)
+			endif
+		endif
+	image = format("1101 0%3b %8b", arn, imm)
+	action = { 
+
+	}
 
 // DOC: page 284
 op movb_ax_lsb(ax: ACC, loc: LOC16)
