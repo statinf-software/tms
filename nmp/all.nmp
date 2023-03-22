@@ -1456,12 +1456,13 @@ op movh_loc16_p(loc: LOC16)
 	}
 
 
-// DOC: page 299
-op movl_acc_p()
-	syntax = "MOVL ACC, P << PM"
-	image = "0001 0110 1010 1100"
+// DOC: page 299, 311
+op movl_acc_p__movp(src: LOC16)
+	syntax = if src.num == 0b10101100 then "MOVL ACC, P << PM" 
+	else format("MOVP T, %s", src) endif
+	image = format("0001 0110 %s", src)
 	action = { 
-		//ACC = P << PM;
+
 	}
 
 // DOC: page 301
@@ -1482,7 +1483,6 @@ op movl_loc32_p(dest: LOC32)
 
 // DOC: page 305, 383
 //conflicts with push_xt, see page 383
-// NP
 op movl_loc32_xt__push_xt(dest: LOC32)
 	syntax = if dest == 0b10111101 then "PUSH XT" else format("MOVL %s, XT", dest) endif
 	image = format("1010 1011 %s", dest)
@@ -1506,26 +1506,15 @@ op movl_p_loc32(src: LOC32)
 		//P = [loc32];
 	}
 
-// // DOC: page 310
-// conflicts with pop xt, page 367
-// NP
-// op movl_xt_loc32(src: LOC32)
-// 	syntax = format("MOVL XT, %s", src)
-// 	image = format("1000 0111 %s", src)
-// 	action = {
-// 		//XT = [loc32];
-// 	}
+// // DOC: page 310, 367
+op movl_xt_loc32__pop_xt(src: LOC32)
+	syntax = if src.num == 0b10111110 then "POP XT" else format("MOVL XT, %s", src) endif
+	image = format("1000 0111 %s", src)
+	action = {
+		//XT = [loc32];
+	}
 
-// // DOC: page 311
-//conflicts with movl_acc_p, see page 299
-// NP
-// op movp(src: LOC16)
-// 	syntax = format("MOVP T, %s", src)
-// 	image = format("0001 0110 %s", src)
-// 	action = {
-// 		//T = [loc16];
-// 		//ACC = P << PM;
-// 	}
+
 
 // DOC: page 312
 op movs(src: LOC16)
@@ -1986,15 +1975,6 @@ op pop_t_st0()
 // op pop_XAR5() MakePopXarn("XAR5", "1000 0011 1011 1110")
 // op pop_XAR6() MakePopXarn("XAR6", "1100 0100 1011 1110")
 // op pop_XAR7() MakePopXarn("XAR7", "1100 0101 1011 1110")
-
-// DOC: page 367
-op pop_xt()
-	syntax = "POP XT"
-	image = "1000 0111 1011 1110"
-	action = {
-		// SP −= 2;
-		// XT = [SP];
-	}
 
 // DOC: page 368
 op pread_loc16_xar7(dest: LOC16)
