@@ -2515,45 +2515,44 @@ op test_acc()
 	}
 
 // DOC: page 440
-// HARD
-// op trap(vector_no: card(5))
-// 	vector_str = switch(vector_no) {
-// 		case 0: "RESET"
-// 		case 1: "INT1"
-// 		case 2: "INT2"
-// 		case 3: "INT3"
-// 		case 4: "INT4"
-// 		case 5: "INT5"
-// 		case 6: "INT6"
-// 		case 7: "INT7"
-// 		case 8: "INT8"
-// 		case 9: "INT9"
-// 		case 10: "INT10"
-// 		case 11: "INT11"
-// 		case 12: "INT12"
-// 		case 13: "INT13"
-// 		case 14: "INT14"
-// 		case 15: "DLOGINT"
-// 		case 16: "RTOSINT"
-// 		case 17: "Reserved"
-// 		case 18: "NMI"
-// 		case 19: "ILLEGAL"
-// 		case 20: "USER1"
-// 		case 21: "USER2"
-// 		case 22: "USER3"
-// 		case 23: "USER4"
-// 		case 24: "USER5"
-// 		case 25: "USER6"
-// 		case 26: "USER7"
-// 		case 27: "USER8"
-// 		case 28: "USER9"
-// 		case 29: "USER10"
-// 		case 30: "USER11"
-// 		case 31: "USER12"
-// 	}
-// 	syntax = format("TRAP #VectorNumber", vector_str)
-// 	image = format("0000 0000 001 %5b", vector_no)
-// 	action = { }
+op trap(vector_no: int(5))
+	// vector_str = switch(vector_no) {
+	// 	case 0: "RESET"
+	// 	case 1: "INT1"
+	// 	case 2: "INT2"
+	// 	case 3: "INT3"
+	// 	case 4: "INT4"
+	// 	case 5: "INT5"
+	// 	case 6: "INT6"
+	// 	case 7: "INT7"
+	// 	case 8: "INT8"
+	// 	case 9: "INT9"
+	// 	case 10: "INT10"
+	// 	case 11: "INT11"
+	// 	case 12: "INT12"
+	// 	case 13: "INT13"
+	// 	case 14: "INT14"
+	// 	case 15: "DLOGINT"
+	// 	case 16: "RTOSINT"
+	// 	case 17: "Reserved"
+	// 	case 18: "NMI"
+	// 	case 19: "ILLEGAL"
+	// 	case 20: "USER1"
+	// 	case 21: "USER2"
+	// 	case 22: "USER3"
+	// 	case 23: "USER4"
+	// 	case 24: "USER5"
+	// 	case 25: "USER6"
+	// 	case 26: "USER7"
+	// 	case 27: "USER8"
+	// 	case 28: "USER9"
+	// 	case 29: "USER10"
+	// 	case 30: "USER11"
+	// 	case 31: "USER12"
+	// }
+	syntax = format("TRAP #%d", vector_no)
+	image = format("0000 0000 001 %5b", vector_no)
+	action = { }
 
 // DOC: page 442; BUG?!!!
 // NP clashes
