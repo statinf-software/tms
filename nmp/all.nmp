@@ -206,9 +206,7 @@ op movl_XAR5_22bit(imm: card(22)) MakeMovlXarn22bit("XAR5", "1000 1111 01 %22b")
 op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
 op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
 
-// DOC: page 256, 318w
-// NP: shares with MOVZ AR%d, %s
-
+// DOC: page 256, 318
 op mov_AR_loc16__movz_ARn_0to5(xarn: card(3), addr: LOC16)
 	syntax = 
 		if xarn == 0b110 then 
@@ -288,13 +286,7 @@ op subu(src: LOC16)
 	image = format("0000 0001 %s", src)
 	action = { } //ACC = ACC − 0:[loc16];
 
-// DOC: page 436
-op tbit_loc16_4bit(src: LOC16, index: card(4))
-	syntax = format("TBIT %s, #0x%x", src, index)
-	image = format("0100 %4b %s", index, src)
-	action = {
-		// TC = [loc16(bit)];
-	}
+
 
 
 /////// UNTESTED INSTRUCTIONS /////////
@@ -1274,16 +1266,16 @@ op mov_loc16_ax_cond(ax: ACC, cond: COND, addr: LOC16)
 		//
 	}
 
-// DOC: page 268
-//broken, conflicts with page 436, which is in the tested section. 
-//I reckon it's the other one that is too broad in its
-// NP: yep
-// op mov_loc16_IER(dest: LOC16)
-// 	syntax = format("MOV %s, IER", dest)
-// 	image = format("0100 0000 %s", dest)
-// 	action = {
-// 		//[loc16] = IER;
-// 	}
+// DOC: page 268, 436
+op tbit_loc16_4bit__mov_loc16_IER(src: LOC16, index: card(4))
+	syntax = 
+	if index == 0b0000 then format("MOV %s, IER", src) 
+		else format("TBIT %s, #0x%x", src, index) 
+	endif
+	image = format("0100 %4b %s", index, src)
+	action = {
+		// TC = [loc16(bit)];
+	}
 
 // DOC: page 269
 op mov_loc16_ovc(dest: LOC16)
@@ -1414,13 +1406,12 @@ op movb_ax_msb(ax: ACC, loc:LOC16)
 	}
 
 // // DOC: page 288
-// NP: COND
-// op movb_loc16_8bit_cond
-// 	syntax = 
-// 	image =
-// 	action = { 
-// 		//
-// 	}
+op movb_loc16_8bit_cond(imm: card(8), loc: LOC16, cond: COND)
+	syntax = format("MOVB %s, #%d, %s", loc, imm, cond)
+	image = format("0101 0110 1011 %s %8b %s", cond, imm, loc)
+	action = { 
+		//
+	}
 
 // DOC: page 290
 op movb_loc16_ax_lsb(ax: ACC, loc: LOC16)
@@ -1474,13 +1465,12 @@ op movl_acc_p()
 	}
 
 // DOC: page 301
-// NP
-// op movl_loc32_acc_cond
-// 	syntax = 
-// 	image =
-// 	action = { 
-// 		//
-// 	}
+op movl_loc32_acc_cond(cond: COND, loc: LOC32)
+	syntax = format("MOVL %s, ACC, %s", loc, cond)
+	image = format("0101 0110 0100 1000 0000 %s %s", cond, loc)
+	action = { 
+		//
+	}
 
 // DOC: page 303
 op movl_loc32_p(dest: LOC32)
@@ -1490,15 +1480,15 @@ op movl_loc32_p(dest: LOC32)
 		//[loc32] = P;
 	}
 
-// DOC: page 305
+// DOC: page 305, 383
 //conflicts with push_xt, see page 383
 // NP
-// op movl_loc32_xt(dest: LOC32)
-// 	syntax = format("movl %s, XT", dest)
-// 	image = format("1010 1011 %s", dest)
-// 	action = {
-// 		//[loc32] = XT;
-// 	}
+op movl_loc32_xt__push_xt(dest: LOC32)
+	syntax = if dest == 0b10111101 then "PUSH XT" else format("movl %s, XT", dest) endif
+	image = format("1010 1011 %s", dest)
+	action = {
+		//[loc32] = XT;
+	}
 
 // DOC: page 306
 op movl_p_ACC()
@@ -2143,15 +2133,6 @@ op push_t_st0()
 // 	action = {
 
 // 	}
-
-// DOC: page 383
-op push_xt()
-	syntax = "PUSH XT"
-	image = "1010 1011 1011 1101"
-	action = {
-		// [SP] = XT;
-		// SP += 2;
-	}
 
 // DOC: page 384
 op pwrite_xar7(src: LOC16)
