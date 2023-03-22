@@ -120,24 +120,24 @@ op movb_ACC(imm: card(8))
 
 // DOC: page 283
 op movb_AX(ax: ACC, imm: card(8))
-	syntax = format("MOVB %s, #0x%01x", ax, imm)
+	syntax = format("MOVB %s, #0x%02x", ax, imm)
 	image = format("1001 101%s %8b", ax, imm)
 	action = { } // AX = 0:8bit;
 
 //this format only works for XAR0..5, 6 and 7 must be handled separately
 // DOC: page 294
 op movb_XARn(xarn: card(3), imm: card(8))
-	syntax = format("MOVB XAR%d, #0x%01x", xarn, imm)
+	syntax = format("MOVB XAR%d, #0x%02x", xarn, imm)
 	image = format("1101 0%3b %8b", xarn, imm)
 	action = { } //XARn = 0:8bit;
 // DOC: page 294
 op movb_XAR6(imm: card(8))
-	syntax = format("MOVB XAR6, #0x%01x", imm)
+	syntax = format("MOVB XAR6, #0x%02x", imm)
 	image = format("1011 1110 %8b", imm)
 	action = { } //XAR6 = 0:8bit;
 // DOC: page 294
 op movb_XAR7(imm: card(8))
-	syntax = format("MOVB XAR7, #0x%01x", imm)
+	syntax = format("MOVB XAR7, #0x%02x", imm)
 	image = format("1011 0110 %8b", imm)
 	action = { } //XAR7 = 0:8bit;
 
