@@ -31,6 +31,15 @@ op addb_XARn(xarn: card(3), imm: card(7))
 	image = format("1101 1%3b 0%7b", xarn, imm)
 	action = { } // XARn = XARn + 0:7bit;
 
+
+// DOC: page 180
+op cmpb(ax: ACC, imm: card(8))
+    syntax = format("CMPB %s, #0x%x", ax, imm)
+    image = format("0101 001%s %8b", ax, imm)
+    action = {
+    	//Set Flags On (AX − 0:8bit);
+    }
+
 // DOC: page 181
 op cmpl_ACC_loc32(src: LOC32)
 	syntax = format("CMPL ACC, %s", src.syntax)
@@ -233,9 +242,9 @@ op nop(arpn: LOC32)
 	}
 
 // DOC: page 399
-op sb(off: int(8), cond: COND)
-	syntax = format("SB %d, %s", off, cond.syntax)
-	image = format("0110 %s %8b", cond.image, off)
+op sb(offset: int(8), cond: COND)
+	syntax = format("SB %d, %s", offset, cond.syntax)
+	image = format("0110 %s %8b", cond.image, offset)
 	action = {
 		// If (COND = true) PC = PC + signed 8-bit offset;
 		// If (COND = false) PC = PC + 1;
@@ -304,6 +313,7 @@ op add_ACC_16bit(imm: card(16), shift: card(4))
     }
 
 // DOC: page 129
+// NP
 // op add_ACC_loc16
 //    syntax = ""
 //    image = ""
@@ -312,7 +322,7 @@ op add_ACC_16bit(imm: card(16), shift: card(4))
 //    }
 
 // DOC: page 130
-//op 
+// NP: 4 different ops
 //    syntax = ""
 //    image = ""
 //    action = {
@@ -320,17 +330,17 @@ op add_ACC_16bit(imm: card(16), shift: card(4))
 //    }
 
 // DOC: page 131
-op add_AX_loc16(ax: ACC, dest: LOC16)
-    syntax = format("ADD %s, %s", ax, dest)
-    image = format("1001 010%s %s", ax, dest)
+op add_AX_loc16(ax: ACC, src: LOC16)
+    syntax = format("ADD %s, %s", ax, src)
+    image = format("1001 010%s %s", ax, src)
     action = {
 
     }
 
 // DOC: page 132
-op add_loc16_AX(ax: ACC, src: LOC16)
-    syntax = format("ADD %s, %s", src, ax)
-    image = format("0111 001%s %s", ax, src)
+op add_loc16_AX(ax: ACC, dest: LOC16)
+    syntax = format("ADD %s, %s", dest, ax)
+    image = format("0111 001%s %s", ax, dest)
     action = {
 
     }
@@ -348,7 +358,7 @@ op addb_ACC(imm: card(8))
     syntax = format("ADDB ACC, #%d", imm)
     image = format("0000 1001 %8b", imm)
     action = {
-
+    	// ACC = ACC + 0:8bit;
     }
 
 // DOC: page 136
@@ -360,12 +370,12 @@ op addb_SP(imm: card(7))
     }
 
 // DOC: page 138
-//op addcl_ACC_loc32
-//    syntax = ""
-//    image = ""
-//    action = {
-
-//    }
+op addcl_ACC_loc32(src: LOC32)
+    syntax = format("ADDCL ACC, %s", src)
+    image = format("0101 0110 0100 0000 xxxx xxxx %s", src)
+    action = {
+        // ACC = ACC + [loc32] + C;
+    }
 
 // DOC: page 139
 op addcu_ACC_loc16(src: LOC16)
@@ -384,12 +394,7 @@ op addl_ACC_loc32(src: LOC32)
     }
 
 // DOC: page 141
-op addl_ACC_P()
-    syntax = "ADDL ACC,P << PM"
-    image = "0001 0000 1010 1100"
-    action = {
-    	//ACC = ACC + P << PM
-    }
+// SEE: page 279
 
 // DOC: page 142
 op addl_loc32_ACC(dest: LOC32)
@@ -416,6 +421,7 @@ op addul_P_loc32(src: LOC32)
     }
 
 // DOC: page 145
+// NP
 //op addul_ACC_loc32(src: LOC32)
 //   syntax = format("ADDUL ACC, %s", src)
 //    image = format("")
@@ -432,6 +438,7 @@ op adrk(imm: card(8))
     }
 
 // DOC: page 147
+// NP: two ops
 //op and_ACC_16bit(shift: card(4), imm: card(16))
 //    syntax = ""
 //    image = ""
@@ -464,7 +471,7 @@ op and_IER(imm: card(16))
     }
 
 // DOC: page 151
-op  and_IFR(imm: card(16))
+op and_IFR(imm: card(16))
     syntax = format("AND IFR, #%d", imm)
     image = format("0111 0110 0010 1111 %16b", imm)
     action = {
@@ -480,7 +487,7 @@ op and_loc16_AX(ax: ACC, dest: LOC16)
     }
 
 // DOC: page 153
-op and_AX_loc16(ax: ACC, src:LOC16)
+op and_AX_loc16(ax: ACC, src: LOC16)
     syntax = format("AND %s, %s", ax, src)
     image = format("1100 111%s %s", ax, src)
     action = {
@@ -552,12 +559,13 @@ op asrl_acc_t()
     }
 
 // DOC: page 162
-//op b(offset: int(16), cond: card(4))
-//    syntax = format("B %d, ")
-//    image = ""
-//    action = {
-
-//    }
+op b(offset: int(16), cond: COND)
+   syntax = format("B %d, %s", offset, cond)
+   image = format("1111 1111 1110 %s %16b", cond, offset)
+   action = {
+        // If (COND = true) PC = PC + signed 16-bit offset;
+        // If (COND = false) PC = PC + 2;
+   }
 
 // DOC: page 163
 op banz(offset: int(16), arn: card(3)) 
@@ -578,6 +586,7 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
     }
 
 // DOC: page 165
+// NP: COND
 //op bf(cond: card(4), offset: int(16))
 //    syntax = format("BF %d, ")
 //    image = ""
@@ -586,7 +595,7 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
 //    }
 
 // DOC: page 166
-//broken, see page 172 clrc_m0m1map
+// ALIAS: page 172
 //op c27map()
 //    syntax = "C27MAP"
 //    image = "0101 0110 0011 1111"
@@ -595,7 +604,7 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
 //    }
 
 // DOC: page 167
-//broken, see page 174 CLRC Objmode
+// ALIAS: page 174
 //op c27obj()
 //    syntax = "C27OBJ"
 //    image = "0101 0110 0011 0110"
@@ -612,8 +621,8 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
 
 //    }
 
-//broken, see page 405 setc_M0M1MAP
 // DOC: page 169
+// ALIAS: page 405
 //op c28map()
 //    syntax = "C28MAP"
 //    image = "0101 0110 0001 1010"
@@ -622,7 +631,7 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
 //    }
 
 // DOC: page 170
-// broken, conflicts with page 406 (setc objmode)
+// ALIAS: page 406
 // op c28obj()
 //     syntax = "C28OBJ"
 //     image = "0101 0110 0001 1111"
@@ -654,8 +663,8 @@ op clrc_objmode()
 
     }
 
-//broken, opcode conflicts with ZAP OVX (pg 471)
-// // DOC: page 174
+// DOC: page 174
+// ALIAS: page 471
 // op clrc_ovc()
 //     syntax = "CLRC OVC"
 //     image = "0101 0110 0101 1100"
@@ -671,7 +680,8 @@ op clrc_xf()
 
     }
 
-// // DOC: page 176
+// DOC: page 176
+// HARD
 // op clrc_mode 
 //    syntax = ""
 //    image = ""
@@ -703,14 +713,6 @@ op cmp64_acc_p()
 
     }
 
-// DOC: page 180
-op cmpb(ax: ACC, imm: card(8))
-    syntax = format("CMPB %s, %d", ax, imm)
-    image = format("0101 001%s %8b", ax, imm)
-    action = {
-    	//Set Flags On (AX − 0:8bit);
-    }
-
 // DOC: page 182
 op cmpl_ACC_p()
     syntax = "CMPL ACC, P << PM"
@@ -720,12 +722,30 @@ op cmpl_ACC_p()
     }
 
 // DOC: page 183
-//op cmpr
-//    syntax = ""
-//    image = ""
-//    action = {
-
-//    }
+op cmpr0()
+    syntax = "CMPR 0"
+    image = "0101 0110 0001 1101"
+    action = {
+        // CMPR 0: if(AR0 = AR[ARP]) TC = 1, else TC = 0
+    }
+op cmpr1()
+    syntax = "CMPR 1"
+    image = "0101 0110 0001 1001"
+    action = {
+        // CMPR 1: if(AR0 > AR[ARP]) TC = 1, else TC = 0
+    }
+op cmpr2()
+    syntax = "CMPR 2"
+    image = "0101 0110 0001 1000"
+    action = {
+        // CMPR 2: if(AR0 > AR[ARP]) TC = 1, else TC = 0
+    }
+op cmpr3()
+    syntax = "CMPR 3"
+    image = "0101 0110 0001 1100"
+    action = {
+        // CMPR 3: if(AR0 != AR[ARP]) TC = 1, else TC = 0
+    }
 
 // DOC: page 184
 op csb()
@@ -893,6 +913,7 @@ op impyxul(loc: LOC32)
 
 // DOC: page 209
 //does the port need special formatting?
+// NP: format 16bit port with *(0x%04x)
 //op in(addr: LOC16, )
 //   syntax = ""
 //   image = ""
@@ -909,6 +930,7 @@ op inc(loc: LOC16)
     }
 
 // DOC: page 212
+// HARD
 // op intr
 //     syntax = ""
 //     image = ""
@@ -955,6 +977,7 @@ op lcr_xarn(xarn: card(3))
 	action = { 
 		//
 	}
+
 // DOC: page 222
 op loopnz(addr: LOC16, imm: card(16))
 	syntax = format("LOOPNZ %s, %d", addr, imm)
@@ -1072,6 +1095,7 @@ op lsrl_ACC_T()
 	}
 // DOC: page 242
 // //how should this be formatted? 
+// NP: look at example, pma should be 0x%04x
 // op macp_loc16(loc: LOC16, imm: card(16))
 // 	syntax = format("MAC P, %s, 0:%")
 // 	image = 
@@ -1080,7 +1104,6 @@ op lsrl_ACC_T()
 // 	}
 
 // DOC: page 244
-
 op macp_loc16_xar7(xartype: bit, loc: LOC16)
 	pp = if xartype == 0 then "*XAR7++" else "*XAR7" endif
 	syntax = format("MAC P, %s, %s", loc, pp)
@@ -1123,7 +1146,8 @@ op min(ax: ACC, addr: LOC16)
 	}
 
 // DOC: page 250
-//potentially weird opcode
+// potentially weird opcode
+// NP: use xxxx in syntax
 // op mincul(addr: LOC32)
 // 	syntax =
 // 	image = 
@@ -1157,6 +1181,7 @@ op mov_acc_loc16(addr: LOC16)
 	}
 
 // DOC: page 255
+// HARD
 // op mov_acc_loc16_shift
 // 	syntax =
 // 	image = 
@@ -1166,6 +1191,7 @@ op mov_acc_loc16(addr: LOC16)
 
 // DOC: page 256
 //This shares an opcode with another function, but I can't work out which
+// NP: shares with MOVZ AR%d, %s
 // op mov_AR_loc16(arn: bit, addr: LOC16)
 // 	artype = if arn == 0 then "AR6" else "AR7" endif
 // 	syntax = format("MOV %s, %s", artype, addr)
@@ -1207,6 +1233,7 @@ op mov_loc16_val(dest: LOC16, val: card(16))
 	}
 
 // // DOC: page 263
+// HARD
 // op mov_loc16_acc()
 // 	syntax =
 // 	image = 
@@ -1215,6 +1242,7 @@ op mov_loc16_val(dest: LOC16, val: card(16))
 // 	}
 
 // // DOC: page 266
+// NP: COND
 // op mov_loc16_ax_cond()
 // 	syntax =
 // 	image = 
@@ -1225,6 +1253,7 @@ op mov_loc16_val(dest: LOC16, val: card(16))
 // DOC: page 268
 //broken, conflicts with page 436, which is in the tested section. 
 //I reckon it's the other one that is too broad in its
+// NP: yep
 // op mov_loc16_IER(dest: LOC16)
 // 	syntax = format("MOV %s, IER", dest)
 // 	image = format("0100 0000 %s", dest)
@@ -1306,15 +1335,19 @@ op mov_xarn_pc(xarn: card(3))
 		//XARn = 0:PC;
 	}
 
-// DOC: page 279
-//conflicts with ADDL_ACC, page 141
-//op mova(src: LOC16)
-//	syntax = format("MOVA T, %s", src)
-//	image = format("0001 0000 %s", src)
-	// action = { 
-	// 	//T = [loc16];
-	// 	//ACC = ACC + P << PM;
-	// }
+// DOC: page 279,141
+op mova__addl_ACC_P(src: LOC16)
+	syntax =
+		if src.num == 0b10101100 then
+			"ADDL ACC, P << PM"
+		else
+			format("MOVA T, %s", src)
+		endif
+	image = format("0001 0000 %s", src)
+	action = { 
+		//T = [loc16];
+		//ACC = ACC + P << PM;
+	}
 
 // DOC: page 280
 op movad(src: LOC16)
@@ -1326,7 +1359,8 @@ op movad(src: LOC16)
 
 // DOC: page 282
 // issues with movb_XARn, see page 294
-// op movb_arn(arn: bit, imm: card(8))
+// NP
+// op movb_AR6_7(arn: bit, imm: card(8))
 // 	arnstr = if arn == 0 then "6" else "7" endif
 // 	syntax = format("MOVB AR%s, #%d", arnstr, imm)
 // 	image = format("1101 011%1b %8b", arn, imm)
@@ -1351,6 +1385,7 @@ op movb_ax_msb(ax: ACC, loc:LOC16)
 	}
 
 // // DOC: page 288
+// NP: COND
 // op movb_loc16_8bit_cond
 // 	syntax = 
 // 	image =
@@ -1384,6 +1419,7 @@ op movdl_xt_loc32(src: LOC32)
 	}
 
 // DOC: page 296
+// HARD
 // op movh_loc16_acc
 // 	syntax = 
 // 	image =
@@ -1409,6 +1445,7 @@ op movl_acc_p()
 	}
 
 // DOC: page 301
+// NP
 // op movl_loc32_acc_cond
 // 	syntax = 
 // 	image =
@@ -1424,16 +1461,9 @@ op movl_loc32_p(dest: LOC32)
 		//[loc32] = P;
 	}
 
-// // DOC: page 304
-// op movl_loc32_xarn
-// 	syntax = format("")
-// 	image = format("")
-// 	action = {
-// 		//
-// 	}
-
 // DOC: page 305
 //conflicts with push_xt, see page 383
+// NP
 // op movl_loc32_xt(dest: LOC32)
 // 	syntax = format("movl %s, XT", dest)
 // 	image = format("1010 1011 %s", dest)
@@ -1459,6 +1489,7 @@ op movl_p_loc32(src: LOC32)
 
 // // DOC: page 310
 // conflicts with pop xt, page 367
+// NP
 // op movl_xt_loc32(src: LOC32)
 // 	syntax = format("MOVL XT, %s", src)
 // 	image = format("1000 0111 %s", src)
@@ -1468,6 +1499,7 @@ op movl_p_loc32(src: LOC32)
 
 // // DOC: page 311
 //conflicts with movl_acc_p, see page 299
+// NP
 // op movp(src: LOC16)
 // 	syntax = format("MOVP T, %s", src)
 // 	image = format("0001 0110 %s", src)
@@ -1513,6 +1545,7 @@ op movu_OVC_loc16(src: LOC16)
 
 
 // DOC: page 317
+// NP
 // op movx()
 // 	syntax = format()
 // 	image = format()
@@ -1796,6 +1829,7 @@ op out_pa_loc16(src: LOC16, addr: card(16))
 	}
 
 // DOC: page 353
+// NP: conflicts with MOVL ACC, %s
 // op pop_acc()
 // 	syntax = "POP ACC"
 // 	image = "0000 0110 1011 1110"
@@ -1805,6 +1839,7 @@ op out_pa_loc16(src: LOC16, addr: card(16))
 // }
 
 // DOC: page 354
+// NP: 3 ops
 // op pop_arn_arm
 // 	syntax =
 // 	image =
@@ -1916,6 +1951,7 @@ op pop_t_st0()
 	}
 
 // DOC: page 366; BUG??
+// NP: conflicts
 // macro MakePopXarn(xarn, fmt) = \
 // 	syntax = format("POP %s", xarn)\
 // 	image = fmt\
@@ -1950,6 +1986,7 @@ op pread_loc16_xar7(dest: LOC16)
 	}
 
 // DOC: page 369; BUG?? same opcode as page 300!
+// NP: conflicts
 // op push_acc()
 // 	syntax = "PUSH ACC"
 // 	image = "0001 1110 1011 1101"
@@ -1959,6 +1996,7 @@ op pread_loc16_xar7(dest: LOC16)
 // 	}
 
 // DOC: page 370
+// NP: 3 ops
 // op push_arn_arm
 // 	syntax = 
 // 	image = 
@@ -2069,6 +2107,7 @@ op push_t_st0()
 	}
 
 // DOC: page 382
+// NP: macro
 // op 
 // 	syntax = "PUSH XARn"
 // 	image = 
@@ -2094,6 +2133,7 @@ op pwrite_xar7(src: LOC16)
 	}
 
 // DOC: page 385
+// NP: one op, only one bit changes
 // op 
 // 	syntax = 
 // 	image = 
@@ -2168,6 +2208,7 @@ op ror_acc()
 	}
 
 // DOC: page 395
+// HARD
 // op 
 // 	syntax = ""
 // 	image = ""
@@ -2200,6 +2241,7 @@ op sbbu(src: LOC16)
 	}
 
 // DOC: page 401
+// NP: 4 ops
 // op 
 // 	syntax = "SBF 8bitOffset, EQ/NEQ/TC/NTC"
 // 	image = ""
@@ -2216,6 +2258,7 @@ op sbrk_8bit(imm: card(8))
 	}
 
 // DOC: page 403
+// HARD
 // op 
 // 	syntax = ""
 // 	image = ""
