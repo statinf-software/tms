@@ -1484,7 +1484,7 @@ op movl_loc32_p(dest: LOC32)
 //conflicts with push_xt, see page 383
 // NP
 op movl_loc32_xt__push_xt(dest: LOC32)
-	syntax = if dest == 0b10111101 then "PUSH XT" else format("movl %s, XT", dest) endif
+	syntax = if dest == 0b10111101 then "PUSH XT" else format("MOVL %s, XT", dest) endif
 	image = format("1010 1011 %s", dest)
 	action = {
 		//[loc32] = XT;
