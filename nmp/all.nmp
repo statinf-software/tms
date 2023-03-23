@@ -144,45 +144,19 @@ op movb_XAR7(imm: card(8))
 	image = format("1011 0110 %8b", imm)
 	action = { } //XAR7 = 0:8bit;
 
-// DOC: page 298; BUG? same opcode as POP ACC page 353
-op movl_ACC_loc32(src: LOC32)
-	syntax = format("MOVL ACC, %s", src.syntax)
-	image = format("0000 0110 %s", src.image)
-	action = { } // ACC = [loc32];
-
-// DOC: page 300; BUG? same opcode as PUSH ACC page 369
-op movl_loc32_ACC(src: LOC32)
-	syntax = format("MOVL %s, ACC", src.syntax)
-	image = format("0001 1110 %s", src.image)
-	action = { } // [loc32] = ACC;
-
-// DOC: page 304
-macro MakeMovlLoc32Xarn(xarn, fmt) = \
-	syntax = format("MOVL %s, %s", dest.syntax, xarn)\
+// DOC: page 304, 382
+macro MakeMovlLoc32Xarn__MakePushXarn(xarn, fmt) = \
+	syntax = if dest == 0b10111101 then format("PUSH %s", xarn) else format("MOVL %s, %s", dest.syntax, xarn) endif\
 	image = format(fmt, dest.image)\
 	action = { } // [loc32] = XARn;
-op movl_loc32_XAR0(dest: LOC32) MakeMovlLoc32Xarn("XAR0", "0011 1010 %s")
-op movl_loc32_XAR1(dest: LOC32) MakeMovlLoc32Xarn("XAR1", "1011 0010 %s")
-op movl_loc32_XAR2(dest: LOC32) MakeMovlLoc32Xarn("XAR2", "1010 1010 %s")
-op movl_loc32_XAR3(dest: LOC32) MakeMovlLoc32Xarn("XAR3", "1010 0010 %s")
-op movl_loc32_XAR4(dest: LOC32) MakeMovlLoc32Xarn("XAR4", "1010 1000 %s")
-op movl_loc32_XAR5(dest: LOC32) MakeMovlLoc32Xarn("XAR5", "1010 0000 %s")
-op movl_loc32_XAR6(dest: LOC32) MakeMovlLoc32Xarn("XAR6", "1100 0010 %s")
-op movl_loc32_XAR7(dest: LOC32) MakeMovlLoc32Xarn("XAR7", "1100 0011 %s")
-
-// DOC: page 308
-macro MakeMovlXarnLoc32(xarn, fmt) = \
-	syntax = format("MOVL %s, %s", xarn, src.syntax)\
-	image = format(fmt, src.image)\
-	action = { } // XARn = [loc32];
-op movl_XAR0_loc32(src: LOC32) MakeMovlXarnLoc32("XAR0", "1000 1110 %s")
-op movl_XAR1_loc32(src: LOC32) MakeMovlXarnLoc32("XAR1", "1000 1011 %s")
-op movl_XAR2_loc32(src: LOC32) MakeMovlXarnLoc32("XAR2", "1000 0110 %s")
-op movl_XAR3_loc32(src: LOC32) MakeMovlXarnLoc32("XAR3", "1000 0010 %s")
-op movl_XAR4_loc32(src: LOC32) MakeMovlXarnLoc32("XAR4", "1000 1010 %s")
-op movl_XAR5_loc32(src: LOC32) MakeMovlXarnLoc32("XAR5", "1000 0011 %s")
-op movl_XAR6_loc32(src: LOC32) MakeMovlXarnLoc32("XAR6", "1100 0100 %s")
-op movl_XAR7_loc32(src: LOC32) MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
+op movl_loc32_XAR0(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR0", "0011 1010 %s")
+op movl_loc32_XAR1(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR1", "1011 0010 %s")
+op movl_loc32_XAR2(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR2", "1010 1010 %s")
+op movl_loc32_XAR3(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR3", "1010 0010 %s")
+op movl_loc32_XAR4(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR4", "1010 1000 %s")
+op movl_loc32_XAR5(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR5", "1010 0000 %s")
+op movl_loc32_XAR6(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR6", "1100 0010 %s")
+op movl_loc32_XAR7(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR7", "1100 0011 %s")
 
 // DOC: page 316
 op movw(imm: card(16))
@@ -1455,12 +1429,28 @@ op movh_loc16_p(loc: LOC16)
 		//[loc16] = (P << PM) >> 16;
 	}
 
+// DOC: page 298, 353
+op movl_ACC_loc32__pop_acc(src: LOC32)
+	syntax = if src.num == 0b10111110 then "POP ACC" else format("MOVL ACC, %s", src.syntax) endif
+	image = format("0000 0110 %s", src.image)
+	action = {
+
+	 } 
+
 
 // DOC: page 299, 311
 op movl_acc_p__movp(src: LOC16)
 	syntax = if src.num == 0b10101100 then "MOVL ACC, P << PM" 
 	else format("MOVP T, %s", src) endif
 	image = format("0001 0110 %s", src)
+	action = { 
+
+	}
+
+// DOC: page 300, 369
+op movl_loc32_ACC__push_ACC(src: LOC32)
+	syntax = if src.num == 0b10111101 then "PUSH ACC" else format("MOVL %s, ACC", src.syntax) endif
+	image = format("0001 1110 %s", src.image)
 	action = { 
 
 	}
@@ -1506,6 +1496,25 @@ op movl_p_loc32(src: LOC32)
 		//P = [loc32];
 	}
 
+
+// DOC: page 308, 366
+macro MakePopXarn__MakeMovlXarnLoc32(xarn, fmt) = \
+	syntax = if src.num == 0b10111110 then format("POP %s", xarn) else format("MOVL %s, %s", xarn, src.syntax) endif\
+	image = format(fmt, src)\
+	action = {\
+		// SP −= 2;\
+		// XARn = [SP];\
+	}
+op movl_XAR0_loc32__pop_XAR0(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR0", "1000 1110 %s")
+op movl_XAR1_loc32__pop_XAR1(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR1", "1000 1011 %s")
+op movl_XAR2_loc32__pop_XAR2(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR2", "1000 0110 %s")
+op movl_XAR3_loc32__pop_XAR3(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR3", "1000 0010 %s")
+op movl_XAR4_loc32__pop_XAR4(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR4", "1000 1010 %s")
+op movl_XAR5_loc32__pop_XAR5(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR5", "1000 0011 %s")
+op movl_XAR6_loc32__pop_XAR6(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR6", "1100 0100 %s")
+op movl_XAR7_loc32__pop_XAR7(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
+
+
 // // DOC: page 310, 367
 op movl_xt_loc32__pop_xt(src: LOC32)
 	syntax = if src.num == 0b10111110 then "POP XT" else format("MOVL XT, %s", src) endif
@@ -1516,9 +1525,9 @@ op movl_xt_loc32__pop_xt(src: LOC32)
 
 
 
-// DOC: page 312
-op movs(src: LOC16)
-	syntax = format("MOVS T, %s", src)
+// DOC: page 312, 429
+op movs__subl_acc_p_pm(src: LOC16)
+	syntax = if src.num == 0b10101100 then "SUBL ACC,P << PM" else format("MOVS T, %s", src) endif
 	image = format("0001 0001 %s", src)
 	action = {
 		//T = [loc16];
@@ -1553,13 +1562,13 @@ op movu_OVC_loc16(src: LOC16)
 
 
 // DOC: page 317
-// NP
-// op movx()
-// 	syntax = format()
-// 	image = format()
-// 	action = {
-// 		//
-// 	}
+op movx(src: LOC16)
+	syntax = format("MOVX TL, %s", src)
+	image = format("0101 0110 0010 0001 xxxx xxxx %s", src)
+	action = {
+		//TL = [loc16];
+		//T = sign extension of TL;
+	}
 
 // DOC: page 319
 op movz_dp(imm: card(10))
@@ -1836,22 +1845,25 @@ op out_pa_loc16(src: LOC16, addr: card(16))
 		// IOspace[0x0000PA] = [loc16];
 	}
 
-// DOC: page 353
-// NP: conflicts with MOVL ACC, %s
-// op pop_acc()
-// 	syntax = "POP ACC"
-// 	image = "0000 0110 1011 1110"
-// 	action = {
-// 		// SP −= 2;
-// 		// ACC = [SP];
-// }
-
 // DOC: page 354
-// NP: 3 ops
-// op pop_arn_arm
-// 	syntax =
-// 	image =
-// 	action = { }
+op pop_ar1_ar0()
+	syntax = "POP AR1:AR0"
+	image = "0111 0110 0000 0111"
+	action = { 
+
+	}
+op pop_ar3_ar2()
+	syntax = "POP AR3:AR2"
+	image = "0111 0110 0000 0101"
+	action = { 
+
+	}
+op pop_ar5_ar4()
+	syntax = "POP AR5:AR4"
+	image = "0111 0110 0000 0110"
+	action = { 
+
+	}
 
 // DOC: page 355
 op pop_ar1h_ar0h()
@@ -1958,24 +1970,6 @@ op pop_t_st0()
 		// TL = unchanged;
 	}
 
-// DOC: page 366; BUG??
-// NP: conflicts
-// macro MakePopXarn(xarn, fmt) = \
-// 	syntax = format("POP %s", xarn)\
-// 	image = fmt\
-// 	action = {\
-// 		// SP −= 2;\
-// 		// XARn = [SP];\
-// 	}
-// op pop_XAR0() MakePopXarn("XAR0", "1000 1110 1011 1110")
-// op pop_XAR1() MakePopXarn("XAR1", "1000 1011 1011 1110")
-// op pop_XAR2() MakePopXarn("XAR2", "1000 0110 1011 1110")
-// op pop_XAR3() MakePopXarn("XAR3", "1000 0010 1011 1110")
-// op pop_XAR4() MakePopXarn("XAR4", "1000 1010 1011 1110")
-// op pop_XAR5() MakePopXarn("XAR5", "1000 0011 1011 1110")
-// op pop_XAR6() MakePopXarn("XAR6", "1100 0100 1011 1110")
-// op pop_XAR7() MakePopXarn("XAR7", "1100 0101 1011 1110")
-
 // DOC: page 368
 op pread_loc16_xar7(dest: LOC16)
 	syntax = format("PREAD %s, *XAR7", dest)
@@ -1984,25 +1978,25 @@ op pread_loc16_xar7(dest: LOC16)
 		// [loc16] = Prog[*XAR7];
 	}
 
-// DOC: page 369; BUG?? same opcode as page 300!
-// NP: conflicts
-// op push_acc()
-// 	syntax = "PUSH ACC"
-// 	image = "0001 1110 1011 1101"
-// 	action = {
-// 		// [SP] = ACC;
-// 		// SP += 2;
-// 	}
-
 // DOC: page 370
-// NP: 3 ops
-// op push_arn_arm
-// 	syntax = 
-// 	image = 
-// 	action = {
+op push_ar1_ar0()
+	syntax = "PUSH AR1:AR0"
+	image = "0111 0110 0000 1101"
+	action = { 
 
-// 	}
+	}
+op push_ar3_ar2()
+	syntax = "PUSH AR3:AR2"
+	image = "0111 0110 0000 1111"
+	action = { 
 
+	}
+op push_ar5_ar4()
+	syntax = "PUSH AR5:AR4"
+	image = "0111 0110 0000 1100"
+	action = { 
+
+	}
 // DOC: page 371
 op push_ar1h_ar0h()
 	syntax = "PUSH AR1H:AR0H"
@@ -2105,14 +2099,6 @@ op push_t_st0()
 		// SP += 2;
 	}
 
-// DOC: page 382
-// NP: macro
-// op 
-// 	syntax = "PUSH XARn"
-// 	image = 
-// 	action = {
-
-// 	}
 
 // DOC: page 384
 op pwrite_xar7(src: LOC16)
@@ -2123,13 +2109,12 @@ op pwrite_xar7(src: LOC16)
 	}
 
 // DOC: page 385
-// NP: one op, only one bit changes
-// op 
-// 	syntax = 
-// 	image = 
-// 	action = {
+op qmacl(optype: bit, loc: LOC32)
+	syntax = if optype == 0b1 then format("QMACL P, %s, *XAR7", loc) else format("QMACL P, %s, *XAR7++", loc) endif
+	image = format("0101 0110 0100 1111 1%1b00 0111 %s", optype, loc)
+	action = {
 
-// 	}
+	}
 
 // DOC: page 387
 op qmpyal_p_xt_loc32(src: LOC32)
@@ -2231,13 +2216,20 @@ op sbbu(src: LOC16)
 	}
 
 // DOC: page 401
-// NP: 4 ops
-// op 
-// 	syntax = "SBF 8bitOffset, EQ/NEQ/TC/NTC"
-// 	image = ""
-// 	action = {
+op sbf(instype: card(2), imm: card(8))
+	sbftype = 
+		if instype == 0b00 then "EQ"
+		else if instype == 0b01 then "NEQ"
+		else if instype == 0b10 then "TC" 
+		else "NTC" 
+		endif
+		endif
+		endif
+	syntax = format("SBF %d, %s", imm, sbftype)
+	image = format("1110 11%2b %8b", instype, imm)
+	action = {
 
-// 	}
+	}
 
 // DOC: page 402
 op sbrk_8bit(imm: card(8))
@@ -2355,22 +2347,20 @@ op sqrs(src: LOC16)
 // 	}
 
 // // DOC: page 416
-// NP
-// op 
-// 	syntax = ""
-// 	image = ""
-// 	action = {
+op sub_ACC_loc16(src: LOC16)
+	syntax = format("SUB ACC, %s << T", src)
+	image = format("0101 0110 0010 0111 0000 0000 %s", src)
+	action = {
 
-// 	}
+	}
 
 // // DOC: page 417
-// NP
-// op 
-// 	syntax = ""
-// 	image = ""
-// 	action = {
+op sub_ACC_16bit(shift: card(4), imm: card(16))
+	syntax = format("SUB ACC, #%d << #%d", imm, shift)
+	image = format("1111 1111 0000 %4b %16b", shift, imm)
+	action = {
 
-// 	}
+	}
 
 // DOC: page 418
 op sub_ax_loc16(ax: ACC, src: LOC16)
@@ -2436,15 +2426,6 @@ op subl_acc_loc32(src: LOC32)
 	action = {
 		// ACC = ACC − [loc32];
 	}
-
-// DOC: page 429
-// NP: clashes with MOVS T, %s
-// op subl_acc_p_pm()
-// 	syntax = "SUBL ACC,P << PM"
-// 	image = "0001 0001 1010 1100"
-// 	action = {
-// 		// ACC = ACC − P << PM;
-// 	}
 
 // DOC: page 430
 op subl_loc32_acc(dest: LOC32)
@@ -2552,15 +2533,14 @@ op trap(vector_no: int(5))
 	image = format("0000 0000 001 %5b", vector_no)
 	action = { }
 
-// DOC: page 442; BUG?!!!
-// NP clashes
-// op tset_loc16_16bit(dest: LOC16, imm: card(16))
-// 	syntax = format("TSET %s, #%d", dest, imm)
-// 	image = format("0101 0110 0000 1101 0000 BBBB LLLL LLLL", ???)
-// 	action = {
-// 		// TC = [loc16(bit)];
-// 		// [loc16(bit)] = 1;
-// 	}
+// DOC: page 442
+op tset_loc16_16bit(dest: LOC16, index: card(4))
+	syntax = format("TSET %s, #%d", dest, index)
+	image = format("0101 0110 0000 1101 0000 %4b %s", index, dest)
+	action = {
+		// TC = [loc16(bit)];
+		// [loc16(bit)] = 1;
+	}
 
 // DOC: page 443
 // NP: format with *(0x%04x)
