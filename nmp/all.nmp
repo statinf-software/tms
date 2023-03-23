@@ -2543,13 +2543,12 @@ op tset_loc16_16bit(dest: LOC16, index: card(4))
 	}
 
 // DOC: page 443
-// NP: format with *(0x%04x)
-// op 
-// 	syntax = "UOUT *(PA),loc16"
-// 	image = "1011 0000 LLLL LLLL CCCC CCCC CCCC CCCC"
-// 	action = {
-// 		// IOspace[0x000:PA] = loc16;
-// 	}
+op uout(src: LOC16, imm: card(16))
+	syntax = format("UOUT *(0x%04x), %s", imm, src)
+	image = format("1011 0000 %s %16b", src, imm)
+	action = {
+		// IOspace[0x000:PA] = loc16;
+	}
 
 // DOC: page 444
 op xb_al()
@@ -2560,25 +2559,23 @@ op xb_al()
 	}
 
 // DOC: page 445
-// NP: format 16bit address with 0x%04x
-// op 
-// 	syntax = "XB pma,*, ARPn"
-// 	image = "0011 1110 0111 0nnn CCCC CCCC CCCC CCCC"
-// 	action = {
-// 		// PC = 0x3F:pma;
-// 		// ARP = n;
-// 	}
+op xb_pma(arp: card(3), pma: card(16))
+	syntax = format("XB 0x%04x, *, ARP%d", pma, arp)
+	image = format("0011 1110 0111 0%3b %16b", arp, pma)
+	action = {
+		// PC = 0x3F:pma;
+		// ARP = n;
+	}
 
 // DOC: page 446
-// NP: COND
-// op 
-// 	syntax = "XB pma,COND"
-// 	image = "0101 0110 1101 COND CCCC CCCC CCCC CCCC"
-// 	action = {
-// 		// If (COND = true) PC(15:0) = pma;
-// 		// If (COND = false) PC(15:0) = PC(15:0) + 2;
-// 		// PC(21:16) = 0x3F;
-// 	}
+op xb_pma_cond(pma: card(16), cond: COND)
+	syntax = format("XB 0x%04x, %s", pma, cond)
+	image = format("0101 0110 1101 %s %16b", cond, pma)
+	action = {
+		// If (COND = true) PC(15:0) = pma;
+		// If (COND = false) PC(15:0) = PC(15:0) + 2;
+		// PC(21:16) = 0x3F;
+	}
 
 // DOC: page 448
 // HARD
@@ -2601,54 +2598,50 @@ op xcall_al()
 	}
 
 // DOC: page 451
-// NP
-// op 
-// 	syntax = "XCALL pma,*,ARPn"
-// 	image = "0011 1110 0110 1nnn CCCC CCCC CCCC CCCC"
-// 	action = {
+op  xcall_pma(pma: card(16), arp: card(3))
+	syntax = format("XCALL 0x%04x, *, ARP%d", pma, arp)
+	image = format("0011 1110 0110 1%3b %16b", arp, pma)
+	action = {
 
-// 	}
+	}
 
 // // DOC: page 452
-// NP
-// op 
-// 	syntax = "XCALL pma,COND"
-// 	image = "0101 0110 1110 COND CCCC CCCC CCCC CCCC"
-// 	action = {
-// 		// if(COND = true)
-// 		// {
-// 		// temp(21:0) = PC + 2;
-// 		// [SP] = temp(15:0);
-// 		// SP = SP + 1;
-// 		// PC
-// 		// = 0x3F:pma;
-// 		// }
-// 		// else
-// 		// PC = PC + 2;
-// 	}
+op xcall_pma_cond(cond: COND, pma: card(16))
+	syntax = format("XCALL 0x%04x, %s", pma, cond)
+	image = format("0101 0110 1110 %s %16b", cond, pma)
+	action = {
+		// if(COND = true)
+		// {
+		// temp(21:0) = PC + 2;
+		// [SP] = temp(15:0);
+		// SP = SP + 1;
+		// PC
+		// = 0x3F:pma;
+		// }
+		// else
+		// PC = PC + 2;
+	}
 
 // // DOC: page 454
-// NP
-// op 
-// 	syntax = "XMAC P,loc16,*(pma)"
-// 	image = "1000 0100 LLLL LLLL CCCC CCCC CCCC CCCC"
-// 	action = {
-// 		// ACC = ACC + P << PM;
-// 		// T = [loc16];
-// 		// P = signed T * signed Prog[0x3F:pma];
-// 	}
+op xmac(loc: LOC16, pma: card(16))
+	syntax = format("XMAC P, %s, *(0x%04x)", loc, pma)
+	image = format("1000 0100 %s %16b", loc, pma)
+	action = {
+		// ACC = ACC + P << PM;
+		// T = [loc16];
+		// P = signed T * signed Prog[0x3F:pma];
+	}
 
 // // DOC: page 456
-// NP
-// op 
-// 	syntax = "XMACD P, loc16, *(pma)"
-// 	image = "1010 0100 LLLL LLLL CCCC CCCC CCCC CCCC"
-// 	action = {
-// 		// ACC = ACC + P << PM;
-// 		// T = [loc16];
-// 		// P = signed T * signed Prog[0x3F:pma];
-// 		// [loc16 + 1] = T;
-// 	}
+op xmacd(loc: LOC16, pma: card(16))
+	syntax = format("XMACD P, %s, *(0x%04x)", loc, pma)
+	image = format("1010 0100 %s %16b", loc, pma)
+	action = {
+		// ACC = ACC + P << PM;
+		// T = [loc16];
+		// P = signed T * signed Prog[0x3F:pma];
+		// [loc16 + 1] = T;
+	}
 
 // DOC: page 458
 op xor_acc_loc16(src: LOC16)
@@ -2659,13 +2652,18 @@ op xor_acc_loc16(src: LOC16)
 	}
 
 // // DOC: page 459
-// NP: 2 ops
-// op 
-// 	syntax = ""
-// 	image = ""
-// 	action = {
+op xor_ACC_16bit_0to15(shift: card(4), imm: card(16))
+	syntax = format("XOR ACC, #%d << #%d", imm, shift)
+	image = format("0011 1110 0010 %4b %16b", shift, imm)
+	action = {
 
-// 	}
+	}
+op xor_ACC_16bit_16(imm: card(16))
+	syntax = format("XOR ACC,#%d << #16", imm)
+	image = format("0101 0110 0100 1110 %16b", imm)
+	action = {
+
+	}
 
 // DOC: page 460
 op xor_ax_loc16(src: LOC16, ax: ACC)
@@ -2700,13 +2698,12 @@ op xorb(ax: ACC, imm: card(8))
 	}
 
 // DOC: page 464
-// NP
-// op xpread_loc16_pma()
-// 	syntax = format("XPREAD loc16, *(pma)")
-// 	image = format("1010 1100 MMMM MMM LLLL LLLL LLLL LLLL")
-// 	action = {
-// 		// [loc16] = Prog[0x3F:pma];
-// 	}
+op xpread_loc16_pma(pma: card(16), loc: LOC16)
+	syntax = format("XPREAD %s, *(0x%04x)", loc, pma)
+	image = format("1010 1100 %s %16b", loc, pma)
+	action = {
+		// [loc16] = Prog[0x3F:pma];
+	}
 
 // DOC: page 465
 op xpread_loc16_al(dest: LOC16)
@@ -2724,30 +2721,26 @@ op xpwrite(src: LOC16)
 		// Prog[0x3F:AL] = [loc16];
 	}
 
-// DOC: page 467
-op xret()
-	syntax = "XRET"
-	image = "0101 0110 1111 1111"
+// DOC: page 467, 468
+op xret__xretc_cond(c: COND)
+	syntax = if c.num == 0b1111 then "XRET" else format("XRETC %s", c) endif
+	image = format("0101 0110 1111 %s", c)
 	action = {
+		//instructions for XRET:
 		// if(COND = true)
 		// SP = SP − 1;
 		// PC = 0x3F:[SP];
-	}
 
-// DOC: page 468
-// NP: conflicts
-// op xretc_cond(c: COND)
-// 	syntax = format("XRETC %s", c)
-// 	image = format("0101 0110 1111 %s", c)
-// 	action = {
-// 		// if(COND = true)
-// 		// {
-// 		// SP = SP − 1;
-// 		// PC = 0x3F:[SP];
-// 		// }
-// 		// else
-// 		// PC = PC + 1;
-// 	}
+		//instructions for XRETC:
+		// if(COND = true)
+		// {
+		// SP = SP − 1;
+		// PC = 0x3F:[SP];
+		// }
+		// else
+		// PC = PC + 1;
+
+	}
 
 // DOC: page 470
 op zalr(src: LOC16)
