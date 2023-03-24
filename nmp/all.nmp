@@ -1217,7 +1217,7 @@ op mov_loc16_val(dest: LOC16, val: card(16))
 // 		//
 // 	}
 
-// // DOC: page 266
+// DOC: page 266
 op mov_loc16_ax_cond(ax: ACC, cond: COND, addr: LOC16)
 	syntax = format("MOV %s, %s, %s", addr, ax, cond)
 	image = format("0101 0110 0010 101%s 0000 %s %s", ax, cond, addr)
@@ -1225,16 +1225,13 @@ op mov_loc16_ax_cond(ax: ACC, cond: COND, addr: LOC16)
 		//
 	}
 
-// DOC: page 268, 436
-op tbit_loc16_4bit__mov_loc16_IER(src: LOC16, index: card(4))
-	syntax = 
-	if index == 0b0000 then format("MOV %s, IER", src) 
-		else format("TBIT %s, #0x%x", src, index) 
-	endif
-	image = format("0100 %4b %s", index, src)
-	action = {
-		// TC = [loc16(bit)];
-	}
+// DOC: page 268
+op mov_loc16_IER(src: LOC16)
+    syntax = format("MOV %s, IER", src)
+    image = format("0010 0000 %s", src)
+    action = { 
+        //[loc16] = IER;
+    }
 
 // DOC: page 269
 op mov_loc16_ovc(dest: LOC16)
@@ -2452,6 +2449,13 @@ op subul_p_loc32(src: LOC32)
 	action = {
 		// P = P − [loc32]; // unsigned subtract
 	}
+
+op tbit_loc16_bit(src: LOC16, bit: card(4))
+    syntax = format("TBIT %s, #0x%01x", src, bit)
+    image = format("0100 %4b %s", bit, src)
+    action = {
+        //TC = [loc16(bit)];
+    }
 
 // DOC: page 437
 op tbit_loc16_t(src: LOC16)
