@@ -144,19 +144,20 @@ op movb_XAR7(imm: card(8))
 	image = format("1011 0110 %8b", imm)
 	action = { } //XAR7 = 0:8bit;
 
+// PUSH XARn is aliased here
 // DOC: page 304, 382
-macro MakeMovlLoc32Xarn__MakePushXarn(xarn, fmt) = \
-	syntax = if dest == 0b10111101 then format("PUSH %s", xarn) else format("MOVL %s, %s", dest.syntax, xarn) endif\
+macro MakeMovlLoc32Xarn(xarn, fmt) = \
+	syntax = format("MOVL %s, %s", dest.syntax, xarn) \
 	image = format(fmt, dest.image)\
 	action = { } // [loc32] = XARn;
-op movl_loc32_XAR0(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR0", "0011 1010 %s")
-op movl_loc32_XAR1(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR1", "1011 0010 %s")
-op movl_loc32_XAR2(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR2", "1010 1010 %s")
-op movl_loc32_XAR3(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR3", "1010 0010 %s")
-op movl_loc32_XAR4(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR4", "1010 1000 %s")
-op movl_loc32_XAR5(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR5", "1010 0000 %s")
-op movl_loc32_XAR6(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR6", "1100 0010 %s")
-op movl_loc32_XAR7(dest: LOC32) MakeMovlLoc32Xarn__MakePushXarn("XAR7", "1100 0011 %s")
+op movl_loc32_XAR0(dest: LOC32) MakeMovlLoc32Xarn("XAR0", "0011 1010 %s")
+op movl_loc32_XAR1(dest: LOC32) MakeMovlLoc32Xarn("XAR1", "1011 0010 %s")
+op movl_loc32_XAR2(dest: LOC32) MakeMovlLoc32Xarn("XAR2", "1010 1010 %s")
+op movl_loc32_XAR3(dest: LOC32) MakeMovlLoc32Xarn("XAR3", "1010 0010 %s")
+op movl_loc32_XAR4(dest: LOC32) MakeMovlLoc32Xarn("XAR4", "1010 1000 %s")
+op movl_loc32_XAR5(dest: LOC32) MakeMovlLoc32Xarn("XAR5", "1010 0000 %s")
+op movl_loc32_XAR6(dest: LOC32) MakeMovlLoc32Xarn("XAR6", "1100 0010 %s")
+op movl_loc32_XAR7(dest: LOC32) MakeMovlLoc32Xarn("XAR7", "1100 0011 %s")
 
 // DOC: page 316
 op movw(imm: card(16))
@@ -455,7 +456,7 @@ op and_ACC_loc16(loc: LOC16)
 
 // DOC: page 149
 op and_AX_loc16_16bit(ax: ACC, loc: LOC16, imm: card(16))
-    syntax = format("AND %s, %s, #%d", ax, loc, imm)
+    syntax = format("AND %s, %s, #0x%x", ax, loc, imm)
     image = format("1100 110%s %s %16b", ax, loc, imm)
     action = {
     	//AX = [loc16] AND 16bit;
@@ -655,7 +656,7 @@ op clrc_m0m1map()
 
 // DOC: page 173
 op clrc_objmode()
-    syntax = "CLRC Objmode"
+    syntax = "CLRC OBJMODE"
     image = "0101 0110 0011 0110"
     action = {
 
@@ -1395,13 +1396,26 @@ op movdl_xt_loc32(src: LOC32)
 	}
 
 // DOC: page 296
+op movh_ACC_1(src: LOC16)
+	syntax = format("MOVH %s, ACC << 1", src)
+	image = format("1011 0011 %s", src)
+	action = { 
+		//
+	}
+op movh_ACC_shift_objmode(src: LOC16, shift: card(3))
+    syntax = format("MOVH %s, ACC << %d", src, shift + 1)
+    image = format("0101 0110 0010 1111 0000 0%3b %s", shift, src)
+action = { 
+
+}
 // HARD
-// op movh_loc16_acc
-// 	syntax = 
-// 	image =
-// 	action = { 
-// 		//
-// 	}
+// oh no
+// op movh_ACC_shift(src: LOC16, shift: card(3))
+//     syntax = format("MOVH %s, ACC << %d", src, shift)
+//     image = format("1011 0%3b %s", shift, src)
+//     action = { 
+
+//     }
 
 // DOC: page 297
 op movh_loc16_p(loc: LOC16)
@@ -1412,8 +1426,9 @@ op movh_loc16_p(loc: LOC16)
 	}
 
 // DOC: page 298, 353
-op movl_ACC_loc32__pop_acc(src: LOC32)
-	syntax = if src.num == 0b10111110 then "POP ACC" else format("MOVL ACC, %s", src.syntax) endif
+// POP ACC is aliased to here
+op movl_ACC_loc32(src: LOC32)
+	syntax = format("MOVL ACC, %s", src.syntax)
 	image = format("0000 0110 %s", src.image)
 	action = {
 
@@ -1455,9 +1470,8 @@ op movl_loc32_p(dest: LOC32)
 	}
 
 // DOC: page 305, 383
-//conflicts with push_xt, see page 383
-op movl_loc32_xt__push_xt(dest: LOC32)
-	syntax = if dest == 0b10111101 then "PUSH XT" else format("MOVL %s, XT", dest) endif
+// PUSH XT is an alias for one of these commands
+	syntax = format("MOVL %s, XT", dest)
 	image = format("1010 1011 %s", dest)
 	action = {
 		//[loc32] = XT;
@@ -1481,26 +1495,28 @@ op movl_p_loc32(src: LOC32)
 
 
 // DOC: page 308, 366
-macro MakePopXarn__MakeMovlXarnLoc32(xarn, fmt) = \
-	syntax = if src.num == 0b10111110 then format("POP %s", xarn) else format("MOVL %s, %s", xarn, src.syntax) endif\
+//POP XARn is aliased to here
+macro MakeMovlXarnLoc32(xarn, fmt) = \
+	syntax = format("MOVL %s, %s", xarn, src.syntax) \
 	image = format(fmt, src)\
 	action = {\
 		// SP −= 2;\
 		// XARn = [SP];\
 	}
-op movl_XAR0_loc32__pop_XAR0(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR0", "1000 1110 %s")
-op movl_XAR1_loc32__pop_XAR1(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR1", "1000 1011 %s")
-op movl_XAR2_loc32__pop_XAR2(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR2", "1000 0110 %s")
-op movl_XAR3_loc32__pop_XAR3(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR3", "1000 0010 %s")
-op movl_XAR4_loc32__pop_XAR4(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR4", "1000 1010 %s")
-op movl_XAR5_loc32__pop_XAR5(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR5", "1000 0011 %s")
-op movl_XAR6_loc32__pop_XAR6(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR6", "1100 0100 %s")
-op movl_XAR7_loc32__pop_XAR7(src: LOC32) MakePopXarn__MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
+op movl_XAR0_loc32(src: LOC32) MakeMovlXarnLoc32("XAR0", "1000 1110 %s")
+op movl_XAR1_loc32(src: LOC32) MakeMovlXarnLoc32("XAR1", "1000 1011 %s")
+op movl_XAR2_loc32(src: LOC32) MakeMovlXarnLoc32("XAR2", "1000 0110 %s")
+op movl_XAR3_loc32(src: LOC32) MakeMovlXarnLoc32("XAR3", "1000 0010 %s")
+op movl_XAR4_loc32(src: LOC32) MakeMovlXarnLoc32("XAR4", "1000 1010 %s")
+op movl_XAR5_loc32(src: LOC32) MakeMovlXarnLoc32("XAR5", "1000 0011 %s")
+op movl_XAR6_loc32(src: LOC32) MakeMovlXarnLoc32("XAR6", "1100 0100 %s")
+op movl_XAR7_loc32(src: LOC32) MakeMovlXarnLoc32("XAR7", "1100 0101 %s")
 
 
 // // DOC: page 310, 367
-op movl_xt_loc32__pop_xt(src: LOC32)
-	syntax = if src.num == 0b10111110 then "POP XT" else format("MOVL XT, %s", src) endif
+//POP XT is aliased to here
+op movl_xt_loc32(src: LOC32)
+	syntax = format("MOVL XT, %s", src)
 	image = format("1000 0111 %s", src)
 	action = {
 		//XT = [loc32];
@@ -2294,7 +2310,7 @@ op spm(pm_bits: card(3))
 		case 0b110: "-5"
 		case 0b111: "-6"
 	}
-	syntax = format("SPM %s", pm_str)
+	syntax = format("SPM #%s", pm_str)
 	image = format("1111 1111 0110 1%3b", pm_bits)
 	action = {
 
