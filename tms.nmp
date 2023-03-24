@@ -67,7 +67,7 @@ mode LOC32(reg32: loc32index) = reg32
 	// if they are not, we may need to treat additional cases
 	// that could represent other operations (e.g. MOVA/ADDL)
 	valid =
-		if reg32ff<0..1> != 0b101 then 1 else
+		if reg32ff<0..2> != 0b101 then 1 else
 			switch(reg32) {
 				case 0b10111101: 1 //"*SP++"
 				case 0b10111110: 1 //"*--SP"
@@ -163,7 +163,7 @@ mode LOC16(reg16: loc16index) = reg16
 	// if they are not, we may need to treat additional cases
 	// that could represent other operations (e.g. MOVA/ADDL)
 	valid =
-		if reg16ff<0..1> != 0b101 then
+		if reg16ff<0..2> != 0b101 then
 			1
 		else
 			switch(reg16) {
