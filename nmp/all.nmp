@@ -57,6 +57,12 @@ op lcr(imm: card(22))
 		// SP = SP + 1;
 		// RPC = PC + 2;
 		// PC = 22bit;
+		M16[SP] = RPC<15..0>;
+		SP = SP + 1;
+		M[SP] = RPC(21:16);
+		SP = SP + 1;
+		RPC = PC + 2;
+		PC = imm;
 	}
 
 // DOC: page 229
@@ -67,9 +73,9 @@ op lretr()
 		// UNTESTED
 		PC = RPC;
 		SP = SP - 1;
-		TMP<31..16> = M32[SP];
+		TMP<31..16> = M16[SP];
 		SP = SP - 1;
-		TMP<15..0> = M32[SP];
+		TMP<15..0> = M16[SP];
 		RPC = TMP<21..0>;
 	}
 
