@@ -196,25 +196,12 @@ op mov_AR_loc16__movz_ARn_0to5(xarn: card(3), addr: LOC16)
 
 	}
 
-
-// op mov_AR_loc16(arn: bit, addr: LOC16)
-// 	artype = if arn == 0 then "AR6" else "AR7" endif
-// 	syntax = format("MOV %s, %s", artype, addr)
-// 	image = format("0101 111%1b %s", arn, addr)
-// 	action = {
-// 		//AR6/7 = [loc16]; AR6/7H = unchanged;
-// 	}
-
-// op movz_ARn_0to5(xarn: card(3), src: LOC16)
-// 	syntax = format("MOVZ AR%d, %s", xarn, src)
-// 	image = format("0101 1%3b %s", xarn, src)
-// 	action = { } //ARn = [loc16]; ARnH = 0;
 op movz_AR6(src: LOC16)
 	syntax = format("MOVZ AR6, %s", src)
 	image = format("1000 1000 %s", src)
 	action = { } // AR6 = [loc16]; AR6H = 0;
 op movz_AR7(src: LOC16)
-	syntax = format("MOVZ AR7 %s", src)
+	syntax = format("MOVZ AR7, %s", src)
 	image = format("1000 0000 %s", src)
 	action = { } // AR7 = [loc16]; AR7H = 0;
 
@@ -231,7 +218,7 @@ op nop(arpn: LOC32)
 	action = {
 		// Modify the indirect address operand as specified and change the auxiliary register pointer (ARP) to the given auxiliary register.
 		// If no operands are given, then do nothing.
-	}
+	}	
 
 // DOC: page 399
 op sb(offset: int(8), cond: COND)
@@ -325,7 +312,11 @@ op add_acc_loc16_shift16(src: LOC16)
    action = {
 
    }
-// conflicts with possibly every other function on earth
+
+// DOC: page 130
+// HARD
+// conflicts with possibly every other function on earth, I don't even know how to differentiate all of them 
+// without breaking this instruction's functionality
 // op add_acc_loc16_0to15(src: LOC16, shift: card(4))
 //    syntax = format("ADD ACC, %s << %d", src, shift)
 //    image = format("1010 %4b %s", shift, src)
@@ -772,12 +763,6 @@ op dec(loc: LOC16)
 
 // DOC: page 186
 // SEE: page 403
-// op dint()
-//     syntax = "DINT"
-//     image = "0011 1011 0001 0000"
-//     action = {
-
-//     }
 
 // DOC: page 187
 op dmac(dmactype: bit, dmacmode: LOC32)
@@ -1209,7 +1194,7 @@ op mov_ier(src: LOC16)
 
 // DOC: page 260
 op mov_loc16_const(dest: LOC16, imm:card(16))
-	syntax = format("MOV %s, #%d", dest, imm)
+	syntax = format("MOV %s, #0x%04x", dest, imm)
 	image = format("0010 1000 %s %16b", dest, imm)
 	action = {
 		//[loc16] = 16bit;
@@ -1381,7 +1366,7 @@ op movb_ax_msb(ax: ACC, loc:LOC16)
 
 // // DOC: page 288
 op movb_loc16_8bit_cond(imm: card(8), loc: LOC16, cond: COND)
-	syntax = format("MOVB %s, #%d, %s", loc, imm, cond)
+	syntax = format("MOVB %s, #0x%02x, %s", loc, imm, cond)
 	image = format("0101 0110 1011 %s %8b %s", cond, imm, loc)
 	action = { 
 		//
@@ -1398,7 +1383,7 @@ op movb_loc16_ax_lsb(ax: ACC, loc: LOC16)
 // DOC: page 292
 op movb_loc16_ax_msb(ax: ACC, loc: LOC16)
 	syntax = format("MOVB %s, %s.MSB", loc, ax)
-	image = format("1100 100%s %s", ax, loc)
+    image = format("1100 100%s %s", ax, loc)
 	action = { 
 		//
 	}
@@ -1447,9 +1432,10 @@ op movl_acc_p__movp(src: LOC16)
 
 	}
 
+//PUSH ACC is an alias for MOV*SP++, ACC 
 // DOC: page 300, 369
 op movl_loc32_ACC__push_ACC(src: LOC32)
-	syntax = if src.num == 0b10111101 then "PUSH ACC" else format("MOVL %s, ACC", src.syntax) endif
+	syntax = format("MOVL %s, ACC", src.syntax)
 	image = format("0001 1110 %s", src.image)
 	action = { 
 
