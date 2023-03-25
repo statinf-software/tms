@@ -59,7 +59,7 @@ op lcr(imm: card(22))
 		// PC = 22bit;
 		M16[SP] = RPC<15..0>;
 		SP = SP + 1;
-		M[SP] = RPC(21:16);
+		M[SP] = RPC<21..16>;
 		SP = SP + 1;
 		RPC = PC + 2;
 		PC = imm;
