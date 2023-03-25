@@ -319,11 +319,7 @@ op add_acc_loc16_shift16(src: LOC16)
    action = {
 
    }
-
-// DOC: page 130
-// HARD
-// conflicts with possibly every other function on earth, I don't even know how to differentiate all of them 
-// without breaking this instruction's functionality
+// UNIMPLEMENTED: OBJMODE 0 instruction
 // op add_acc_loc16_0to15(src: LOC16, shift: card(4))
 //    syntax = format("ADD ACC, %s << %d", src, shift)
 //    image = format("1010 %4b %s", shift, src)
@@ -1326,7 +1322,7 @@ op mov_xarn_pc(xarn: card(3))
 op mova__addl_ACC_P(src: LOC16)
 	syntax =
 		if src.num == 0b10101100 then
-			"ADDL ACC, P << PM"
+			"ADDL ACC, P << PM" // alias
 		else
 			format("MOVA T, %s", src)
 		endif
@@ -1419,11 +1415,10 @@ op movh_ACC_1(src: LOC16)
 op movh_ACC_shift_objmode(src: LOC16, shift: card(3))
     syntax = format("MOVH %s, ACC << %d", src, shift + 1)
     image = format("0101 0110 0010 1111 0000 0%3b %s", shift, src)
-action = { 
+    action = { 
 
-}
-// HARD
-// oh no
+    }
+// UNIMPLEMENTED: OBJMODE 0 instruction
 // op movh_ACC_shift(src: LOC16, shift: card(3))
 //     syntax = format("MOVH %s, ACC << %d", src, shift)
 //     image = format("1011 0%3b %s", shift, src)
@@ -1451,8 +1446,12 @@ op movl_ACC_loc32(src: LOC32)
 
 // DOC: page 299, 311
 op movl_acc_p__movp(src: LOC16)
-	syntax = if src.num == 0b10101100 then "MOVL ACC, P << PM" 
-	else format("MOVP T, %s", src) endif
+	syntax =
+        if src.num == 0b10101100 then
+            "MOVL ACC, P << PM" 
+        else
+            format("MOVP T, %s", src)
+        endif
 	image = format("0001 0110 %s", src)
 	action = { 
 
