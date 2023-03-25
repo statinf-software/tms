@@ -59,38 +59,11 @@ mode COND(cond: card(4)) = cond
 	action = { }
 
 // ASSUMES: AMODE = 0
+// WARNING: has the following invalid cases: 0b10101000, 0b10101010, 0b10101101 (168, 170, 173)
 // DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
 mode LOC32(reg32: loc32index) = reg32
 	num = reg32
 	reg32ff = reg32<0..7> // flipped reg32
-	// not all reg32 bitfields are valid
-	// if they are not, we may need to treat additional cases
-	// that could represent other operations (e.g. MOVA/ADDL)
-	valid =
-		if reg32ff<0..2> != 0b101 then 1 else
-			switch(reg32) {
-				case 0b10111101: 1 //"*SP++"
-				case 0b10111110: 1 //"*--SP"
-				case 0b10111000: 1 //"*"
-				case 0b10111001: 1 //"*++"
-				case 0b10111010: 1 //"*--"
-				case 0b10111011: 1 //"*0++"
-				case 0b10111100: 1 //"*0--"
-				case 0b10101110: 1 //"*BR0++"
-				case 0b10101111: 1 //"*BR0--"
-				case 0b10111111: 1 //"*AR6%%++"
-				case 0b10101001: 1 // "ACC"
-				case 0b10101011: 1 // "P"
-				case 0b10101100: 1 // "XT"
-				default:
-					switch(reg32ff<0..4>) {
-						case 0b10110: 1 // *,ARP%d
-						case 0b10100: 1 // @XAR%d
-						default: 0
-					}
-			}
-		endif
-
 	syntax =
 		// TODO: check bit order of constants
 		switch(reg32ff<0..1>) {
@@ -107,47 +80,47 @@ mode LOC32(reg32: loc32index) = reg32
 				// UNTESTED
 				if reg32ff<2..2> == 0 then // 0b100
 					switch(reg32ff<3..4>) {
-						case 0b00: format("*XAR%d++", reg32ff<5..7>)
-						case 0b01: format("*--XAR%d", reg32ff<5..7>)
-						case 0b10: format("*+XAR%d[AR0]", reg32ff<5..7>)
-						case 0b11: format("*+XAR%d[AR1]", reg32ff<5..7>)
+					case 0b00: format("*XAR%d++", reg32ff<5..7>)
+					case 0b01: format("*--XAR%d", reg32ff<5..7>)
+					case 0b10: format("*+XAR%d[AR0]", reg32ff<5..7>)
+					case 0b11: format("*+XAR%d[AR1]", reg32ff<5..7>)
 					}
 				else // 0b101
 					// UNTESTED except *SP++
-					switch(reg32) {
+					switch(reg32ff<3..4>) {
+					case 0b11:
+						switch(reg32ff<5..7>) {
 						// Stack Addressing Modes (SP):
-						case 0b10111101: "*SP++"
-						case 0b10111110: "*--SP"
+						case 0b101: "*SP++"
+						case 0b110: "*--SP"
 						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
-						case 0b10111000: "*"
-						case 0b10111001: "*++"
-						case 0b10111010: "*--"
-						case 0b10111011: "*0++"
-						case 0b10111100: "*0--"
-						case 0b10101110: "*BR0++"
-						case 0b10101111: "*BR0--"
+						case 0b000: "*"
+						case 0b001: "*++"
+						case 0b010: "*--"
+						case 0b011: "*0++"
+						case 0b100: "*0--"
 						// Circular Indirect Addressing Modes (XAR6, XAR1):
-						case 0b10111111: "*AR6%%++"
+						case 0b111: "*AR6%%++"
+						}
+					case 0b10:
+						// case 0b10110RRR: "*,ARP%d"
+						format("*,ARP%d", reg32ff<5..7>)
+					case 0b00:
+						// loc32 stuff
+						// case 0b10100AAA: "@XAR%d"
+						format("XAR%d", reg32ff<5..7>)
+					case 0b01:
+						switch(reg32ff<5..7>) {
+						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
+						case 0b110: "*BR0++"
+						case 0b111: "*BR0--"
+						case 0b001: "ACC"
+						case 0b011: "P"
+						case 0b100: "XT"
 						default:
-							// case 0b10110RRR: "*,ARP%d"
-							if reg32ff<0..4> == 0b10110 then
-								format("*,ARP%d", reg32ff<5..7>)
-							else
-								// loc32 stuff
-								// case 0b10100AAA: "@XAR%d"
-								if reg32ff<0..4> == 0b10100 then
-									format("XAR%d", reg32ff<5..7>)
-								else switch(reg32) {
-									// 32-Bit Register Addressing Modes (XAR0 to XAR7, ACC, P, XT):
-									case 0b10101001: "ACC"
-									case 0b10101011: "P"
-									case 0b10101100: "XT"
-									default: "!!!"
-								}
-								endif
-							endif
-							// default case end
-						// switch case end
+							// case 0b000, 0b010, 0b101
+							"<invalid>"
+						}
 					}
 				endif
 		}
@@ -159,38 +132,6 @@ mode LOC32(reg32: loc32index) = reg32
 mode LOC16(reg16: loc16index) = reg16
 	num = reg16
 	reg16ff = reg16<0..7> // flipped reg16
-	// not all reg16 bitfields are valid
-	// if they are not, we may need to treat additional cases
-	// that could represent other operations (e.g. MOVA/ADDL)
-	valid =
-		if reg16ff<0..2> != 0b101 then
-			1
-		else
-			switch(reg16) {
-				case 0b10111101: 1 //"*SP++"
-				case 0b10111110: 1 //"*--SP"
-				case 0b10111000: 1 //"*"
-				case 0b10111001: 1 //"*++"
-				case 0b10111010: 1 //"*--"
-				case 0b10111011: 1 //"*0++"
-				case 0b10111100: 1 //"*0--"
-				case 0b10101110: 1 //"*BR0++"
-				case 0b10101111: 1 //"*BR0--"
-				case 0b10111111: 1 //"*AR6%%++"
-				case 0b10101000: 1 // "AH"
-				case 0b10101001: 1 // "AL"
-				case 0b10101010: 1 // "PH"
-				case 0b10101011: 1 // "PL"
-				case 0b10101100: 1 // "TH"
-				case 0b10101101: 1 // "SP"
-				default:
-					switch(reg16ff<0..4>) {
-						case 0b10110: 1 // *,ARP%d
-						case 0b10100: 1 // AR%d
-						default: 0
-					}
-			}
-		endif
 	syntax =
 		// TODO: check bit order of constants
 		switch(reg16ff<0..1>) {
@@ -207,50 +148,48 @@ mode LOC16(reg16: loc16index) = reg16
 				// UNTESTED
 				if reg16ff<2..2> == 0 then // 0b100
 					switch(reg16ff<3..4>) {
-						case 0b00: format("*XAR%d++", reg16ff<5..7>)
-						case 0b01: format("*--XAR%d", reg16ff<5..7>)
-						case 0b10: format("*+XAR%d[AR0]", reg16ff<5..7>)
-						case 0b11: format("*+XAR%d[AR1]", reg16ff<5..7>)
+					case 0b00: format("*XAR%d++", reg16ff<5..7>)
+					case 0b01: format("*--XAR%d", reg16ff<5..7>)
+					case 0b10: format("*+XAR%d[AR0]", reg16ff<5..7>)
+					case 0b11: format("*+XAR%d[AR1]", reg16ff<5..7>)
 					}
 				else // 0b101
 					// UNTESTED
-					switch(reg16) {
+					switch(reg16ff<3..4>) {
+					case 0b11:
+						switch(reg16ff<5..7>) {
 						// Stack Addressing Modes (SP):
-						case 0b10111101: "*SP++"
-						case 0b10111110: "*--SP"
+						case 0b101: "*SP++"
+						case 0b110: "*--SP"
 						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
-						case 0b10111000: "*"
-						case 0b10111001: "*++"
-						case 0b10111010: "*--"
-						case 0b10111011: "*0++"
-						case 0b10111100: "*0--"
-						case 0b10101110: "*BR0++"
-						case 0b10101111: "*BR0--"
+						case 0b000: "*"
+						case 0b001: "*++"
+						case 0b010: "*--"
+						case 0b011: "*0++"
+						case 0b100: "*0--"
 						// Circular Indirect Addressing Modes (XAR6, XAR1):
-						case 0b10111111: "*AR6%%++"
-						default:
-							// case 0b10110RRR: "*,ARP%d"
-							if reg16ff<0..4> == 0b10110 then
-								format("*,ARP%d", reg16ff<5..7>)
-							else
-								// loc16 stuff
-								// case 0b10100AAA: "AR%d"
-								if reg16ff<0..4> == 0b10100 then
-									format("AR%d", reg16ff<5..7>)
-								else switch(reg16) {
-									// 16-Bit Register Addressing Modes (AR0 to AR7, AH, AL, PH, PL, TH, SP):
-									case 0b10101000: "AH"
-									case 0b10101001: "AL"
-									case 0b10101010: "PH"
-									case 0b10101011: "PL"
-									case 0b10101100: "TH"
-									case 0b10101101: "SP"
-									default: "!!!"
-								}
-								endif
-							endif
-							// default case end
-						// switch case end
+						case 0b111: "*AR6%%++"
+						}
+					case 0b10:
+						// case 0b10110RRR: "*,ARP%d"
+						format("*,ARP%d", reg16ff<5..7>)
+					case 0b00:
+						// loc16 stuff
+						// case 0b10100AAA: "AR%d"
+						format("AR%d", reg16ff<5..7>)
+					case 0b01:
+						switch(reg16ff<5..7>) {
+						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
+						case 0b110: "*BR0++"
+						case 0b111: "*BR0--"
+						// 16-Bit Register Addressing Modes (AR0 to AR7, AH, AL, PH, PL, TH, SP):
+						case 0b000: "AH"
+						case 0b001: "AL"
+						case 0b010: "PH"
+						case 0b011: "PL"
+						case 0b100: "TH"
+						case 0b101: "SP"
+						}
 					}
 				endif
 		}
