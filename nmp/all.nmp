@@ -681,7 +681,8 @@ op clrc_xf()
 
     }
 
-// DOC: page 176
+// EINT is aliased to here
+// DOC: page 176, 192 
 op clrc_mode(mode_bitset: card(8))
     _m = mode_bitset
     syntax = format("CLRC %s%s%s%s%s%s%s%s",
@@ -809,12 +810,13 @@ op edis()
     }
 
 // DOC: page 192
-op eint()
-    syntax = "EINT"
-    image = "0010 1001 0001 0000"
-    action = {
+// SEE: page 176
+// op eint()
+//     syntax = "EINT"
+//     image = "0010 1001 0001 0000"
+//     action = {
 
-    }
+//     }
 
 // DOC: page 193
 op estop0()
@@ -932,13 +934,25 @@ op inc(loc: LOC16)
     }
 
 // DOC: page 212
-// HARD
-// op intr
-//     syntax = ""
-//     image = ""
-//     action = {
-
-//     }
+op intr(intx: card(4))
+    intr_vector = switch(intx) {
+        case 0: "RESET"
+        case 15: "<invalid>"
+        default: format("INT%d", intx)
+    }
+    syntax = format("INTR %s", intr_vector)
+    image = format("0000 0000 0001 %4b", intx)
+    action = { }
+// DOC: page 212
+op intr_nmi()
+    syntax = "INTR NMI"
+    image = "0111 0110 0001 0110"
+    action = { }
+// DOC: page 212
+op intr_emuint()
+    syntax = "INTR EMUINT"
+    image = "0111 0110 0001 1100"
+    action = { }
 
 // DOC: page 214
 op iret()
@@ -1178,14 +1192,30 @@ op mov_acc_loc16(addr: LOC16)
 		//
 	}
 
+// ASSUMES OBJMODE = 1
 // DOC: page 255
-// HARD
-// op mov_acc_loc16_shift
-// 	syntax =
-// 	image = 
-// 	action = {
-// 		//
-// 	}
+op mov_acc_loc16_shift_0(src: LOC16)
+	syntax = format("MOV ACC, %s << 0", src)
+	image = format("1000 0101 %s", src)
+	action = {
+		//
+	}
+// TESTED
+// ASSUMES OBJMODE = 1
+// DOC: page 255
+op mov_acc_loc16_shift_1to15(src: LOC16, shift: card(4))
+    syntax = format("MOV ACC, %s << %d", src, shift)
+    image = format("0101 0110 0000 0011 0000 %4b %s", shift, src)
+    action = {
+        //
+    }
+// DOC: page 255
+op mov_acc_loc16_shift_16(src: LOC16)
+    syntax = format("MOV ACC, %s << 16", src)
+    image = format("0010 0101 %s", src)
+    action = {
+        //
+    }
 
 // DOC: page 258
 op mov_dp(imm: card(10))
@@ -1219,14 +1249,21 @@ op mov_loc16_val(dest: LOC16, val: card(16))
 		//[loc16] = [0x0000:16bit];
 	}
 
-// // DOC: page 263
-// HARD
-// op mov_loc16_acc()
-// 	syntax =
-// 	image = 
-// 	action = {
-// 		//
-// 	}
+// DOC: page 263
+op mov_loc16_acc_shift1(src: LOC16)
+	syntax = format("MOV %s, ACC << 1", src)
+	image = format("1011 0001 %s", src)
+	action = {
+		//
+	}
+// ASSUMES OBJMODE = 1
+// DOC: page 263
+op mov_loc16_acc_shift2to8(src: LOC16, shift: card(3))
+    syntax = format("MOV %s, ACC << %d", src, shift)
+    image = format("0101 0110 0010 1101 0000 0%3b %s", shift, src)
+    action = {
+        //
+    }
 
 // DOC: page 266
 op mov_loc16_ax_cond(ax: ACC, cond: COND, addr: LOC16)
@@ -2195,13 +2232,15 @@ op ror_acc()
 	}
 
 // DOC: page 395
-// HARD
-// op 
-// 	syntax = ""
-// 	image = ""
-// 	action = {
-
-// 	}
+op rpt_imm(imm: card(8))
+	syntax = format("RPT #%d", imm)
+	image = format("1111 0110 %8b", imm)
+	action = { }
+// DOC: page 395
+op rpt_loc16(src: LOC16)
+    syntax = format("RPT %s", src)
+    image = format("1111 0111 %s", src)
+    action = { }
 
 // DOC: page 396
 op sat_acc()
@@ -2349,14 +2388,23 @@ op sqrs(src: LOC16)
 		// P = T * [loc16];
 	}
 
-// // DOC: page 414
-// HARD
-// op 
-// 	syntax = ""
-// 	image = ""
-// 	action = {
-
-// 	}
+// ASSUMES OBJMODE = 1
+// DOC: page 414
+op sub_acc_loc16_shift_0(src: LOC16)
+	syntax = format("SUB ACC, %s << #0", src)
+	image = format("1010 1110 %s", src)
+	action = { }
+// ASSUMES OBJMODE = 1
+// DOC: page 414
+op sub_acc_loc16_shift_1to15(src: LOC16, shift: card(4))
+    syntax = format("SUB ACC, %s << #%d", src, shift)
+    image = format("0101 0110 0000 0000 0000 %4b %s", shift, src)
+    action = { }
+// DOC: page 414
+op sub_acc_loc16_shift_16(src: LOC16)
+    syntax = format("SUB ACC, %s << #16", src)
+    image = format("0000 0100 %s", src)
+    action = { }
 
 // // DOC: page 416
 op sub_ACC_loc16(src: LOC16)
@@ -2597,13 +2645,35 @@ op xb_pma_cond(pma: card(16), cond: COND)
 	}
 
 // DOC: page 448
-// HARD
-// op 
-// 	syntax = "XBANZ pma,*ind{,ARPn}"
-// 	image = ""
-// 	action = {
-
-// 	}
+op xbanz(pma: card(16), ind: enum(0b010, 0b011, 0b100, 0b110, 0b111))
+    ind_str =
+        if ind == 0b010 then "++"  else
+        if ind == 0b011 then "--"  else
+        if ind == 0b100 then ""    else
+        if ind == 0b110 then "0++" else
+        if ind == 0b111 then "0--" else
+        "<invalid>"
+        endif endif endif endif endif
+	syntax = format("XBANZ 0x%04x, *%s", pma, ind_str)
+	image = format("0101 0110 0000 1%3b %16b", ind, pma)
+	action = { }
+// DOC: page 448
+op xbanz_arpn1(pma: card(16), arpn: card(3), ind_bit: bit)
+    ind_str = if ind_bit == 0 then "" else "++" endif
+    syntax = format("XBANZ 0x%04x, *%s, ARP%d", pma, ind_str, arpn)
+    image = format("0011 1110 0011 %1b%3b %16b", ind_bit, arpn, pma)
+    action = { }
+// DOC: page 448
+op xbanz_arpn2(pma: card(16), arpn: card(3), ind_bit: bit)
+    ind_str = if ind_bit == 0 then "--" else "0++" endif
+    syntax = format("XBANZ 0x%04x, *%s, ARP%d", pma, ind_str, arpn)
+    image = format("0011 1110 0100 %1b%3b %16b", ind_bit, arpn, pma)
+    action = { }
+// DOC: page 448
+op xbanz_arpn3(pma: card(16), arpn: card(3))
+    syntax = format("XBANZ 0x%04x, *0--, ARP%d", pma, arpn)
+    image = format("0011 1110 0101 0%3b %16b", arpn, pma)
+    action = { }
 
 // DOC: page 450
 op xcall_al()
