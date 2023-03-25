@@ -33,6 +33,7 @@ type address   = card(32)
 type index     = card( 5)
 type loc16index = card( 8)
 type loc32index = card( 8)
+type loc32enum  = enum(0..167, 169, 170..172, 174..255)
 
 // tms state
 // ISETSTATE definitions from ARM Thumb
