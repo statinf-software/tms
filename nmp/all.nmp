@@ -686,13 +686,21 @@ op clrc_xf()
     }
 
 // DOC: page 176
-// HARD
-// op clrc_mode 
-//    syntax = ""
-//    image = ""
-//    action = {
-
-//    }
+op clrc_mode(mode_bitset: card(8))
+    _m = mode_bitset
+    syntax = format("CLRC %s%s%s%s%s%s%s%s",
+        if _m<0..0> then format("SXM%s",  if _m<1..7>  then ", " else "" endif) else "" endif,
+        if _m<1..1> then format("OVM%s",  if _m<2..7>  then ", " else "" endif) else "" endif,
+        if _m<2..2> then format("TC%s",   if _m<3..7>  then ", " else "" endif) else "" endif,
+        if _m<3..3> then format("C%s",    if _m<4..7>  then ", " else "" endif) else "" endif,
+        if _m<4..4> then format("INTM%s", if _m<5..7>  then ", " else "" endif) else "" endif,
+        if _m<5..5> then format("DBGM%s", if _m<6..7>  then ", " else "" endif) else "" endif,
+        if _m<6..6> then format("PAGE0%s",if _m<7..7>  then ", " else "" endif) else "" endif,
+        if _m<7..7> then "VMAP" else "" endif)
+    image = format("0010 1001 %8b", mode_bitset)
+    action = {
+        // Clear the specified status bits.
+    }
 
 // DOC: page 177
 op cmp_ax(ax: ACC, loc: LOC16)
