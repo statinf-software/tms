@@ -125,6 +125,73 @@ mode LOC32(reg32: loc32index) = reg32
 				endif
 		}
 	image = format("%8b", reg32)
+// ASSUMES: AMODE = 0
+// WARNING: this version does not include invalid cases
+// DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
+mode LOC32_CHECKED(reg32: loc32enum) = reg32
+	num = reg32
+	reg32ff = reg32<0..7> // flipped reg32
+	syntax =
+		// TODO: check bit order of constants
+		switch(reg32ff<0..1>) {
+			case 0b00:
+				// UNTESTED
+				format("@0x%x", reg32ff<2..7>)
+			case 0b01:
+				// UNTESTED
+				format("*-SP[%d]", reg32ff<2..7>)
+			case 0b11:
+				// UNTESTED
+				format("*+XAR%d[%d]", reg32ff<5..7>, reg32ff<2..4>)
+			case 0b10:
+				// UNTESTED
+				if reg32ff<2..2> == 0 then // 0b100
+					switch(reg32ff<3..4>) {
+					case 0b00: format("*XAR%d++", reg32ff<5..7>)
+					case 0b01: format("*--XAR%d", reg32ff<5..7>)
+					case 0b10: format("*+XAR%d[AR0]", reg32ff<5..7>)
+					case 0b11: format("*+XAR%d[AR1]", reg32ff<5..7>)
+					}
+				else // 0b101
+					// UNTESTED except *SP++
+					switch(reg32ff<3..4>) {
+					case 0b11:
+						switch(reg32ff<5..7>) {
+						// Stack Addressing Modes (SP):
+						case 0b101: "*SP++"
+						case 0b110: "*--SP"
+						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
+						case 0b000: "*"
+						case 0b001: "*++"
+						case 0b010: "*--"
+						case 0b011: "*0++"
+						case 0b100: "*0--"
+						// Circular Indirect Addressing Modes (XAR6, XAR1):
+						case 0b111: "*AR6%%++"
+						}
+					case 0b10:
+						// case 0b10110RRR: "*,ARP%d"
+						format("*,ARP%d", reg32ff<5..7>)
+					case 0b00:
+						// loc32 stuff
+						// case 0b10100AAA: "@XAR%d"
+						format("XAR%d", reg32ff<5..7>)
+					case 0b01:
+						switch(reg32ff<5..7>) {
+						// C2xLP Indirect Addressing Modes (ARP, XAR0 to XAR7):
+						case 0b110: "*BR0++"
+						case 0b111: "*BR0--"
+						case 0b001: "ACC"
+						case 0b011: "P"
+						case 0b100: "XT"
+						default:
+							// case 0b000, 0b010, 0b101
+							"<invalid>"
+						}
+					}
+				endif
+		}
+	image = format("%8b", reg32)
 
 
 // ASSUMES: AMODE = 0
