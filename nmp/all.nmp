@@ -2159,7 +2159,7 @@ op pwrite_xar7(src: LOC16)
 
 // DOC: page 385
 op qmacl(optype: bit, loc: LOC32)
-	syntax = if optype == 0b1 then format("QMACL P, %s, *XAR7", loc) else format("QMACL P, %s, *XAR7++", loc) endif
+    syntax = format("QMACL P,  %s, %s", loc, if optype == 0 then "*XAR7" else "*XAR7++" endif)
 	image = format("0101 0110 0100 1111 1%1b00 0111 %s", optype, loc)
 	action = {
 
@@ -2267,17 +2267,15 @@ op sbbu(src: LOC16)
 	}
 
 // DOC: page 401
-op sbf(instype: card(2), imm: card(8))
-	sbftype = 
-		if instype == 0b00 then "EQ"
-		else if instype == 0b01 then "NEQ"
-		else if instype == 0b10 then "TC" 
-		else "NTC" 
-		endif
-		endif
-		endif
+op sbf(insttype: card(2), imm: card(8))
+	sbftype = switch(insttype) { 
+        case 0b00: "EQ"
+        case 0b01: "NEQ"
+        case 0b10: "TC"
+        default: "NTC"
+    }
 	syntax = format("SBF %d, %s", imm, sbftype)
-	image = format("1110 11%2b %8b", instype, imm)
+	image = format("1110 11%2b %8b", insttype, imm)
 	action = {
 
 	}
@@ -2809,10 +2807,10 @@ op xpwrite(src: LOC16)
 	action = {
 		// Prog[0x3F:AL] = [loc16];
 	}
-
+// 467 is an alias for XRETC COND
 // DOC: page 467, 468
 op xret__xretc_cond(c: COND)
-	syntax = if c.num == 0b1111 then "XRET" else format("XRETC %s", c) endif
+	syntax = format("XRETC %s", c)
 	image = format("0101 0110 1111 %s", c)
 	action = {
 		//instructions for XRET:
