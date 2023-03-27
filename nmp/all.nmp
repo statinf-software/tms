@@ -2159,7 +2159,7 @@ op pwrite_xar7(src: LOC16)
 
 // DOC: page 385
 op qmacl(optype: bit, loc: LOC32)
-    syntax = format("QMACL P,  %s, %s", loc, if optype == 0 then "*XAR7" else "*XAR7++" endif)
+    syntax = format("QMACL P, %s, %s", loc, if optype == 0 then "*XAR7" else "*XAR7++" endif)
 	image = format("0101 0110 0100 1111 1%1b00 0111 %s", optype, loc)
 	action = {
 
@@ -2272,7 +2272,7 @@ op sbf(insttype: card(2), imm: card(8))
         case 0b00: "EQ"
         case 0b01: "NEQ"
         case 0b10: "TC"
-        default: "NTC"
+        case 0b11: "NTC"
     }
 	syntax = format("SBF %d, %s", imm, sbftype)
 	image = format("1110 11%2b %8b", insttype, imm)
