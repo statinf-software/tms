@@ -571,7 +571,7 @@ op b(offset: int(16), cond: COND)
 
 // DOC: page 163
 op banz(offset: int(16), arn: card(3)) 
-    syntax = format("BANZ %d, AR%d--", offset, arn)
+    syntax = format("BANZ %d,AR%d--", offset, arn)
     image = format("0000 0000 0000 1%3b %16b", arn, offset)
     action = {
 
@@ -1204,7 +1204,12 @@ op mov_acc_loc16_shift_0(src: LOC16)
 // ASSUMES OBJMODE = 1
 // DOC: page 255
 op mov_acc_loc16_shift_1to15(src: LOC16, shift: card(4))
-    syntax = format("MOV ACC, %s << %d", src, shift)
+    syntax =
+        if shift then
+            format("MOV ACC, %s << %d", src, shift)
+        else
+            format("MOV ACC, %s", src)
+        endif
     image = format("0101 0110 0000 0011 0000 %4b %s", shift, src)
     action = {
         //
