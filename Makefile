@@ -118,6 +118,7 @@ src/disasm.c: $(ARCH).irg
 test_disasm: $(ARCH)-disasm
 	-disasm/tms-disasm disasm/test/blinky.elf > disasm/test/blinky.gliss
 	-disasm/tms-disasm disasm/test/adpcm.elf > disasm/test/adpcm.gliss
+	-disasm/tms-disasm disasm/test/lms.elf > disasm/test/lms.gliss
 
 distclean: clean
 	-for d in $(SUBDIRS); do test -d $$d && (cd $$d; make distclean || exit 0); done
