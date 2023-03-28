@@ -286,7 +286,8 @@ op abstc_ACC()
 
 // DOC: page 128
 op add_ACC_16bit(imm: card(16), shift: card(4))
-    syntax = format("ADD ACC, #%d << #%d", imm, shift)
+    syntax = if shift == 0b0000 then format("ADD ACC, #%d", imm)
+        else format("ADD ACC, #%d << #%d", imm, shift) endif
     image = format("1111 1111 0001 %4b %16b", shift, imm)
     action = {
 
@@ -2394,7 +2395,7 @@ op sqrs(src: LOC16)
 // ASSUMES OBJMODE = 1
 // DOC: page 414
 op sub_acc_loc16_shift_0(src: LOC16)
-	syntax = format("SUB ACC, %s << #0", src)
+	syntax = format("SUB ACC, %s", src)
 	image = format("1010 1110 %s", src)
 	action = { }
 // ASSUMES OBJMODE = 1
@@ -2860,3 +2861,71 @@ op zapa()
 		// P = 0;
 		// OVC = 0;
 	}
+
+
+///////////// instructions from the extended instruction set
+
+// DOC: page 48
+op cmpf32_zero(rah: card(3))
+    syntax = format("CMPF32 R%dH, #0.0", rah)
+    image = format("1110 0101 1010 0%3b", rah)
+    action = {
+
+    }
+
+// DOC: page 101
+op moviz(imm: card(16), rah: card(3))
+    syntax = format("MOVIZ R%d, #0x%x", rah, imm)
+    image = format("1110 1000 0000 0 %16b %3b", imm, rah)
+    action = {
+        //RaH[31:16] = #16FHiHex
+        //RaH[15:0] = 0
+    }
+
+// DOC: page 105
+op mpyf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
+    syntax = format("MPYF32 R%dH, R%dH, R%dH", rah, rbh, rch)
+    image = format("1110 0111 0000 0000 0000 000%3b %3b %3b", rch, rbh, rah)
+    action = { 
+
+    }
+
+
+// DOC: page 116
+op negf32(rah: card(3), rbh: card(3), cndf: CNDF)
+    syntax = format("NEGF32 R%dH, R%dH, %s", rah, rbh, cndf)
+    image = format("1110 0110 1010 %4b 0000 0000 00%3b %3b", cndf, rbh, rah)
+    action = { 
+
+    }
+
+// DOC: page 141
+op zero(rah: card(3))
+    syntax = format("ZERO R%d", rah)
+    image = format("1110 0101 1001 0%3b", rah)
+    action = { 
+
+    }
+
+//I'm pretty sure mem32 is just the second document's name for loc32
+//It certainly seems to work identically 
+// DOC: page 219
+op mov32_mem32_rah(loc: LOC32, rah: card(3))
+    syntax = format("MOV32 %s, R%dH", loc, rah)
+    image = format("1110 0010 0000 0011 0000 0%3b %s", rah, loc)
+    action = { 
+
+    }
+
+// DOC: page 238
+// TODO: implement the syntax for the flags 
+op movst0(flag1: card(4), flag2: card(4))
+    syntax = "MOVST0 <flag1> <flag2>"
+    image = format("1010 1101 %4b %4b", flag1, flag2)
+    action = { 
+
+    }
+
+    
+
+
