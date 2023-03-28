@@ -141,12 +141,12 @@ op movb_AX(ax: ACC, imm: card(8))
 
 // DOC: page 294
 op movb_XAR6(imm: card(8))
-	syntax = format("MOVB XAR6, #0x%02x", imm)
+	syntax = format("MOVB XAR6, #0x%x", imm)
 	image = format("1011 1110 %8b", imm)
 	action = { } //XAR6 = 0:8bit;
 // DOC: page 294
 op movb_XAR7(imm: card(8))
-	syntax = format("MOVB XAR7, #0x%02x", imm)
+	syntax = format("MOVB XAR7, #0x%x", imm)
 	image = format("1011 0110 %8b", imm)
 	action = { } //XAR7 = 0:8bit;
 
@@ -1195,7 +1195,7 @@ op mov_acc_loc16(addr: LOC16)
 // ASSUMES OBJMODE = 1
 // DOC: page 255
 op mov_acc_loc16_shift_0(src: LOC16)
-	syntax = format("MOV ACC, %s << 0", src)
+	syntax = format("MOV ACC, %s", src)
 	image = format("1000 0101 %s", src)
 	action = {
 		//
@@ -1386,11 +1386,11 @@ op movad(src: LOC16)
 op movb_XARn__movb_ARn(arn: card(3), imm: card(8))
 	syntax = 
 		if arn == 0b110 then 
-			format("MOVB AR6, #%d", imm)
+			format("MOVB AR6, #0x%x", imm)
 			else if arn == 0b111 then 
-				format("MOVB AR7, #%d", imm)
+				format("MOVB AR7, #0x%x", imm)
 			else
-				format("MOVB XAR%d, #0x%02x", arn, imm)
+				format("MOVB XAR%d, #0x%x", arn, imm)
 			endif
 		endif
 	image = format("1101 0%3b %8b", arn, imm)
@@ -2320,7 +2320,7 @@ op setc_M0M1MAP()
 
 // DOC: page 406
 op setc_objmode()
-	syntax = "SETC Objmode"
+	syntax = "SETC OBJMODE"
 	image = "0101 0110 0001 1111"
 	action = {
 		// Set the Objmode status bit, putting the device in C28x object mode (supports C2XLP source).
