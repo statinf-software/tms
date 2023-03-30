@@ -29,6 +29,44 @@ let bit_order = "uppermost"
 let gliss_isize = "16,32"
 //let bit_image_order =  1
 
+//OTAWA kind instruction types
+let IS_COND    = 0x00001
+let IS_CONTROL = 0x00002
+let IS_CALL    = 0x00004
+let IS_RETURN  = 0x00008
+let IS_MEM     = 0x00010
+let IS_LOAD    = 0x00020
+let IS_STORE   = 0x00040
+let IS_INT     = 0x00080
+let IS_FLOAT   = 0x00100
+let IS_ALU     = 0x00200
+let IS_MUL     = 0x00400
+let IS_DIV     = 0x00800
+let IS_SHIFT   = 0x01000
+let IS_TRAP    = 0x02000
+let IS_INTERN  = 0x04000
+let IS_MULTI   = 0x08000
+let IS_SPECIAL = 0x10000
+ 
+//shortcuts and aliases for the above instructions
+let ARITH = IS_ALU | IS_INT  //"0"       // Integer Add and Sub Instructions
+let MULDIV = IS_ALU | IS_INT //"1"     // Integer Mul and Div Instructions
+let INTCMP = IS_ALU | IS_INT //"2"     // Integer Compare Instructions
+let LOGIC = IS_ALU | IS_INT //"3"       // Integer Logical instructions
+let SHIFTROT = IS_ALU | IS_SHIFT | IS_INT //"4" // Int shift and rotate
+let STORE = IS_MEM | IS_STORE | IS_INT //"5"       // Integer Stores including byte reverse, multiple and string
+let LOAD = IS_MEM | IS_LOAD | IS_INT //"6"         // Integer Loads including byte reverse, multiple and string
+let MEMSYNC = IS_INTERN //"7"   // Memory Synchronization Instructions
+let BRANCH = IS_CONTROL //"8" // IMPORTANT
+let CRLI = IS_INTERN //"9"         // Condition Register Logical Instructions
+let SYSTEM = IS_CONTROL | IS_TRAP //"10"     // System Linkage Instructions
+let TRAP = IS_CONTROL | IS_TRAP //"11"
+let EXT = IS_INTERN //"12"           // External Control Instructions
+let CONTROL = IS_INTERN //"13"   // Processor Control Instructions
+let CACHE = IS_INTERN //"14"       // Cache Management Instructions
+let RETURN = IS_RETURN
+let CALL = IS_CALL
+
 mode ACC(acc_type: bit) = acc_type
 	syntax = if acc_type == 0 then "AL" else "AH" endif
 	image = format("%1b", acc_type)
