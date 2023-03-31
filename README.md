@@ -1,6 +1,7 @@
 # TMS320C28x Instruction Set Architecture
 
-TMS implementation in SimNML for the GLISS2 ISS generator. [TMS320C28x CPU and Instruction Set Reference Guide](https://www.ti.com/lit/ug/spru430f/spru430f.pdf) (from ti.com).
+TMS implementation in SimNML for the GLISS2 ISS generator. [TMS320C28x CPU and Instruction Set Reference Guide](https://www.ti.com/lit/ug/spru430f/spru430f.pdf) and [TMS320C28x Floating Point Unit and
+Instruction Set](https://www.ti.com/lit/ug/sprueo2b/sprueo2b.pdf) (from ti.com).
 
 This GLISS ISA supports TMS320C28x, 32-bits architecture, with both 16-bit and 32-bit instructions.
 
@@ -255,3 +256,86 @@ Instructions used in LTS code:
 - [ ] ZAPA
 - [ ] ZERO
 - [ ] ZEROA
+
+Floating Point Instructions for TMS:
+ - [ ] ABSF32 RaH, RbH
+ - [ ] ADDF32 RaH, #16FHi, RbH
+ - [ ] ADDF32 RaH, RbH, #16FHi
+ - [ ] ADDF32 RaH, RbH, RcH
+ - [ ] ADDF32 RdH, ReH, RfH || MOV32 mem32, RaH
+ - [ ] ADDF32 RdH, ReH, RfH || MOV32 RaH, mem32
+ - [ ] CMPF32 RaH, RbH
+ - [ ] CMPF32 RaH, #16FHi
+ - [ ] CMPF32 RaH, #0.0
+ - [ ] EINVF32 RaH, RbH
+ - [ ] EISQRTF32 RaH, RbH
+ - [ ] F32TOI16 RaH, RbH
+ - [ ] F32TOI16R RaH, RbH
+ - [ ] F32TOI32 RaH, RbH
+ - [ ] F32TOUI16 RaH, RbH
+ - [ ] F32TOUI16R RaH, RbH
+ - [ ] F32TOUI32 RaH, RbH
+ - [ ] FRACF32 RaH, RbH
+ - [ ] I16TOF32 RaH, RbH
+ - [ ] I16TOF32 RaH, mem16
+ - [ ] I32TOF32 RaH, mem32
+ - [ ] I32TOF32 RaH, RbH
+ - [ ] MACF32 R3H, R2H, RdH, ReH, RfH
+ - [ ] MACF32 R3H, R2H, RdH, ReH, RfH || MOV32 RaH, mem32
+ - [ ] MACF32 R7H, R3H, mem32, *XAR7++
+ - [ ] MACF32 R7H, R6H, RdH, ReH, RfH
+ - [ ] MACF32 R7H, R6H, RdH, ReH, RfH || MOV32 RaH, mem32
+ - [ ] MAXF32 RaH, RbH
+ - [ ] MAXF32 RaH, #16FHi
+ - [ ] MAXF32 RaH, RbH || MOV32 RcH, RdH
+ - [ ] MINF32 RaH, RbH
+ - [ ] MINF32 RaH, #16FHi
+ - [ ] MINF32 RaH, RbH || MOV32 RcH, RdH
+ - [ ] MOV16 mem16, RaH
+ - [ ] MOV32 *(0:16bitAddr), loc32
+ - [ ] MOV32 ACC, RaH
+ - [ ] MOV32 loc32, *(0:16bitAddr)
+ - [ ] MOV32 mem32, RaH
+ - [ ] MOV32 mem32, STF
+ - [ ] MOV32 P, RaH
+ - [ ] MOV32 RaH, ACC
+ - [ ] MOV32 RaH, mem32 {, CNDF}
+ - [ ] MOV32 RaH, P
+ - [ ] MOV32 RaH, RbH {, CNDF}
+ - [ ] MOV32 RaH, XARn
+ - [ ] MOV32 RaH, XT
+ - [ ] MOV32 STF, mem32
+ - [ ] MOV32 XARn, RaH
+ - [ ] MOV32 XT, RaH
+ - [ ] MOVD32 RaH, mem32
+ - [ ] MOVIZ RaH, #16FHiHex
+ - [ ] MOVIZF32 RaH, #16FHi
+ - [ ] MOVST0 FLAG
+ - [ ] MOVXI RaH, #16FLoHex
+ - [ ] MPYF32 RaH, RbH, RcH
+ - [ ] MPYF32 RaH, #16FHi, RbH
+ - [ ] MPYF32 RaH, RbH, #16FHi
+ - [ ] MPYF32 RaH, RbH, RcH || ADDF32 RdH, ReH, RfH
+ - [ ] MPYF32 RdH, ReH, RfH || MOV32 RaH, mem32
+ - [ ] MPYF32 RdH, ReH, RfH || MOV32 mem32, RaH
+ - [ ] MPYF32 RaH, RbH, RcH || SUBF32 RdH, ReH, RfH
+ - [ ] NEGF32 RaH, RbH{, CNDF}
+ - [ ] POP RB
+ - [ ] PUSH RB
+ - [ ] RESTORE
+ - [ ] RPTB label, loc16
+ - [ ] RPTB label, #RC
+ - [ ] SAVE FLAG, VALUE
+ - [ ] SETFLG FLAG, VALUE
+ - [ ] SUBF32 RaH, RbH, RcH
+ - [ ] SUBF32 RaH, #16FHi, RbH
+ - [ ] SUBF32 RdH, ReH, RfH || MOV32 RaH, mem32
+ - [ ] SUBF32 RdH, ReH, RfH || MOV32 mem32, RaH
+ - [ ] SWAPF RaH, RbH{, CNDF}
+ - [ ] TESTTF CNDF
+ - [ ] UI16TOF32 RaH, mem16
+ - [ ] UI16TOF32 RaH, RbH
+ - [ ] UI32TOF32 RaH, mem32
+ - [ ] UI32TOF32 RaH, RbH
+ - [ ] ZERO RaH
+ - [ ] ZEROA
