@@ -22,13 +22,13 @@ cd ../tms
 Then, you have just to build ISS, disassembler and libraries with:
 
 ```sh
-make
+make WITH_DYNLIB=
 ```
 
 or
 
 ```sh
-make WITH_DYNLIB=1
+make
 ```
 
 to enable `-fPIC`.
