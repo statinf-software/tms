@@ -2936,12 +2936,12 @@ op i32_to_f32_tworh(rah: card(3), rbh: card(3))
 
 // DOC: page 88
 // Image for this one is rather confusing
-// op mov32_rah_acc(rah: card(3))
-//     syntax = format("MOV32 ")
-//     image = 
-//     action = {
+op mov32_rah_acc(loc: LOC32, bits: card(16))
+    syntax = "MOV32 wat"
+    image = format("1011 1101 %s %16b", loc, bits)
+    action = {
 
-//     }
+    }
 
 // DOC: page 92
 op mov32_rah_rbh_cndf(rah: card(3), rbh: card(3), cndf: CNDF)
@@ -3016,8 +3016,6 @@ op zero(rah: card(3))
 
     }
 
-//I'm pretty sure mem32 is just the second document's name for loc32
-//It certainly seems to work identically 
 // DOC: page 219
 op mov32_mem32_rah(loc: LOC32, rah: card(3))
     syntax = format("MOV32        %s, R%dH", loc, rah)
@@ -3034,11 +3032,20 @@ op mov32_rah_mem32(rah: card(3), loc: LOC32, cndf: CNDF)
 
     } 
 
+// A small amount of guesswork has been undertaken to determine which flag corresponds to which bit.
+// This order both makes sense with what's written in the relevant document and with the test data
 // DOC: page 238
-// TODO: implement the syntax for the flags 
-op movst0(flag1: card(4), flag2: card(4))
-    syntax = "MOVST0       <flag1> <flag2>"
-    image = format("1010 1101 %4b %4b", flag1, flag2)
+op movst0(flags: card(8))
+    syntax = format("MOVST0       %s%s%s%s%s%s%s%s",
+        if flags<0..0> then format("LVF%s",  if flags<1..7>  then "," else "" endif) else "" endif,
+        if flags<1..1> then format("LUF%s",  if flags<2..7>  then "," else "" endif) else "" endif,
+        if flags<2..2> then format("NF%s",   if flags<3..7>  then "," else "" endif) else "" endif,
+        if flags<3..3> then format("NI%s",    if flags<4..7>  then "," else "" endif) else "" endif,
+        if flags<4..4> then format("ZF%s", if flags<5..7>  then "," else "" endif) else "" endif,
+        if flags<5..5> then format("ZI%s", if flags<6..7>  then "," else "" endif) else "" endif,
+        if flags<6..6> then format("CI%s",if flags<7..7>  then "," else "" endif) else "" endif,
+        if flags<7..7> then "TF" else "" endif)
+    image = format("1010 1101 %8b", flags)
     action = { 
 
     }
