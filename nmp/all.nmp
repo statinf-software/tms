@@ -500,7 +500,7 @@ op and_AX_loc16(ax: ACC, src: LOC16)
 
 // DOC: page 154
 op and_loc16_16bitsigned(src: LOC16, imm: int(16))
-    syntax = format("AND %s, #%d", src, imm)
+    syntax = format("AND %s, #0x%x", src, imm)
     image = format("0001 1000 %s %16b", src, imm)
     action = {
     	//[loc16] = [loc16] AND 16bit;
@@ -540,7 +540,7 @@ op asr_ax_t(ax: ACC)
 
 // DOC: page 159
 op asr_acc(shift: card(4))
-    syntax = format("ASR64 ACC:P,#%d", shift+1)
+    syntax = format("ASR64        ACC:P,#%d", shift+1)
     image = format("0101 0110 1000 %4b", shift)
     action = {
 
@@ -548,7 +548,7 @@ op asr_acc(shift: card(4))
 
 // DOC: page 160
 op asr_acc_t()
-    syntax = "ASR64 ACC:P, T"
+    syntax = "ASR64        ACC:P, T"
     image = "0101 0110 0010 1100"
     action = {
 
@@ -671,13 +671,12 @@ op clrc_objmode()
     }
 
 // DOC: page 174
-// ALIAS: page 471
-// op clrc_ovc()
-//     syntax = "CLRC OVC"
-//     image = "0101 0110 0101 1100"
-//     action = {
+op clrc_ovc()
+    syntax = "CLRC OVC"
+    image = "0101 0110 0101 1100"
+    action = {
 
-//     }
+    }
 
 // DOC: page 175
 op clrc_xf()
@@ -723,7 +722,7 @@ op cmp_loc16(loc: LOC16, imm: int(16))
 
 // DOC: page 179
 op cmp64_acc_p()
-    syntax = "CMP64 ACC:P"
+    syntax = "CMP64        ACC:P"
     image = "0101 0110 0101 1110"
     action = {
 
@@ -1050,7 +1049,7 @@ op lrete()
 
 // DOC: page 230
 op lsl_ACC(shift: card(4))
-	syntax = format("LSL ACC, #%d", shift+1)
+	syntax = format("LSL ACC, %d", shift+1)
 	image = format("1111 1111 0011 %4b", shift)
 	action = {
 		//
@@ -1064,7 +1063,7 @@ op lsl_ACC_T()
 	}
 // DOC: page 232
 op lsl_AX(ax: ACC, shift: card(4))
-	syntax = format("LSL %s, #%d", ax, shift+1)
+	syntax = format("LSL %s, %d", ax, shift+1)
 	image = format("1111 1111 100%s %4b", ax, shift)
 	action = {
 		//
@@ -1078,14 +1077,14 @@ op lsl_AX_T(ax: ACC)
 	}
 // DOC: page 234
 op lsl64_ACC(shift: card(4))
-	syntax = format("LSL64 ACC:P, #%d", shift+1)
+	syntax = format("LSL64        ACC:P, %d", shift+1)
 	image = format("0101 0110 1010 %4b", shift)
 	action = {
 		//
 	}
 // DOC: page 235
 op lsl64_ACC_T()
-	syntax = "LSL64 ACC:P, T"
+	syntax = "LSL64        ACC:P, T"
 	image = "0101 0110 0101 0010"
 	action = {
 		//
@@ -1106,7 +1105,7 @@ op lsr_AX_T(ax: ACC)
 	}
 // DOC: page 239
 op lsr64_ACC(shift: card(4))
-	syntax = format("LSR64 ACC:P, #%d", shift+1)
+	syntax = format("LSR64        ACC:P, %d", shift+1)
 	image = format("0101 0110 1001 %4b", shift)
 	action = {
 		//
@@ -1280,7 +1279,7 @@ op mov_loc16_acc_shift1(src: LOC16)
 // ASSUMES OBJMODE = 1
 // DOC: page 263
 op mov_loc16_acc_shift2to8(src: LOC16, shift: card(3))
-    syntax = format("MOV %s, ACC << %d", src, shift)
+    syntax = format("MOV %s, ACC << %d", src, shift + 1)
     image = format("0101 0110 0010 1101 0000 0%3b %s", shift, src)
     action = {
         //
@@ -1703,7 +1702,7 @@ op mpya_P_T(loc: LOC16)
 
 // DOC: page 326
 op mpyb_ACC(imm: card(8))
-	syntax = format("MPYB ACC, T, #%d", imm)
+	syntax = format("MPYB ACC, T, %d", imm)
 	image = format("0011 0101 %8b", imm)
 	action = {
 		//ACC = signed T * 0:8bit
@@ -1783,7 +1782,7 @@ op neg_ax(ax: ACC)
 
 // DOC: page 336
 op neg64_ax()
-	syntax = "NEG64 ACC:P"
+	syntax = "NEG64        ACC:P"
 	image = "0101 0110 0101 1000"
 	action = {
 		//
@@ -1885,7 +1884,7 @@ op or_ifr_16bit(imm: card(16))
 
 // DOC: page 349
 op or_loc16_16bit(dest: LOC16, imm: card(16))
-	syntax = format("OR %s, #%d", dest, imm)
+	syntax = format("OR %s, #0x%x", dest, imm)
 	image  = format("0001 1010 %s %16b", dest, imm)
 	action = {
 		// [loc16] = [loc16] OR 16bit;
@@ -2803,7 +2802,7 @@ op xor_loc16_ax(dest: LOC16, ax: ACC)
 
 // DOC: page 462
 op xor_loc16_16bit(dest: LOC16, imm: card(16))
-	syntax = format("XOR %s, #%d", dest, imm)
+	syntax = format("XOR %s, #0x%x", dest, imm)
 	image = format("0001 1100 %s %16b", dest, imm)
 	action = {
 		// [loc16] = [loc16] XOR 16bit;
@@ -2873,12 +2872,13 @@ op zalr(src: LOC16)
 	}
 
 // DOC: page 471
-op zap_ovc()
-	syntax = "ZAP OVC"
-	image = "0101 0110 0101 1100"
-	action = {
-		// Clear the overflow counter (OVC) bits in Status Register 0 (ST0).
-	}
+// ALIAS: page 171
+// op zap_ovc()
+// 	syntax = "ZAP OVC"
+// 	image = "0101 0110 0101 1100"
+// 	action = {
+// 		// Clear the overflow counter (OVC) bits in Status Register 0 (ST0).
+// 	}
 
 // DOC: page 472
 op zapa()
@@ -2920,7 +2920,7 @@ op cmpf32_zero(rah: card(3))
     }
 // DOC: page 61
 op i16_to_f32_rah_mem16(rah: card(3), loc: LOC16)
-    syntax = format("I16TOF32 R%dH, %s", rah, loc)
+    syntax = format("I16TOF32     R%dH, %s", rah, loc)
     image = format("1110 0010 1100 1000 0000 0%3b %s", rah, loc)
     action = { 
 
@@ -2934,13 +2934,26 @@ op i32_to_f32_tworh(rah: card(3), rbh: card(3))
 
     }
 
-// DOC: page 88
-// Image for this one is rather confusing
-op mov32_rah_acc(loc: LOC32, bits: card(16))
-    syntax = "MOV32 wat"
-    image = format("1011 1101 %s %16b", loc, bits)
+// This one is super weird
+// Unless someone can reliably work out how to map the 16 bit location
+// To the correct places, we can't output the correct location either
+// DOC: page 81, 88, 91, 93, 94, 216, 223, 226, 228, 229, 492, 548
+op mov32_locsrc(loc: LOC32, dest: card(16))
+    syntax = format("MOV32        0x%04x, %s", dest, loc)
+    image = format("1011 1101 %s %16b", loc, dest)
     action = {
+        //dest = loc (I think)
+    }
 
+// Similar to above
+// If anyone works out what is going on here, please let me know
+// It's eating away at me inside
+// DOC: page 82, 83, 87, 96, 97, 217, 218, 222, 231, 232, 491, 549
+op mov32_locdest(loc: LOC32, src: card(16))
+    syntax = format("MOV32        %s, 0x%04x", loc, src)
+    image = format("1011 1111 %s %16b", loc, src)
+    action = {
+        //loc = src (I think)
     }
 
 // DOC: page 92
@@ -3001,9 +3014,16 @@ op negf32(rah: card(3), rbh: card(3), cndf: CNDF)
     }
 
 //DOC: page 129
-op subf32(rah: card(3), rbh: card(3), rch: card(3))
+op subf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
     syntax = format("SUBF32       R%dH, R%dH, R%dH", rah, rbh, rch)
     image = format("1110 0111 0010 0000 0000 000%3b %3b %3b", rch, rbh, rah)
+    action = { 
+
+    }
+// DOC: page 130
+op subf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
+    syntax = format("SUBF32       R%dH, #0x%x, R%dH", rah, imm, rbh)
+    image = format("1110 1000 11%16b %3b %3b", imm, rbh, rah)
     action = { 
 
     }
@@ -3037,17 +3057,33 @@ op mov32_rah_mem32(rah: card(3), loc: LOC32, cndf: CNDF)
 // DOC: page 238
 op movst0(flags: card(8))
     syntax = format("MOVST0       %s%s%s%s%s%s%s%s",
-        if flags<0..0> then format("LVF%s",  if flags<1..7>  then "," else "" endif) else "" endif,
-        if flags<1..1> then format("LUF%s",  if flags<2..7>  then "," else "" endif) else "" endif,
-        if flags<2..2> then format("NF%s",   if flags<3..7>  then "," else "" endif) else "" endif,
-        if flags<3..3> then format("NI%s",    if flags<4..7>  then "," else "" endif) else "" endif,
-        if flags<4..4> then format("ZF%s", if flags<5..7>  then "," else "" endif) else "" endif,
-        if flags<5..5> then format("ZI%s", if flags<6..7>  then "," else "" endif) else "" endif,
-        if flags<6..6> then format("CI%s",if flags<7..7>  then "," else "" endif) else "" endif,
+        if flags<0..0> then format("LVF%s", if flags<1..7>  then "," else "" endif) else "" endif,
+        if flags<1..1> then format("LUF%s", if flags<2..7>  then "," else "" endif) else "" endif,
+        if flags<2..2> then format("NF%s",  if flags<3..7>  then "," else "" endif) else "" endif,
+        if flags<3..3> then format("NI%s",  if flags<4..7>  then "," else "" endif) else "" endif,
+        if flags<4..4> then format("ZF%s",  if flags<5..7>  then "," else "" endif) else "" endif,
+        if flags<5..5> then format("ZI%s",  if flags<6..7>  then "," else "" endif) else "" endif,
+        if flags<6..6> then format("CI%s",  if flags<7..7>  then "," else "" endif) else "" endif,
         if flags<7..7> then "TF" else "" endif)
     image = format("1010 1101 %8b", flags)
     action = { 
 
     }
 
+// DOC: page 263
+op setflg(flags: card(11), value: card(11))
+    flagstr = format("%s%s%s%s%s%s%s%s", 
+        if flags<0..0> then format("LVF=%b%s", value<0..0>, if flags<1..6> then "," else "" endif) else "" endif,
+        if flags<1..1> then format("LUF=%b%s", value<1..1>, if flags<2..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<2..2> then format("NF=%b%s",  value<2..2>, if flags<3..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<3..3> then format("ZF=%b%s",  value<3..3>, if flags<4..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<4..4> then format("NI=%b%s",  value<4..4>, if flags<5..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<5..5> then format("ZI=%b%s",  value<5..5>, if flags<6..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<6..6> then format("CI=%b%s",  value<6..6>, if flags<9..9> then "," else "" endif) else "" endif,
+        if flags<9..9> then format("RNDF32=%b", value<9..9>) else "" endif)
+    syntax = format("SETFLG %s", flagstr)
+    image = format("1110 0110 00 %11b %11b", flags, value)
+    action = {
 
+
+    }
