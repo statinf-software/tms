@@ -11,7 +11,7 @@ def main(argv):
     for line in lines:
         outl = line.strip()
         if process:
-            x = re.search("^([0-9a-f]{8}   [0-9a-f]{4}   [A-Z]+)\s+(.*)", line.strip())
+            x = re.search("^([0-9a-f]{8}   [0-9a-f]{4}   [A-Z0-9]+)\s+(.*)", line.strip())
             if x:
                 outl = x.group(1) +" "+ x.group(2)
         print(outl)
