@@ -142,12 +142,12 @@ op movb_AX(ax: ACC, imm: card(8))
 
 // DOC: page 294
 op movb_XAR6(imm: card(8))
-	syntax = format("MOVB XAR6, #0x%x", imm)
+	syntax = format("MOVB XAR6, #0x%02x", imm)
 	image = format("1011 1110 %8b", imm)
 	action = { } //XAR6 = 0:8bit;
 // DOC: page 294
 op movb_XAR7(imm: card(8))
-	syntax = format("MOVB XAR7, #0x%x", imm)
+	syntax = format("MOVB XAR7, #0x%02x", imm)
 	image = format("1011 0110 %8b", imm)
 	action = { } //XAR7 = 0:8bit;
 
@@ -438,7 +438,9 @@ op adrk(imm: card(8))
 
 // DOC: page 147
 op and_ACC_16bit(shift: card(4), imm: card(16))
-   syntax = format("AND ACC, #%d << #%d", imm, shift)
+   syntax = 
+        if shift then format("AND ACC, #%d << #%d", imm, shift)
+        else format ("AND ACC, #%d", imm) endif
    image = format("0011 1110 0000 %4b %16b", shift, imm)
    action = {
 
@@ -1193,7 +1195,9 @@ op minl(addr: LOC32)
 
 // DOC: page 253
 op mov_acc_imm(shift: card(4), imm: card(16))
-	syntax = format("MOV ACC, #%d << #%d", imm, shift+1)
+	syntax = 
+        if shift then format("MOV ACC, #%d << #%d", imm, shift)
+        else format("MOV ACC, #%d", imm) endif
 	image = format("1111 1111 0010 %4b %16b", shift, imm)
 	action = {
 		//
@@ -1845,7 +1849,9 @@ op or_acc_loc16(src: LOC16)
 
 // DOC: page 345
 op or_acc_16bit_0_15(imm: card(16), shift: card(4))
-	syntax = format("OR ACC, #0x%x << #%d", imm, shift)
+	syntax = 
+    if shift then format("OR ACC, #0x%x << #%d", imm, shift)
+    else format("OR ACC, #0x%x", imm) endif
 	image  = format("0011 1110 0001 %4b %16b", shift, imm)
 	action = {
 		// ACC = ACC OR (0:16bit << shift value);
@@ -2772,11 +2778,14 @@ op xor_acc_loc16(src: LOC16)
 
 // // DOC: page 459
 op xor_ACC_16bit_0to15(shift: card(4), imm: card(16))
-	syntax = format("XOR ACC, #%d << #%d", imm, shift)
+	syntax = 
+        if shift then format("XOR ACC, #%d << #%d", imm, shift)
+        else format("XOR ACC, #%d", imm) endif
 	image = format("0011 1110 0010 %4b %16b", shift, imm)
 	action = {
 
 	}
+
 op xor_ACC_16bit_16(imm: card(16))
 	syntax = format("XOR ACC,#%d << #16", imm)
 	image = format("0101 0110 0100 1110 %16b", imm)
