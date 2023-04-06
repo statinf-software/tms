@@ -724,7 +724,7 @@ op cmp_loc16(loc: LOC16, imm: int(16))
 
 // DOC: page 179
 op cmp64_acc_p()
-    syntax = "CMP64        ACC:P"
+    syntax = "CMP64 ACC:P"
     image = "0101 0110 0101 1110"
     action = {
 
@@ -1079,14 +1079,14 @@ op lsl_AX_T(ax: ACC)
 	}
 // DOC: page 234
 op lsl64_ACC(shift: card(4))
-	syntax = format("LSL64        ACC:P, %d", shift+1)
+	syntax = format("LSL64 ACC:P, %d", shift+1)
 	image = format("0101 0110 1010 %4b", shift)
 	action = {
 		//
 	}
 // DOC: page 235
 op lsl64_ACC_T()
-	syntax = "LSL64        ACC:P, T"
+	syntax = "LSL64 ACC:P, T"
 	image = "0101 0110 0101 0010"
 	action = {
 		//
@@ -1107,7 +1107,7 @@ op lsr_AX_T(ax: ACC)
 	}
 // DOC: page 239
 op lsr64_ACC(shift: card(4))
-	syntax = format("LSR64        ACC:P, %d", shift+1)
+	syntax = format("LSR64 ACC:P, %d", shift+1)
 	image = format("0101 0110 1001 %4b", shift)
 	action = {
 		//
@@ -1786,7 +1786,7 @@ op neg_ax(ax: ACC)
 
 // DOC: page 336
 op neg64_ax()
-	syntax = "NEG64        ACC:P"
+	syntax = "NEG64 ACC:P"
 	image = "0101 0110 0101 1000"
 	action = {
 		//
@@ -2904,7 +2904,7 @@ op zapa()
 
 // DOC: page 39
 op addf32_threerh(rah: card(3), rbh:  card(3), rch: card(3))
-    syntax = format("ADDF32       R%dH, R%dH, R%dH", rah, rbh, rch)
+    syntax = format("ADDF32 R%dH, R%dH, R%dH", rah, rbh, rch)
     image = format("1110 0111 0001 0000 0000 000%3b %3b %3b", rch, rbh, rah)
     action = { 
 
@@ -2913,7 +2913,7 @@ op addf32_threerh(rah: card(3), rbh:  card(3), rch: card(3))
 
 // DOC: page 46
 op cmpf32_imm(rah: card(3), imm: card(16))
-    syntax = format("CMPF32       R%dH, #0x%x", rah, imm)
+    syntax = format("CMPF32 R%dH, #0x%x", rah, imm)
     image = format("1110 1000 0001 0%16b %3b", imm, rah)
     action = { 
 
@@ -2922,14 +2922,14 @@ op cmpf32_imm(rah: card(3), imm: card(16))
 
 // DOC: page 48
 op cmpf32_zero(rah: card(3))
-    syntax = format("CMPF32       R%dH, #0.0", rah)
+    syntax = format("CMPF32 R%dH, #0.0", rah)
     image = format("1110 0101 1010 0%3b", rah)
     action = {
 
     }
 // DOC: page 61
 op i16_to_f32_rah_mem16(rah: card(3), loc: LOC16)
-    syntax = format("I16TOF32     R%dH, %s", rah, loc)
+    syntax = format("I16TOF32 R%dH, %s", rah, loc)
     image = format("1110 0010 1100 1000 0000 0%3b %s", rah, loc)
     action = { 
 
@@ -2937,7 +2937,7 @@ op i16_to_f32_rah_mem16(rah: card(3), loc: LOC16)
 
 // DOC: page 63
 op i32_to_f32_tworh(rah: card(3), rbh: card(3))
-    syntax = format("I32TOF32     R%dH, R%dH", rah, rbh)
+    syntax = format("I32TOF32 R%dH, R%dH", rah, rbh)
     image = format("1110 0110 1000 1001 0000 0000 00%3b %3b", rbh, rah)
     action = { 
 
@@ -2948,7 +2948,7 @@ op i32_to_f32_tworh(rah: card(3), rbh: card(3))
 // To the correct places, we can't output the correct location either
 // DOC: page 81, 88, 91, 93, 94, 216, 223, 226, 228, 229, 492, 548
 op mov32_locsrc(loc: LOC32, dest: card(16))
-    syntax = format("MOV32        0x%04x, %s", dest, loc)
+    syntax = format("MOV32 0x%04x, %s", dest, loc)
     image = format("1011 1101 %s %16b", loc, dest)
     action = {
         //dest = loc (I think)
@@ -2959,7 +2959,7 @@ op mov32_locsrc(loc: LOC32, dest: card(16))
 // It's eating away at me inside
 // DOC: page 82, 83, 87, 96, 97, 217, 218, 222, 231, 232, 491, 549
 op mov32_locdest(loc: LOC32, src: card(16))
-    syntax = format("MOV32        %s, 0x%04x", loc, src)
+    syntax = format("MOV32 %s, 0x%04x", loc, src)
     image = format("1011 1111 %s %16b", loc, src)
     action = {
         //loc = src (I think)
@@ -2967,7 +2967,7 @@ op mov32_locdest(loc: LOC32, src: card(16))
 
 // DOC: page 92
 op mov32_rah_rbh_cndf(rah: card(3), rbh: card(3), cndf: CNDF)
-    syntax = format("MOV32        R%dH, R%dH, %s", rah, rbh, cndf)
+    syntax = format("MOV32 R%dH, R%dH, %s", rah, rbh, cndf)
     image = format("1110 0110 1100 %s 0000 0000 00%3b %3b", cndf, rbh, rah)
     action = { 
 
@@ -2992,7 +2992,7 @@ op movxi(rah: card(3), imm: card(16))
     
 // DOC: page 105
 op mpyf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
-    syntax = format("MPYF32       R%dH, R%dH, R%dH", rah, rbh, rch)
+    syntax = format("MPYF32 R%dH, R%dH, R%dH", rah, rbh, rch)
     image = format("1110 0111 0000 0000 0000 000%3b %3b %3b", rch, rbh, rah)
     action = { 
 
@@ -3000,7 +3000,7 @@ op mpyf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
 
 // DOC: page 106
 op mpyf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
-    syntax = format("MPYF32       R%dH, #0x%x, R%dH", rah, imm, rbh)
+    syntax = format("MPYF32 R%dH, #0x%x, R%dH", rah, imm, rbh)
     image = format("1110 1000 01%16b %3b %3b", imm, rbh, rah)
     action = {
 
@@ -3008,7 +3008,7 @@ op mpyf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
 
 // DOC: page 112
 op mpyf32_threerh_and_mov32_rah_mem32(rah: card(3), rdh: card(3), reh: card(3), rfh: card(3), loc: LOC32)
-    syntax = format("MPYF32       R%dH, R%dH, R%dH\n||MOV32        R%dH, %s", rdh, reh, rfh, rah, loc)
+    syntax = format("MPYF32 R%dH, R%dH, R%dH\n||MOV32  R%dH, %s", rdh, reh, rfh, rah, loc)
     image = format("1110 0011 0000 %3b %3b %3b %3b %s", rfh, reh, rdh, rah, loc)
     action = {
 
@@ -3016,7 +3016,7 @@ op mpyf32_threerh_and_mov32_rah_mem32(rah: card(3), rdh: card(3), reh: card(3), 
 
 // DOC: page 116
 op negf32(rah: card(3), rbh: card(3), cndf: CNDF)
-    syntax = format("NEGF32       R%dH, R%dH, %s", rah, rbh, cndf)
+    syntax = format("NEGF32 R%dH, R%dH, %s", rah, rbh, cndf)
     image = format("1110 0110 1010 %4b 0000 0000 00%3b %3b", cndf, rbh, rah)
     action = { 
 
@@ -3024,14 +3024,14 @@ op negf32(rah: card(3), rbh: card(3), cndf: CNDF)
 
 //DOC: page 129
 op subf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
-    syntax = format("SUBF32       R%dH, R%dH, R%dH", rah, rbh, rch)
+    syntax = format("SUBF32  R%dH, R%dH, R%dH", rah, rbh, rch)
     image = format("1110 0111 0010 0000 0000 000%3b %3b %3b", rch, rbh, rah)
     action = { 
 
     }
 // DOC: page 130
 op subf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
-    syntax = format("SUBF32       R%dH, #0x%x, R%dH", rah, imm, rbh)
+    syntax = format("SUBF32 R%dH, #0x%x, R%dH", rah, imm, rbh)
     image = format("1110 1000 11%16b %3b %3b", imm, rbh, rah)
     action = { 
 
@@ -3047,7 +3047,7 @@ op zero(rah: card(3))
 
 // DOC: page 219
 op mov32_mem32_rah(loc: LOC32, rah: card(3))
-    syntax = format("MOV32        %s, R%dH", loc, rah)
+    syntax = format("MOV32 %s, R%dH", loc, rah)
     image = format("1110 0010 0000 0011 0000 0%3b %s", rah, loc)
     action = { 
 
@@ -3055,7 +3055,7 @@ op mov32_mem32_rah(loc: LOC32, rah: card(3))
 
    // DOC: page 224
 op mov32_rah_mem32(rah: card(3), loc: LOC32, cndf: CNDF)
-    syntax = format("MOV32        R%dH, %s, %s", rah, loc, cndf)
+    syntax = format("MOV32 R%dH, %s, %s", rah, loc, cndf)
     image = format("1110 0010 1010 %s 0000 0%3b %s", cndf, rah, loc)
     action = { 
 
@@ -3065,7 +3065,7 @@ op mov32_rah_mem32(rah: card(3), loc: LOC32, cndf: CNDF)
 // This order both makes sense with what's written in the relevant document and with the test data
 // DOC: page 238
 op movst0(flags: card(8))
-    syntax = format("MOVST0       %s%s%s%s%s%s%s%s",
+    syntax = format("MOVST0 %s%s%s%s%s%s%s%s",
         if flags<0..0> then format("LVF%s", if flags<1..7>  then "," else "" endif) else "" endif,
         if flags<1..1> then format("LUF%s", if flags<2..7>  then "," else "" endif) else "" endif,
         if flags<2..2> then format("NF%s",  if flags<3..7>  then "," else "" endif) else "" endif,

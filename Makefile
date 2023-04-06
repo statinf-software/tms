@@ -6,7 +6,7 @@ GLISS_PREFIX	=../gliss2/gliss2
 GEN_LIST 		= ./gen_list.py
 WITH_DISASM		= 1	# comment it to prevent disassembler building
 # WITH_SIM		= 1	# comment it to prevent simulator building
-WITH_DYNLIB 	= 1	# comment it to disable dynamicaly linkable library
+WITH_DYNLIB 	= 1	# comment it to disable dynamically linkable library
 #WITH_OSEMUL	= 1 # uncomment it to use OS emulation of system calls (only with Unix)
 CPU_ENDIAN		= little	# change to big if required
 MEM_ENDIAN		= little	# change to big if required
@@ -120,6 +120,8 @@ test_disasm: $(ARCH)-disasm
 	-disasm/tms-disasm disasm/test/adpcm.elf > disasm/test/adpcm.gliss
 	-disasm/tms-disasm disasm/test/lms.elf > disasm/test/lms.gliss
 	-disasm/tms-disasm disasm/test/bs.elf > disasm/test/bs.gliss
+	-disasm/tms-disasm disasm/test/bsort100.elf > disasm/test/bsort100.gliss
+	-disasm/tms-disasm disasm/test/cnt.elf > disasm/test/cnt.gliss
 
 distclean: clean
 	-for d in $(SUBDIRS); do test -d $$d && (cd $$d; make distclean || exit 0); done
