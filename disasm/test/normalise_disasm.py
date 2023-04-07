@@ -14,7 +14,7 @@ def main(argv):
             x = re.search("^([0-9a-f]{8}   [0-9a-f]{4}   [A-Z0-9]+)\s+(.*)", line.strip())
             if x:
                 outl = x.group(1) +" "+ x.group(2)
-        print(outl)
+            print(outl)
         if line.startswith("TEXT Section "):
             process = True
 
