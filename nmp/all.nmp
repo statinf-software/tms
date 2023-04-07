@@ -2900,7 +2900,31 @@ op zapa()
 	}
 
 
-///////////// instructions from the extended instruction set
+///////////// Floating Point Instructions ///////////// 
+// DOC: page 34
+op absf32(rah: card(3), rbh: card(3))
+    syntax = format("ABSF32 R%dH, R%dH", rah, rbh)
+    image = format("1110 0110 1001 0101 0000 0000 00%3b %3b", rbh, rah)
+    action = { 
+
+    }
+
+// DOC: page 35
+op addf32_rah_imm_rbh(rah: RH, rbh: RH, imm: card(16))
+    syntax = format("ADDF32 %s, #0x%x, %s", rah, imm, rbh)
+    image = format("1110 1000 10%16b %s %s", imm, rbh, rah)
+    action = { 
+
+    }
+
+// DOC: page 37
+// Alias of  page 35, above
+// op addf32_rah_rbh_imm(rah: RH, rbh: RH, imm:card(16))
+//     syntax = format("ADDF32 %s, %s, #0x%x", rah, rbh, imm)
+//     image = format("1110 1000 10%16b %s %s", imm, rbh, rah)
+//     action = { 
+
+//     }
 
 // DOC: page 39
 op addf32_threerh(rah: card(3), rbh:  card(3), rch: card(3))
@@ -2910,6 +2934,30 @@ op addf32_threerh(rah: card(3), rbh:  card(3), rch: card(3))
 
     }
 
+// DOC: page 41
+op addf32_threerh_and_mov32_mem32_rh(rah: RH, rdh: RH, reh: RH, rfh: RH, loc: LOC32)
+    syntax = format("ADDF32 %s, %s, %s \n||MOV32 %s, %s", rdh, reh, rfh, loc, rah)
+    image = format("1110 0000 0001 %s %s %s %s %s", rfh, reh, rdh, rah, loc)
+    action = { 
+
+    }
+
+// DOC: page 43
+op addf32_threerh_and_mov32_rh_mem32(rah: RH, rdh: RH, reh: RH, rfh: RH, loc: LOC32)
+    syntax = format("ADDF32 %s, %s, %s \n||MOV32 %s, %s", rdh, reh, rfh, rah, loc)
+    image = format("1110 0011 0001 %s %s %s %s %s", rfh, reh, rdh, rah, loc)
+    action = { 
+
+    }
+
+
+// DOC: page 45
+op cmpf32_tworh(rah: RH, rbh: RH)
+    syntax = format("CMPF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1001 0100 0000 0000 00%s %s", rbh, rah)
+    action = { 
+
+    }
 
 // DOC: page 46
 op cmpf32_imm(rah: card(3), imm: card(16))
@@ -2919,7 +2967,6 @@ op cmpf32_imm(rah: card(3), imm: card(16))
 
     }
 
-
 // DOC: page 48
 op cmpf32_zero(rah: card(3))
     syntax = format("CMPF32 R%dH, #0.0", rah)
@@ -2927,11 +2974,100 @@ op cmpf32_zero(rah: card(3))
     action = {
 
     }
+
+// DOC: page 49
+op einvf32(rah: RH, rbh: RH)
+    syntax = format("EINVF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1001 0011 0000 0000 00%s%s", rbh, rah)
+    action = { 
+
+    }
+
+// DOC: page 51
+op eisqrtf32(rah: RH, rbh: RH)
+    syntax = format("EISQRTF32 %s %s", rah, rbh)
+    image = format("1110 0110 1001 0010 0000 0000 00%3b%3b", rbh, rah)
+    action = { 
+
+    }
+
+// DOC: page 53
+op f32_to_i16(rah: RH, rbh: RH)
+    syntax = format("F32TOI16 %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1100 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 54
+op f32_to_i16_r(rah: RH, rbh: RH)
+    syntax = format("F32TOI16R, %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1100 1000 0000 00%s%s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 55
+    op f32toi32(rah: RH, rbh: RH) 
+    syntax = format("F32TOI32 %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1000 0000 0000 00 %s %s", rbh, rah) 
+    action = {
+
+    }
+
+// DOC: page 56
+op f32_to_ui16(rah: RH, rbh: RH)
+    syntax = format("F32TOUI16 %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1110 0000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 57
+op f32_to_ui16r(rah: RH, rbh: RH)
+    syntax = format("F32TOUI16R %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1110 1000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 58
+op f32_to_ui32(rah: RH, rbh: RH)
+    syntax = format("F32TOUI32 %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1010 0000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 59
+op fracf32(rah: RH, rbh: RH)
+    syntax = format("FRACF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1111 0001 0000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 60
+op i16_to_f32(rah: RH, rbh: RH)
+    syntax = format("I16TOF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1101 0000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
 // DOC: page 61
 op i16_to_f32_rah_mem16(rah: card(3), loc: LOC16)
     syntax = format("I16TOF32 R%dH, %s", rah, loc)
     image = format("1110 0010 1100 1000 0000 0%3b %s", rah, loc)
     action = { 
+
+    }
+
+// DOC: page 62
+op i32_to_f32_rh_mem32(rah: RH, loc: LOC32)
+    syntax = format("I32TOF32 %s, %s", rah, loc)
+    image = format("1110 0010 1000 1000 0000 0%s %s", rah, loc)
+    action = {
 
     }
 
@@ -2942,6 +3078,124 @@ op i32_to_f32_tworh(rah: card(3), rbh: card(3))
     action = { 
 
     }
+
+// DOC: page 64
+// Alias for parallel multiply and add, page 110
+// op macf32_5rh()
+//     syntax = format()
+//     image = format()
+//     action = {
+
+//     }
+
+// DOC: page 66
+op macf32_r7h_r6h_and_mov32_rh_mem32(rah: RH, rdh: RH, reh: RH, rfh: RH, loc: LOC32)
+    syntax = format("MACF32 R3H, R2H, %s, %s, %s\n||MOV32 %s, %s", rdh, reh, rfh, rah, loc)
+    image = format("1110 0011 0011 %s %s %s %s %s", rfh, reh, rdh, rah, loc)
+    action = {
+        // R3H = R3H + R2H,
+        // RdH = ReH * RfH,
+        // RaH = [mem32]
+    }
+
+// DOC: page 68
+op macf32_r7h_r3h_mem32_xar7(loc: LOC32)
+    syntax = format("MACF32 R7H, R3H, %s, *XAR7++", loc)
+    image = format("1110 0010 0101 0000 0001 1111 %s", loc)
+    action = {
+
+    }
+
+// DOC: page 70
+// alias for 32 bit floating multiply with parallel add, see page 110
+// op macf32_r7h_r6h_threerh(rdh: RH, reh: RH, rfh: RH)
+//     syntax = format("MACF32 R7H, R6H, ")
+//     image = format()
+//     action = {
+
+//     }
+
+// DOC: page 72
+op macf32_r3h_r2h_and_mov32_rh_mem32(rdh: RH, reh: RH, rfh: RH, rah: RH, loc: LOC32)
+    syntax = format("MACF32 R7H, R6H, %s, %s, %s\n||MOV32 %s, %s", rdh, reh, rfh, rah, loc)
+    image = format("1110 0011 1100 %s %s %s %s %s", rfh, reh, rdh, rah, loc)
+    action = {
+
+    }
+
+// DOC: page 74
+op maxf32_tworh(rah: RH, rbh: RH)
+    syntax = format("MAXF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1001 0110 0000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 75
+op maxf32_16bit(rah: RH, imm: card(16))
+    syntax = format("MAXF32 %s, #0x%x", rah, imm)
+    image = format("1110 1000 0010 0%16b %s", imm, rah)
+    action = {
+
+    }
+
+// DOC: page 76
+op maxf32_tworh_and_mov32_tworh(rah: RH, rbh: RH, rch: RH, rdh: RH)
+    syntax = format("MAXF32 %s, %s\n||MOV32 %s, %s", rah, rbh, rch, rdh)
+    image = format("1110 0110 1001 1100 0000 %s %s %s %s", rdh, rch, rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 77
+op minf32_tworh(rah: RH, rbh: RH)
+    syntax = format("MINF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1001 0111 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 78
+op minf32_16bit(rah: RH, imm: card(16))
+    syntax = format("MINF32 %s, #0x%x", rah, imm)
+    image = format("1110 1000 0011 0 %16b %s", imm, rah)
+    action = {
+
+    }
+
+// DOC: page 79
+op minf32_tworh_and_mov32_tworh(rah: RH, rbh: RH, rch: RH, rdh: RH)
+    syntax = format("MINF32 %s, %s\n||MOV32 %s, %s", rah, rbh, rch, rdh)
+    image = format("1110 0110 1001 1101 0000 %s %s %s %s", rdh, rch, rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 80
+op mov16(loc: LOC16, rah: RH)
+    syntax = format("MOV16 %s, %s", loc, rah)
+    image = format("1110 0010 0001 0011 0000 0%s %s", rah, loc)
+    action = {
+
+    }
+
+// DOC: page 81
+op mov32_16bitaddr_loc32(loc: LOC32, addr: card(16))
+    syntax = format("MOV32 *(#0x%04x), %s", addr, loc)
+    image = format("1011 1101 %s %16b", loc, addr)
+    action = {
+
+    }
+
+// TODO
+// DOC: page 82
+// op mov32_acc_rh()
+//     syntax = format()
+//     image = format()
+//     action = {
+
+//     }
+
 
 // This one is super weird
 // Unless someone can reliably work out how to map the 16 bit location

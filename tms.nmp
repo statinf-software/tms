@@ -115,7 +115,13 @@ mode CNDF(cndf: card(4)) = cndf
 			default: "" 
 		}
 	image = format("%4b", cndf)
-	action = { }
+
+mode RH(rh: card(3)) = rh
+	num = rh
+	syntax = format("R%dH", rh)
+	image = format("%3b", rh)
+
+
 // ASSUMES: AMODE = 0
 // WARNING: has the following invalid cases: 0b10101000, 0b10101010, 0b10101101 (168, 170, 173)
 // DOC: Table 5-1. Addressing Modes for “loc16” or “loc32”, page 81
