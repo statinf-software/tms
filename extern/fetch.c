@@ -85,11 +85,7 @@ tms_ident_t tms_fetch(tms_fetch_t *fetch, tms_address_t address, mask_t *code) {
 			uint8_t buff[4];
 			uint32_t word;
 			tms_mem_read(fetch->mem, (address + (get_mask_length(code) >> 3)) * 2, buff, 4);
-#			ifdef TMS_ORDER_BYTES_CISC
-				TMS_ORDER_BYTES_CISC;
-#			elif HOST_ENDIANNESS == TARGET_ENDIANNESS
-				word = (buff[0] << 24) | (buff[1] << 16) | (buff[2] << 8) | buff[3];
-#			endif
+			word = (buff[1] << 24) | (buff[0] << 16) | (buff[3] << 8) | buff[2];
 			set_mask_chunk(code, get_mask_length(code) >> 5, word);
 			set_mask_length(code, get_mask_length(code) + 32);
 		}
@@ -101,6 +97,7 @@ tms_ident_t tms_fetch(tms_fetch_t *fetch, tms_address_t address, mask_t *code) {
 
 	} while (ptr->table[value].type == TABLEFETCH);
 
+	//fprintf(stderr, "DEBUG: address = %08x, code = %08x\n", address, *code->mask);
 	return (tms_ident_t)ptr->table[value].ptr;
 }
 
