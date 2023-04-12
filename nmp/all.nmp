@@ -3179,24 +3179,6 @@ op mov16(loc: LOC16, rah: RH)
 
     }
 
-// DOC: page 81
-op mov32_16bitaddr_loc32(loc: LOC32, addr: card(16))
-    syntax = format("MOV32 *(#0x%04x), %s", addr, loc)
-    image = format("1011 1101 %s %16b", loc, addr)
-    action = {
-
-    }
-
-// TODO
-// DOC: page 82
-// op mov32_acc_rh()
-//     syntax = format()
-//     image = format()
-//     action = {
-
-//     }
-
-
 // This one is super weird
 // Unless someone can reliably work out how to map the 16 bit location
 // To the correct places, we can't output the correct location either
