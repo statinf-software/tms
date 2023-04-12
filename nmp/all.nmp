@@ -3179,9 +3179,11 @@ op mov16(loc: LOC16, rah: RH)
 
     }
 
-// This one is super weird
-// Unless someone can reliably work out how to map the 16 bit location
-// To the correct places, we can't output the correct location either
+// Takes data from a loc32 address and stores it in the address
+// pointed to by by the 16-bit immediate address
+// 121 of the possible 65536 addresses are named
+// Finding these names and implementing them in the syntax is not necessary for us
+// It could be done with generate_elf.py if you wanted
 // DOC: page 81, 88, 91, 93, 94, 216, 223, 226, 228, 229, 492, 548
 op mov32_locsrc(loc: LOC32, dest: card(16))
     syntax = format("MOV32 0x%04x, %s", dest, loc)
@@ -3190,9 +3192,7 @@ op mov32_locsrc(loc: LOC32, dest: card(16))
         //dest = loc (I think)
     }
 
-// Similar to above
-// If anyone works out what is going on here, please let me know
-// It's eating away at me inside
+// As above, but source and destination are reversed
 // DOC: page 82, 83, 87, 96, 97, 217, 218, 222, 231, 232, 491, 549
 op mov32_locdest(loc: LOC32, src: card(16))
     syntax = format("MOV32 %s, 0x%04x", loc, src)

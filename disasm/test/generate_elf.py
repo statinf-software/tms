@@ -98,9 +98,14 @@ def write_strtab_section(f):
 def main(argv):
     logging.basicConfig(format='%(levelname)s: %(message)s', level='INFO')
     assert(argv[0])
-    try:
-        low_opcode = int(argv[1])
-        high_opcode = int(argv[2])
+    try: 
+        if len(argv) > 3 and argv[3] == "-hex": 
+            low_opcode = int(argv[1], 16)
+            high_opcode = int(argv[2], 16) + 1
+        else: 
+            low_opcode = int(argv[1])
+            high_opcode = int(argv[2])
+
         if low_opcode>4294967295 or high_opcode>4294967296 or low_opcode>high_opcode:
             logging.error('second and third arguments should be less than 4294967296 and in ascendent order')
             sys.exit(1)

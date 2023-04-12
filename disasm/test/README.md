@@ -7,6 +7,12 @@ cd disasm/test
 python generate_elf.py test_all_16bit_inst.elf 0 65536
 ```
 
+You can also specify bounds in hexadecimal by adding "-hex" as the final argument: 
+``` bash
+python generate_elf.py test_all_16bit_inst.elf 0 ffff -hex
+```
+
+
 Then, you can apply GLISS disassembler on generated file:
 ``` bash
 cd disasm
@@ -25,3 +31,4 @@ Finally, you can compare the two disassembly version:
 cd disasm/test
 diff -y --color test_all_16bit_inst_gliss.asm  test_all_16bit_inst_norm.asm
 ```
+
