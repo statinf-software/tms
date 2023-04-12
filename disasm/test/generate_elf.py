@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+import logging
 
 def write_elf_header(f):
     header_bytes = b'\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\
@@ -21,13 +22,13 @@ def write_elf_header(f):
     return e_ehsize,e_shentsize
 
 
-def write_code_section(f,nbr_inst=2**16,inst_size=2):
-    for op_code in range(nbr_inst):
+def write_code_section(f,low_opcode=0,high_opcode=2**16):
+    inst_size = 2 if high_opcode<=65536 else 4
+    for op_code in range(low_opcode,high_opcode):
         f.write(op_code.to_bytes(inst_size, 'little'))
-    code_size = inst_size*nbr_inst
+    code_size = inst_size*(high_opcode-low_opcode)+1
 
     return code_size
-
 
 def update_elf_header(f,shoff):
     f.seek(28)
@@ -46,6 +47,7 @@ def write_sections_header(f,code_size,shoff,strtab_off,e_ehsize,e_shentsize):
     f.write(code_sec_hdr_bytes)
     sec_start = shoff+e_shentsize*1
     f.seek(sec_start+16)
+    print()
     f.write(e_ehsize.to_bytes(4, 'little')) #section offset
     f.write(code_size.to_bytes(4, 'little')) #section size
     f.seek(sec_start+e_shentsize)
@@ -94,20 +96,21 @@ def write_strtab_section(f):
 
 
 def main(argv):
+    logging.basicConfig(format='%(levelname)s: %(message)s', level='INFO')
     assert(argv[0])
     try:
-        nbr_inst_bit = int(argv[1])
-        if nbr_inst_bit>32:
-            print('ERROR!: second argument should be less than 32')
+        low_opcode = int(argv[1])
+        high_opcode = int(argv[2])
+        if low_opcode>4294967295 or high_opcode>4294967296 or low_opcode>high_opcode:
+            logging.error('second and third arguments should be less than 4294967296 and in ascendent order')
+            sys.exit(1)
     except ValueError:
-        print('ERROR!: second argument should be an integer')
+        logging.error('second and third arguments should be integers')
         sys.exit(1)
-    
-    inst_size = 2 if nbr_inst_bit/8<=2 else 4
 
     with open(argv[0],'wb') as f:
         e_ehsize, e_shentsize = write_elf_header(f)
-        code_size = write_code_section(f, nbr_inst=2**nbr_inst_bit,inst_size=inst_size)
+        code_size = write_code_section(f,low_opcode,high_opcode)
         
         strtab_off = f.tell()
         write_strtab_section(f)
