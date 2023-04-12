@@ -136,7 +136,7 @@ only-clean:
 HOST_ENDIAN = $(shell python -c "import sys; print(sys.byteorder)")
 
 include/$(ARCH)/config.h: config.tpl
-	test -d include/$(ARCH) || mkdir include/$(ARCH)
+	test -d include/$(ARCH) || mkdir -p include/$(ARCH)
 	cp config.tpl $@
 	echo "#define TARGET_ENDIANNESS $(CPU_ENDIAN)" >> $@
 	echo "#define HOST_ENDIANNESS $(HOST_ENDIAN)" >> $@
