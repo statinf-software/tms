@@ -56,6 +56,7 @@ GFLAGS = \
 	-m exception:extern/exception \
 	-m emu:extern/emu \
 	-m env:$(ENV) \
+	-m fetch:extern/fetch \
 	-a disasm.c
 
 #	-m fpi:extern/fpi \
@@ -133,7 +134,7 @@ clean: only-clean
 only-clean:
 	-rm -rf $(CLEAN)
 
-HOST_ENDIAN = $(shell python -c "import sys; print(sys.byteorder)")
+HOST_ENDIAN = $(shell python3 -c "import sys; print(sys.byteorder)")
 
 include/$(ARCH)/config.h: config.tpl
 	test -d include/$(ARCH) || mkdir -p include/$(ARCH)
