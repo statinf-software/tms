@@ -2,7 +2,7 @@
 
 # configuration
 ARCH=tms
-GLISS_PREFIX	=../gliss2/gliss2
+GLISS_PREFIX	= ../gliss2
 GEN_LIST 		= ./gen_list.py
 WITH_DISASM		= 1	# comment it to prevent disassembler building
 # WITH_SIM		= 1	# comment it to prevent simulator building
