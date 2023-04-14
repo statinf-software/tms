@@ -1,7 +1,7 @@
 # TMS320C28x Instruction Set Architecture
 
-TMS implementation in SimNML for the GLISS2 ISS generator. [TMS320C28x CPU and Instruction Set Reference Guide](https://www.ti.com/lit/ug/spru430f/spru430f.pdf) and [TMS320C28x Floating Point Unit and
-Instruction Set](https://www.ti.com/lit/ug/sprueo2b/sprueo2b.pdf) (from ti.com).
+TMS implementation in SimNML for the GLISS2 ISS generator. [TMS320C28x CPU and Instruction Set Reference Guide](https://www.ti.com/lit/ug/spru430f/spru430f.pdf), [TMS320C28x Floating Point Unit and
+Instruction Set](https://www.ti.com/lit/ug/sprueo2b/sprueo2b.pdf), and [TMS320C28x Extended Instruction Sets Technical Reference Manual](https://www.ti.com/lit/ug/spruhs1c/spruhs1c.pdf) (from ti.com).
 
 This GLISS ISA supports TMS320C28x, 32-bits architecture, with both 16-bit and 32-bit instructions.
 
