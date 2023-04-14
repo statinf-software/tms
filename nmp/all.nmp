@@ -591,7 +591,7 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
     syntax = format("BAR %d, AR%d, AR%d, %s", offset, arn, arm, eq_type)
     image = format("1000 1111 1%1b %3b %3b %16b", eq, arn, arm, offset)
     // otawa_kind = BRANCH
-   otawa_target = __IADDR + offset
+    // otawa_target = __IADDR + offset
     action = {
     	//If (tested condition = true) PC = PC + signed 16-bit offset;
 		//If (tested condition = false) PC = PC + 2;
@@ -602,7 +602,7 @@ op bf(cond: COND, offset: int(16))
    syntax = format("BF %d, %s", offset, cond)
    image = format("0101 0110 1100 %s %16b", cond, offset)
    // otawa_kind = BRANCH
-   otawa_target = __IADDR + offset
+   // otawa_target = __IADDR + offset
    action = {
 
    }
