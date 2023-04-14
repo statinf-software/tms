@@ -3396,6 +3396,14 @@ op ui32_to_f32_mem32(loc: LOC32, rah: RH)
 
     }
 
+// DOC: page 275
+op ui32_to_f32_tworh(rah: RH, rbh: RH)
+    syntax = format("UI32TOF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1011 0000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
 
 // DOC: page 785
 op divf32_threerh(rah: RH, rbh: RH, rch: RH)
