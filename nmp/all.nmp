@@ -3210,6 +3210,9 @@ op mov32_locdest(loc: LOC32, src: card(16))
 op mov32_mem32_rah(rah: RH, loc: LOC32)
     syntax = format("MOV32 %s, %s", loc, rah)
     image = format("1110 0010 0000 0011 0000 0 %s %s", rah, loc)
+    action = { 
+
+    }
 
 //DOC: page 86
 op mov32_mem32_stf(loc: LOC32)
@@ -3219,12 +3222,13 @@ op mov32_mem32_stf(loc: LOC32)
 
     }
 
+// DOC: page 89
 op mov32_rah_mem32_cond(rah: RH, loc: LOC32, cndf: CNDF)
     syntax = format("MOV32 %s, %s, {%s}", rah, loc, cndf)
     image = format("1110 0010 1010 %s 0000 0 %s %s", cndf, rah, loc)
-action = {
+    action = {
     
-}
+    }
 
 // DOC: page 92
 op mov32_rah_rbh_cndf(rah: card(3), rbh: card(3), cndf: CNDF)
@@ -3343,20 +3347,10 @@ op zero(rah: card(3))
     }
 
 // DOC: page 219
-op mov32_mem32_rah(loc: LOC32, rah: card(3))
-    syntax = format("MOV32 %s, R%dH", loc, rah)
-    image = format("1110 0010 0000 0011 0000 0%3b %s", rah, loc)
-    action = { 
+// see page 84
 
-    }
-
-   // DOC: page 224
-op mov32_rah_mem32(rah: card(3), loc: LOC32, cndf: CNDF)
-    syntax = format("MOV32 R%dH, %s, %s", rah, loc, cndf)
-    image = format("1110 0010 1010 %s 0000 0%3b %s", cndf, rah, loc)
-    action = { 
-
-    } 
+// DOC: page 224
+// See page 89
 
 // A small amount of guesswork has been undertaken to determine which flag corresponds to which bit.
 // This order both makes sense with what's written in the relevant document and with the test data
@@ -3391,5 +3385,13 @@ op setflg(flags: card(11), value: card(11))
     image = format("1110 0110 00 %11b %11b", flags, value)
     action = {
 
+
+    }
+
+// DOC: page 785
+op divf32_threerh(rah: RH, rbh: RH, rch: RH)
+    syntax = format("DIVF32 %s, %s, %s", rah, rbh, rch)
+    image = format("1110 0010 0111 0100 0000 000 %s %s %s", rch, rbh, rah)
+    action = {
 
     }
