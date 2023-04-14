@@ -3206,6 +3206,11 @@ op mov32_locdest(loc: LOC32, src: card(16))
         //loc = src (I think)
     }
 
+// DOC: page 84
+op mov32_mem32_rah(rah: RH, loc: LOC32)
+    syntax = format("MOV32 %s, %s", loc, rah)
+    image = format("1110 0010 0000 0011 0000 0 %s %s", rah, loc)
+
 //DOC: page 86
 op mov32_mem32_stf(loc: LOC32)
     syntax = format("MOV32 %s, STF", loc)
@@ -3214,6 +3219,13 @@ op mov32_mem32_stf(loc: LOC32)
 
     }
 
+op mov32_rah_mem32_cond(rah: RH, loc: LOC32, cndf: CNDF)
+    syntax = format("MOV32 %s, %s, {%s}", rah, loc, cndf)
+    image = format("1110 0010 1010 %s 0000 0 %s %s", cndf, rah, loc)
+action = {
+    
+}
+
 // DOC: page 92
 op mov32_rah_rbh_cndf(rah: card(3), rbh: card(3), cndf: CNDF)
     syntax = format("MOV32 R%dH, R%dH, %s", rah, rbh, cndf)
@@ -3221,7 +3233,23 @@ op mov32_rah_rbh_cndf(rah: card(3), rbh: card(3), cndf: CNDF)
     action = { 
 
     }
+// DOC: page 95
+op mov32_stf_mem32(loc: LOC32)
+    syntax = format("MOV32 STF, %s", loc)
+    image = format("1110 0010 1000 0000 0000 0000 %s", loc)
+    action = { 
 
+    }
+
+// DOC: page 98
+op movd32(rah: RH, loc: LOC32)
+    syntax = format("MOVD32 %s, %s", rah, loc)
+    image = format("1110 0010 0010 0011 0000 0%s %s", rah, loc)
+    action = {
+
+    }
+
+//page 99 MOVF32 is an alias for this
 // DOC: page 101
 op moviz(imm: card(16), rah: card(3))
     syntax = format("MOVIZ R%d, #0x%x", rah, imm)
@@ -3230,6 +3258,7 @@ op moviz(imm: card(16), rah: card(3))
         //RaH[31:16] = #16FHiHex
         //RaH[15:0] = 0
     }
+//page 99 MOVF32 is an alias for this
 // DOC: page 104
 op movxi(rah: card(3), imm: card(16))
     syntax = format("MOVXI R%dH, #0x%x", rah, imm)
@@ -3254,6 +3283,25 @@ op mpyf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
     action = {
 
     }
+
+// // DOC: page 108
+// // TODO
+// op ()
+//     syntax = format()
+//     image = format()
+//     action = {
+
+//     }
+
+// // DOC: page 
+// // TODO
+// op ()
+//     syntax = format()
+//     image = format()
+//     action = {
+
+//     }
+
 
 // DOC: page 112
 op mpyf32_threerh_and_mov32_rah_mem32(rah: card(3), rdh: card(3), reh: card(3), rfh: card(3), loc: LOC32)
