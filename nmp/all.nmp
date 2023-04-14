@@ -3388,6 +3388,15 @@ op setflg(flags: card(11), value: card(11))
 
     }
 
+// DOC: page 274
+op ui32_to_f32_mem32(loc: LOC32, rah: RH)
+    syntax = format("UI32TOF32 %s, %s", rah, loc)
+    image = format("1110 0010 1000 0100 0000 0 %s %s", rah, loc)
+    action = {
+
+    }
+
+
 // DOC: page 785
 op divf32_threerh(rah: RH, rbh: RH, rch: RH)
     syntax = format("DIVF32 %s, %s, %s", rah, rbh, rch)
