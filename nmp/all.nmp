@@ -970,7 +970,7 @@ op intr_emuint()
 op iret()
     syntax = "IRET"
     image = "0111 0110 0000 0010"
-    otawa_kind = RETURN
+    //otawa_kind = RETURN
     action = {
 
     }
@@ -3204,6 +3204,14 @@ op mov32_locdest(loc: LOC32, src: card(16))
     image = format("1011 1111 %s %16b", loc, src)
     action = {
         //loc = src (I think)
+    }
+
+//DOC: page 86
+op mov32_mem32_stf(loc: LOC32)
+    syntax = format("MOV32 %s, STF", loc)
+    image = format("1110 0010 0000 0000 0000 0000 %s", loc)
+    action = { 
+
     }
 
 // DOC: page 92
