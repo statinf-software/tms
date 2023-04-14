@@ -568,7 +568,8 @@ op asrl_acc_t()
 op b(offset: int(16), cond: COND)
    syntax = format("B %d, %s", offset, cond)
    image = format("1111 1111 1110 %s %16b", cond, offset)
-   otawa_kind = BRANCH
+   // otawa_kind = BRANCH
+   // otawa_target = __IADDR + offset
    action = {
         // If (COND = true) PC = PC + signed 16-bit offset;
         // If (COND = false) PC = PC + 2;
@@ -578,7 +579,8 @@ op b(offset: int(16), cond: COND)
 op banz(offset: int(16), arn: card(3)) 
     syntax = format("BANZ %d,AR%d--", offset, arn)
     image = format("0000 0000 0000 1%3b %16b", arn, offset)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
+    // otawa_target = __IADDR + (offset << 1)
     action = {
 
     }
@@ -588,7 +590,8 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
 	eq_type = if eq == 0 then "EQ" else "NEQ" endif
     syntax = format("BAR %d, AR%d, AR%d, %s", offset, arn, arm, eq_type)
     image = format("1000 1111 1%1b %3b %3b %16b", eq, arn, arm, offset)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
+   otawa_target = __IADDR + offset
     action = {
     	//If (tested condition = true) PC = PC + signed 16-bit offset;
 		//If (tested condition = false) PC = PC + 2;
@@ -598,7 +601,8 @@ op bar(offset: int(16), arn: card(3), arm: card(3), eq: bit)
 op bf(cond: COND, offset: int(16))
    syntax = format("BF %d, %s", offset, cond)
    image = format("0101 0110 1100 %s %16b", cond, offset)
-   otawa_kind = BRANCH
+   // otawa_kind = BRANCH
+   otawa_target = __IADDR + offset
    action = {
 
    }
@@ -845,7 +849,7 @@ op estop1()
 op ffc(addr: card(22))
     syntax = format("FFC XAR7, %d", addr)
     image = format ("0000 0000 11%22b", addr)
-    otawa_kind = CALL
+    // otawa_kind = CALL
     action = {
     	//XAR7(21:0) = PC + 2;
 		//XAR7(31:22) = 0;
@@ -975,7 +979,7 @@ op iret()
 op lb_xar7()
     syntax = "LB *XAR7"
     image = "0111 0110 0010 0000"
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
     action = {
     	//PC = XAR7(21:0);
     }
@@ -984,7 +988,7 @@ op lb_xar7()
 op lb_22bit(addr: card(22))
     syntax = format("LB 0x%6x", addr)
     image = format("0000 0000 01%22b", addr)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
     action = {
 
     }
@@ -993,7 +997,7 @@ op lb_22bit(addr: card(22))
 op lc_xar7()
     syntax = "LC *XAR7"
     image = "0111 0110 0000 0100"
-    otawa_kind = CALL
+    // otawa_kind = CALL
     action = {
 
     }
@@ -1002,7 +1006,7 @@ op lc_xar7()
 op lcr_xarn(xarn: card(3))
 	syntax = format("LCR *XAR%d", xarn)
 	image = format("0011 1110 0110 0%3b", xarn)
-    otawa_kind = CALL
+    // otawa_kind = CALL
 	action = { 
 		//
 	}
@@ -1011,7 +1015,7 @@ op lcr_xarn(xarn: card(3))
 op loopnz(addr: LOC16, imm: card(16))
 	syntax = format("LOOPNZ %s, %d", addr, imm)
 	image = format("0010 1110 %s %16b", addr, imm) 
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
 	action = { 
 		//while([loc16] & 16bit != 0);
 	}
@@ -1020,7 +1024,7 @@ op loopnz(addr: LOC16, imm: card(16))
 op loopz(addr: LOC16, imm: card(16))
 	syntax = format("LOOPZ %s, %d", addr, imm)
 	image = format("0010 1100 %s %16b", addr, imm)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
 	action = { 
 		//while([loc16] & 16bit = 0);
 	}
@@ -2302,7 +2306,7 @@ op sbf(insttype: card(2), imm: card(8))
     }
 	syntax = format("SBF %d, %s", imm, sbftype)
 	image = format("1110 11%2b %8b", insttype, imm)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
 	action = {
 
 	}
@@ -2647,7 +2651,7 @@ op uout(src: LOC16, imm: card(16))
 op xb_al()
 	syntax = "XB *AL"
 	image = "0101 0110 0001 0100"
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
 	action = {
 		// PC = 0x3F:AL;
 	}
@@ -2656,7 +2660,7 @@ op xb_al()
 op xb_pma(arp: card(3), pma: card(16))
 	syntax = format("XB 0x%04x, *, ARP%d", pma, arp)
 	image = format("0011 1110 0111 0%3b %16b", arp, pma)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
 	action = {
 		// PC = 0x3F:pma;
 		// ARP = n;
@@ -2666,7 +2670,7 @@ op xb_pma(arp: card(3), pma: card(16))
 op xb_pma_cond(pma: card(16), cond: COND)
 	syntax = format("XB 0x%04x, %s", pma, cond)
 	image = format("0101 0110 1101 %s %16b", cond, pma)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
 	action = {
 		// If (COND = true) PC(15:0) = pma;
 		// If (COND = false) PC(15:0) = PC(15:0) + 2;
@@ -2685,34 +2689,34 @@ op xbanz(pma: card(16), ind: enum(0b010, 0b011, 0b100, 0b110, 0b111))
         endif endif endif endif endif
 	syntax = format("XBANZ 0x%04x, *%s", pma, ind_str)
 	image = format("0101 0110 0000 1%3b %16b", ind, pma)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
 	action = { }
 // DOC: page 448
 op xbanz_arpn1(pma: card(16), arpn: card(3), ind_bit: bit)
     ind_str = if ind_bit == 0 then "" else "++" endif
     syntax = format("XBANZ 0x%04x, *%s, ARP%d", pma, ind_str, arpn)
     image = format("0011 1110 0011 %1b%3b %16b", ind_bit, arpn, pma)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
     action = { }
 // DOC: page 448
 op xbanz_arpn2(pma: card(16), arpn: card(3), ind_bit: bit)
     ind_str = if ind_bit == 0 then "--" else "0++" endif
     syntax = format("XBANZ 0x%04x, *%s, ARP%d", pma, ind_str, arpn)
     image = format("0011 1110 0100 %1b%3b %16b", ind_bit, arpn, pma)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
     action = { }
 // DOC: page 448
 op xbanz_arpn3(pma: card(16), arpn: card(3))
     syntax = format("XBANZ 0x%04x, *0--, ARP%d", pma, arpn)
     image = format("0011 1110 0101 0%3b %16b", arpn, pma)
-    otawa_kind = BRANCH
+    // otawa_kind = BRANCH
     action = { }
 
 // DOC: page 450
 op xcall_al()
 	syntax = "XCALL *AL"
 	image = "0101 0110 0011 0100"
-    otawa_kind = CALL
+    // otawa_kind = CALL
 	action = {
 		// temp(21:0) = PC + 1;
 		// [SP] = temp(15:0);
@@ -2724,7 +2728,7 @@ op xcall_al()
 op  xcall_pma(pma: card(16), arp: card(3))
 	syntax = format("XCALL 0x%04x, *, ARP%d", pma, arp)
 	image = format("0011 1110 0110 1%3b %16b", arp, pma)
-    otawa_kind = CALL
+    // otawa_kind = CALL
 	action = {
 
 	}
@@ -2733,7 +2737,7 @@ op  xcall_pma(pma: card(16), arp: card(3))
 op xcall_pma_cond(cond: COND, pma: card(16))
 	syntax = format("XCALL 0x%04x, %s", pma, cond)
 	image = format("0101 0110 1110 %s %16b", cond, pma)
-    otawa_kind = CALL
+    // otawa_kind = CALL
 	action = {
 		// if(COND = true)
 		// {
