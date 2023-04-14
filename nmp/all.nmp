@@ -1547,8 +1547,9 @@ op movl_loc32_p(dest: LOC32)
 		//[loc32] = P;
 	}
 
-// DOC: page 305, 383
 // PUSH XT is an alias for one of these commands
+// DOC: page 305, 383
+op movl_loc32_xt__push_xt(dest: LOC32)
 	syntax = format("MOVL %s, XT", dest)
 	image = format("1010 1011 %s", dest)
 	action = {
