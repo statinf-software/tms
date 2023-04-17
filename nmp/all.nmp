@@ -3253,8 +3253,9 @@ op movd32(rah: RH, loc: LOC32)
 
     }
 
+
 //page 99 MOVF32 is an alias for this
-// DOC: page 101
+// DOC: page 99, 100, 101
 op moviz(imm: card(16), rah: card(3))
     syntax = format("MOVIZ R%d, #0x%x", rah, imm)
     image = format("1110 1000 0000 0 %16b %3b", imm, rah)
@@ -3262,6 +3263,27 @@ op moviz(imm: card(16), rah: card(3))
         //RaH[31:16] = #16FHiHex
         //RaH[15:0] = 0
     }
+
+
+// A small amount of guesswork has been undertaken to determine which flag corresponds to which bit.
+// This order both makes sense with what's written in the relevant document and with the test data
+// DOC: page 103
+op movst0(flags: card(8))
+    syntax = format("MOVST0 %s%s%s%s%s%s%s%s",
+        if flags<0..0> then format("LVF%s", if flags<1..7>  then "," else "" endif) else "" endif,
+        if flags<1..1> then format("LUF%s", if flags<2..7>  then "," else "" endif) else "" endif,
+        if flags<2..2> then format("NF%s",  if flags<3..7>  then "," else "" endif) else "" endif,
+        if flags<3..3> then format("NI%s",  if flags<4..7>  then "," else "" endif) else "" endif,
+        if flags<4..4> then format("ZF%s",  if flags<5..7>  then "," else "" endif) else "" endif,
+        if flags<5..5> then format("ZI%s",  if flags<6..7>  then "," else "" endif) else "" endif,
+        if flags<6..6> then format("CI%s",  if flags<7..7>  then "," else "" endif) else "" endif,
+        if flags<7..7> then "TF" else "" endif)
+    image = format("1010 1101 %8b", flags)
+    action = { 
+
+    }
+
+
 //page 99 MOVF32 is an alias for this
 // DOC: page 104
 op movxi(rah: card(3), imm: card(16))
@@ -3280,31 +3302,21 @@ op mpyf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
 
     }
 
-// DOC: page 106
-op mpyf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
-    syntax = format("MPYF32 R%dH, #0x%x, R%dH", rah, imm, rbh)
-    image = format("1110 1000 01%16b %3b %3b", imm, rbh, rah)
+// DOC: page 106, 108
+op mpyf32_rah_rbh_16bit(rah: RH, rbh: RH, imm: card(16))
+    syntax = format("MPYF32 %s %s #0x%x", rah, rbh, imm)
+    image = format("1110 1000 01%16b %s %s", imm, rbh, rah)
     action = {
 
     }
 
-// // DOC: page 108
-// // TODO
-// op ()
-//     syntax = format()
-//     image = format()
-//     action = {
+// DOC: page 110
+op mpyf32_threerh_and_addf32_threerh(rah: RH, rbh: RH, rch: RH, rdh: RH, reh: RH, rfh: RH)
+    syntax = format("MPYF32 %s %s %s\n||ADDF32 %s %s %s", rah, rbh, rch, rdh, reh, rfh)
+    image = format("1110 0111 0100 00 %s %s %s %s %s %s", rfh, reh, rdh, rch, rbh, rah)
+    action = {
 
-//     }
-
-// // DOC: page 
-// // TODO
-// op ()
-//     syntax = format()
-//     image = format()
-//     action = {
-
-//     }
+    }
 
 
 // DOC: page 112
@@ -3315,6 +3327,23 @@ op mpyf32_threerh_and_mov32_rah_mem32(rah: card(3), rdh: card(3), reh: card(3), 
 
     }
 
+// DOC: page 114
+op mpyf32_threerh_and_mov32_mem32_rah(rdh: RH, reh: RH, rfh: RH, loc: LOC32, rah: RH)
+    syntax = format("MPYF32 %s, %s, %s\n||MOV32 %s, %s", rdh, reh, rfh, loc, rah)
+    image = format("1110 0000 0000 %s %s %s %s %s", rfh, reh, rdh, rah, loc)
+    action = {
+
+    }
+
+// DOC: page 115
+op mpyf32_threerh_and_subf32_threerh(rah: RH, rbh: RH, rch: RH, rdh: RH, reh: RH, rfh: RH)
+    syntax = format("MPYF32 %s, %s, %s\n||SUBF32 %s, %s, %s", rah, rbh, rch, rdh, reh, rfh)
+    image = format("1110 0111 0101 00 %s %s %s %s %s %s", rfh, reh, rdh, rch, rbh, rah)
+    action = {
+
+    }
+
+
 // DOC: page 116
 op negf32(rah: card(3), rbh: card(3), cndf: CNDF)
     syntax = format("NEGF32 R%dH, R%dH, %s", rah, rbh, cndf)
@@ -3323,54 +3352,66 @@ op negf32(rah: card(3), rbh: card(3), cndf: CNDF)
 
     }
 
-//DOC: page 129
-op subf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
-    syntax = format("SUBF32  R%dH, R%dH, R%dH", rah, rbh, rch)
-    image = format("1110 0111 0010 0000 0000 000%3b %3b %3b", rch, rbh, rah)
-    action = { 
-
-    }
-// DOC: page 130
-op subf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
-    syntax = format("SUBF32 R%dH, #0x%x, R%dH", rah, imm, rbh)
-    image = format("1110 1000 11%16b %3b %3b", imm, rbh, rah)
-    action = { 
+// DOC: page 117
+op pop_rb()
+    syntax = "POP RB"
+    image = "1111 1111 1111 0001"
+    action = {
 
     }
 
-// DOC: page 141
-op zero(rah: card(3))
-    syntax = format("ZERO R%d", rah)
-    image = format("1110 0101 1001 0%3b", rah)
-    action = { 
+// DOC: page 119
+op push_RB()
+    syntax = "PUSH RB"
+    image = "1111 1111 1111 0000"
+    action = {
 
     }
 
-// DOC: page 219
-// see page 84
-
-// DOC: page 224
-// See page 89
-
-// A small amount of guesswork has been undertaken to determine which flag corresponds to which bit.
-// This order both makes sense with what's written in the relevant document and with the test data
-// DOC: page 238
-op movst0(flags: card(8))
-    syntax = format("MOVST0 %s%s%s%s%s%s%s%s",
-        if flags<0..0> then format("LVF%s", if flags<1..7>  then "," else "" endif) else "" endif,
-        if flags<1..1> then format("LUF%s", if flags<2..7>  then "," else "" endif) else "" endif,
-        if flags<2..2> then format("NF%s",  if flags<3..7>  then "," else "" endif) else "" endif,
-        if flags<3..3> then format("NI%s",  if flags<4..7>  then "," else "" endif) else "" endif,
-        if flags<4..4> then format("ZF%s",  if flags<5..7>  then "," else "" endif) else "" endif,
-        if flags<5..5> then format("ZI%s",  if flags<6..7>  then "," else "" endif) else "" endif,
-        if flags<6..6> then format("CI%s",  if flags<7..7>  then "," else "" endif) else "" endif,
-        if flags<7..7> then "TF" else "" endif)
-    image = format("1010 1101 %8b", flags)
-    action = { 
+// DOC: page 120
+op restore()
+    syntax = "RESTORE"
+    image = "1110 0101 0110 0010"
+    action = {
 
     }
 
-// DOC: page 263
+// DOC: page 122
+//TODO THIS IS A BRANCH
+op rptb(label: card(7), loc: LOC16)
+    syntax = format("RPTB #%d, %s", label, loc)
+    image = format("1011 0101 0%7b 0000 0000 %s", label, loc)
+    action = {
+
+    }
+
+//DOC: page 124
+//TODO also a branch, and how should a 16 bit loc be branched to? 
+op rptb_rc(label: card(7), imm: card(16))
+    syntax = format("RPTB #%d, #0x%04x", label, imm)
+    image = format("1011 0101 1%7b %16b", label, imm)
+    action = {
+
+    }
+
+// DOC: page 126
+op save(flags: card(11), value: card(11))
+    flagstr = format("%s%s%s%s%s%s%s%s", 
+        if flags<0..0> then format("LVF=%b%s", value<0..0>, if flags<1..6> then "," else "" endif) else "" endif,
+        if flags<1..1> then format("LUF=%b%s", value<1..1>, if flags<2..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<2..2> then format("NF=%b%s",  value<2..2>, if flags<3..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<3..3> then format("ZF=%b%s",  value<3..3>, if flags<4..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<4..4> then format("NI=%b%s",  value<4..4>, if flags<5..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<5..5> then format("ZI=%b%s",  value<5..5>, if flags<6..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<6..6> then format("CI=%b%s",  value<6..6>, if flags<9..9> then "," else "" endif) else "" endif,
+        if flags<9..9> then format("RNDF32=%b", value<9..9>) else "" endif)
+    syntax = format("SAVE %s", flagstr)
+    image = format("1110 0110 01 %11b %11b", flags, value)
+    action = {
+
+    }
+
+// DOC: page 128
 op setflg(flags: card(11), value: card(11))
     flagstr = format("%s%s%s%s%s%s%s%s", 
         if flags<0..0> then format("LVF=%b%s", value<0..0>, if flags<1..6> then "," else "" endif) else "" endif,
@@ -3388,7 +3429,71 @@ op setflg(flags: card(11), value: card(11))
 
     }
 
-// DOC: page 274
+
+//DOC: page 129
+op subf32_threerh(rah: card(3), rbh: card(3), rch: card(3))
+    syntax = format("SUBF32  R%dH, R%dH, R%dH", rah, rbh, rch)
+    image = format("1110 0111 0010 0000 0000 000%3b %3b %3b", rch, rbh, rah)
+    action = { 
+
+    }
+// DOC: page 130
+op subf32_tworh_imm(rah: card(3), rbh: card(3), imm: card(16))
+    syntax = format("SUBF32 R%dH, #0x%x, R%dH", rah, imm, rbh)
+    image = format("1110 1000 11%16b %3b %3b", imm, rbh, rah)
+    action = { 
+
+    }
+
+// DOC: page 131
+op subf32_and_mov32(rdh: RH, reh: RH, rfh: RH, rah: RH, loc: LOC32)
+    syntax = format("SUBF32 %s, %s, %s\n||MOV32 %s, %s", rdh, reh, rfh, rah, loc)
+    image = format("1110 0011 0010 %s %s %s %s %s", rfh, reh, rdh, rah, loc)
+    action = {
+
+    }
+
+// DOC: page 133
+op subf32_and_mov32_locdest(rdh: RH, reh: RH, rfh: RH, rah: RH, loc: LOC32)
+    syntax = format("SUBF32 %s, %s, %s\n||MOV32 %s, %s", rdh, reh, rfh, loc, rah)
+    image = format("1110 0000 0010 %s %s %s %s %s", rfh, reh, rdh, rah, loc)
+    action = {
+
+    }
+
+// DOC: page 135
+op swapf(rah: RH, rbh: RH, cndf: CNDF)
+    syntax = format("SWAPF %s, %s{, %s}", rah, rbh, cndf)
+    image = format("1110 0110 1110 %s 0000 0000 00 %s %s", cndf, rbh, rah)
+    action = {
+
+    }
+
+//DOC: page 136
+op test_tf(cndf: CNDF)
+    syntax = format("TESTTF %s", cndf)
+    image = format("1110 0101 1000 %s", cndf)
+    action = {
+
+    }
+
+// DOC: page 137
+op u16_to_f32_loc(rah: RH, loc: LOC16)
+    syntax = format("UI16TOF32 %s, %s", rah, loc)
+    image = format("1110 0010 1100 0100 0000 0%s %s", rah, loc)
+    action = {
+
+    }
+
+// DOC: page 138
+op ui16_to_f32_rh(rah: RH, rbh: RH)
+    syntax = format("UI16TOF32 %s, %s", rah, rbh)
+    image = format("1110 0110 1000 1111 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 139
 op ui32_to_f32_mem32(loc: LOC32, rah: RH)
     syntax = format("UI32TOF32 %s, %s", rah, loc)
     image = format("1110 0010 1000 0100 0000 0 %s %s", rah, loc)
@@ -3396,7 +3501,7 @@ op ui32_to_f32_mem32(loc: LOC32, rah: RH)
 
     }
 
-// DOC: page 275
+// DOC: page 140
 op ui32_to_f32_tworh(rah: RH, rbh: RH)
     syntax = format("UI32TOF32 %s, %s", rah, rbh)
     image = format("1110 0110 1000 1011 0000 0000 00 %s %s", rbh, rah)
@@ -3404,7 +3509,30 @@ op ui32_to_f32_tworh(rah: RH, rbh: RH)
 
     }
 
+// DOC: page 141
+op zero(rah: card(3))
+    syntax = format("ZERO R%d", rah)
+    image = format("1110 0101 1001 0%3b", rah)
+    action = { 
 
+    }
+
+// DOC: page 142
+op zero_a()
+    syntax = "ZEROA"
+    image = "1110 0101 0110 0011"
+    action = {
+
+    }
+
+
+// DOC: page 219
+// see page 84
+
+// DOC: page 224
+// See page 89
+
+// TRIGONOMETRIC MATH UNIT
 // DOC: page 785
 op divf32_threerh(rah: RH, rbh: RH, rch: RH)
     syntax = format("DIVF32 %s, %s, %s", rah, rbh, rch)
