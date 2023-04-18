@@ -175,18 +175,20 @@ op movw(imm: card(16))
 	}
 
 // DOC: page 309
-macro MakeMovlXarn22bit(xarn, fmt) = \
+macro MakeMovlXarn22bit(xarn, fmt, n) = \
 	syntax = format("MOVL %s, #0x%06x", xarn, imm)\
 	image = format(fmt, imm)\
-	action = { } // XARn = 0:22bit;
-op movl_XAR0_22bit(imm: card(22)) MakeMovlXarn22bit("XAR0", "1000 1101 00 %22b")
-op movl_XAR1_22bit(imm: card(22)) MakeMovlXarn22bit("XAR1", "1000 1101 01 %22b")
-op movl_XAR2_22bit(imm: card(22)) MakeMovlXarn22bit("XAR2", "1000 1101 10 %22b")
-op movl_XAR3_22bit(imm: card(22)) MakeMovlXarn22bit("XAR3", "1000 1101 11 %22b")
-op movl_XAR4_22bit(imm: card(22)) MakeMovlXarn22bit("XAR4", "1000 1111 00 %22b")
-op movl_XAR5_22bit(imm: card(22)) MakeMovlXarn22bit("XAR5", "1000 1111 01 %22b")
-op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b")
-op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b")
+	action = {\
+        XAR[n] = imm;\
+    }
+op movl_XAR0_22bit(imm: card(22)) MakeMovlXarn22bit("XAR0", "1000 1101 00 %22b", 0)
+op movl_XAR1_22bit(imm: card(22)) MakeMovlXarn22bit("XAR1", "1000 1101 01 %22b", 1)
+op movl_XAR2_22bit(imm: card(22)) MakeMovlXarn22bit("XAR2", "1000 1101 10 %22b", 2)
+op movl_XAR3_22bit(imm: card(22)) MakeMovlXarn22bit("XAR3", "1000 1101 11 %22b", 3)
+op movl_XAR4_22bit(imm: card(22)) MakeMovlXarn22bit("XAR4", "1000 1111 00 %22b", 4)
+op movl_XAR5_22bit(imm: card(22)) MakeMovlXarn22bit("XAR5", "1000 1111 01 %22b", 5)
+op movl_XAR6_22bit(imm: card(22)) MakeMovlXarn22bit("XAR6", "0111 0110 10 %22b", 6)
+op movl_XAR7_22bit(imm: card(22)) MakeMovlXarn22bit("XAR7", "0111 0110 11 %22b", 7)
 
 // DOC: page 256, 318
 op mov_AR_loc16__movz_ARn_0to5(xarn: card(3), addr: LOC16)
@@ -1007,6 +1009,7 @@ op lcr_xarn(xarn: card(3))
 	syntax = format("LCR *XAR%d", xarn)
 	image = format("0011 1110 0110 0%3b", xarn)
     // otawa_kind = CALL
+    // otawa_target = (XAR[7]) << 1
 	action = { 
 		//
 	}
@@ -1579,8 +1582,7 @@ macro MakeMovlXarnLoc32(xarn, fmt) = \
 	syntax = format("MOVL %s, %s", xarn, src.syntax) \
 	image = format(fmt, src)\
 	action = {\
-		// SP −= 2;\
-		// XARn = [SP];\
+		// XARn = [loc32];
 	}
 op movl_XAR0_loc32(src: LOC32) MakeMovlXarnLoc32("XAR0", "1000 1110 %s")
 op movl_XAR1_loc32(src: LOC32) MakeMovlXarnLoc32("XAR1", "1000 1011 %s")
@@ -2855,9 +2857,9 @@ op xpwrite(src: LOC16)
 	}
 // 467 is an alias for XRETC COND
 // DOC: page 467, 468
-op xret__xretc_cond(c: COND)
-	syntax = format("XRETC %s", c)
-	image = format("0101 0110 1111 %s", c)
+op xret__xretc_cond(cond: COND)
+	syntax = format("XRETC %s", cond)
+	image = format("0101 0110 1111 %s", cond)
     otawa_kind = RETURN
 	action = {
 		//instructions for XRET:

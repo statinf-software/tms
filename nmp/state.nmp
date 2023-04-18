@@ -57,6 +57,7 @@ reg SP      [1,  address]
 reg RPC     [ 1, address]
 reg NPC 	[ 1, address]
 reg R		[32, word]
+reg XAR     [8, word]
 // reg F		[32, float(23,9)]
 // reg LLbit	[ 1, card(1)]
 

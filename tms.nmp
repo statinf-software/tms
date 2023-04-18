@@ -93,6 +93,8 @@ mode COND(cond: card(4)) = cond
 			case 0b1110: "NBIO" // BIO Input Equal To Zero BIO = 0
 			case 0b1111: "UNC" // Unconditional –
 		}
+	is_conditional = 1
+	// is_conditional = if syntax == 0b1111 then 0 else 1 endif
 	image = format("%4b", cond)
 	action = { }
 
@@ -114,6 +116,7 @@ mode CNDF(cndf: card(4)) = cndf
 			case 0b1111: "UNCF" // Unconditional with flag modification
 			default: "" 
 		}
+	// is_conditional = (syntax != 0b1111 and syntax != 0b1110)
 	image = format("%4b", cndf)
 
 mode RH(rh: card(3)) = rh
