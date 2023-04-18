@@ -3255,7 +3255,7 @@ op movd32(rah: RH, loc: LOC32)
 
 
 //page 99 MOVF32 is an alias for this
-// DOC: page 99, 100, 101
+// DOC: page 99, 100, 101, 102
 op moviz(imm: card(16), rah: card(3))
     syntax = format("MOVIZ R%d, #0x%x", rah, imm)
     image = format("1110 1000 0000 0 %16b %3b", imm, rah)
@@ -3525,18 +3525,85 @@ op zero_a()
 
     }
 
-
-// DOC: page 219
-// see page 84
-
-// DOC: page 224
-// See page 89
-
 // TRIGONOMETRIC MATH UNIT
+
+// DOC: page 783
+op mpy2pif32(rah: RH, rbh: RH)
+    syntax = format("MPY2PIF32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 0000 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 784 
+op div2pif32(rah: RH, rbh: RH)
+    syntax = format("DIV2PIF32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 0001 0000 0000 00 %s %s", rbh, rah)
+    action = {
+
+    }
+
+
 // DOC: page 785
 op divf32_threerh(rah: RH, rbh: RH, rch: RH)
     syntax = format("DIVF32 %s, %s, %s", rah, rbh, rch)
     image = format("1110 0010 0111 0100 0000 000 %s %s %s", rch, rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 787
+op sqrtf32(rah: RH, rbh: RH)
+    syntax = format("SQRTF32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 0111 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 788
+op sinpuf32(rah: RH, rbh: RH)
+    syntax = format("SINPUF32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 1000 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 790
+op cospuf32(rah: RH, rbh: RH)
+    syntax = format("COSPUF32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 1001 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 792 
+op atanpuf32(rah: RH, rbh: RH)
+    syntax = format("ATANPUF32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 1010 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 793
+op quadf32(rah: RH, rbh: RH, rch: RH, rdh: RH)
+    syntax = format("QUADF32 %s, %s, %s", rah, rbh, rch) //you don't mention rdh, apparently
+    image = format("1110 0010 0111 1100 0000 %s %s %s %s", rdh, rch, rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 797 
+op iexp2f32(rah: RH, rbh: RH)
+    syntax = format("IEXP2F32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 0011 0000 0000 00%s %s", rbh, rah)
+    action = {
+
+    }
+
+// DOC: page 798 
+op log2f32(rah: RH, rbh: RH)
+    syntax = format("LOG2F32 %s, %s", rah, rbh)
+    image = format("1110 0010 0111 0010 0000 0000 00%s %s", rbh, rah)
     action = {
 
     }
