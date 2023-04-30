@@ -3399,14 +3399,14 @@ op rptb_rc(label: card(7), imm: card(16))
 // DOC: page 126
 op save(flags: card(11), value: card(11))
     flagstr = format("%s%s%s%s%s%s%s%s", 
-        if flags<0..0> then format("LVF=%b%s", value<0..0>, if flags<1..6> then "," else "" endif) else "" endif,
-        if flags<1..1> then format("LUF=%b%s", value<1..1>, if flags<2..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<2..2> then format("NF=%b%s",  value<2..2>, if flags<3..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<3..3> then format("ZF=%b%s",  value<3..3>, if flags<4..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<4..4> then format("NI=%b%s",  value<4..4>, if flags<5..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<5..5> then format("ZI=%b%s",  value<5..5>, if flags<6..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<6..6> then format("CI=%b%s",  value<6..6>, if flags<9..9> then "," else "" endif) else "" endif,
-        if flags<9..9> then format("RNDF32=%b", value<9..9>) else "" endif)
+        if flags<0..0> then format("LVF=%d%s", value<0..0>, if flags<1..6> then "," else "" endif) else "" endif,
+        if flags<1..1> then format("LUF=%d%s", value<1..1>, if flags<2..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<2..2> then format("NF=%d%s",  value<2..2>, if flags<3..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<3..3> then format("ZF=%d%s",  value<3..3>, if flags<4..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<4..4> then format("NI=%d%s",  value<4..4>, if flags<5..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<5..5> then format("ZI=%d%s",  value<5..5>, if flags<6..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<6..6> then format("CI=%d%s",  value<6..6>, if flags<9..9> then "," else "" endif) else "" endif,
+        if flags<9..9> then format("RNDF32=%d", value<9..9>) else "" endif)
     syntax = format("SAVE %s", flagstr)
     image = format("1110 0110 01 %11b %11b", flags, value)
     action = {
@@ -3416,14 +3416,14 @@ op save(flags: card(11), value: card(11))
 // DOC: page 128
 op setflg(flags: card(11), value: card(11))
     flagstr = format("%s%s%s%s%s%s%s%s", 
-        if flags<0..0> then format("LVF=%b%s", value<0..0>, if flags<1..6> then "," else "" endif) else "" endif,
-        if flags<1..1> then format("LUF=%b%s", value<1..1>, if flags<2..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<2..2> then format("NF=%b%s",  value<2..2>, if flags<3..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<3..3> then format("ZF=%b%s",  value<3..3>, if flags<4..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<4..4> then format("NI=%b%s",  value<4..4>, if flags<5..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<5..5> then format("ZI=%b%s",  value<5..5>, if flags<6..6> | flags<9..9> then "," else "" endif) else "" endif,
-        if flags<6..6> then format("CI=%b%s",  value<6..6>, if flags<9..9> then "," else "" endif) else "" endif,
-        if flags<9..9> then format("RNDF32=%b", value<9..9>) else "" endif)
+        if flags<0..0> then format("LVF=%d%s", value<0..0>, if flags<1..6> then "," else "" endif) else "" endif,
+        if flags<1..1> then format("LUF=%d%s", value<1..1>, if flags<2..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<2..2> then format("NF=%d%s",  value<2..2>, if flags<3..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<3..3> then format("ZF=%d%s",  value<3..3>, if flags<4..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<4..4> then format("NI=%d%s",  value<4..4>, if flags<5..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<5..5> then format("ZI=%d%s",  value<5..5>, if flags<6..6> | flags<9..9> then "," else "" endif) else "" endif,
+        if flags<6..6> then format("CI=%d%s",  value<6..6>, if flags<9..9> then "," else "" endif) else "" endif,
+        if flags<9..9> then format("RNDF32=%d", value<9..9>) else "" endif)
     syntax = format("SETFLG %s", flagstr)
     image = format("1110 0110 00 %11b %11b", flags, value)
     action = {

@@ -135,16 +135,12 @@ mode LOC32(reg32: loc32index) = reg32
 		// TODO: check bit order of constants
 		switch(reg32ff<0..1>) {
 			case 0b00:
-				// UNTESTED
 				format("@0x%x", reg32ff<2..7>)
 			case 0b01:
-				// UNTESTED
 				format("*-SP[%d]", reg32ff<2..7>)
 			case 0b11:
-				// UNTESTED
 				format("*+XAR%d[%d]", reg32ff<5..7>, reg32ff<2..4>)
 			case 0b10:
-				// UNTESTED
 				if reg32ff<2..2> == 0 then // 0b100
 					switch(reg32ff<3..4>) {
 					case 0b00: format("*XAR%d++", reg32ff<5..7>)
@@ -153,7 +149,6 @@ mode LOC32(reg32: loc32index) = reg32
 					case 0b11: format("*+XAR%d[AR1]", reg32ff<5..7>)
 					}
 				else // 0b101
-					// UNTESTED except *SP++
 					switch(reg32ff<3..4>) {
 					case 0b11:
 						switch(reg32ff<5..7>) {
@@ -202,16 +197,12 @@ mode LOC32_CHECKED(reg32: loc32enum) = reg32
 		// TODO: check bit order of constants
 		switch(reg32ff<0..1>) {
 			case 0b00:
-				// UNTESTED
 				format("@0x%x", reg32ff<2..7>)
 			case 0b01:
-				// UNTESTED
 				format("*-SP[%d]", reg32ff<2..7>)
 			case 0b11:
-				// UNTESTED
 				format("*+XAR%d[%d]", reg32ff<5..7>, reg32ff<2..4>)
 			case 0b10:
-				// UNTESTED
 				if reg32ff<2..2> == 0 then // 0b100
 					switch(reg32ff<3..4>) {
 					case 0b00: format("*XAR%d++", reg32ff<5..7>)
@@ -220,7 +211,6 @@ mode LOC32_CHECKED(reg32: loc32enum) = reg32
 					case 0b11: format("*+XAR%d[AR1]", reg32ff<5..7>)
 					}
 				else // 0b101
-					// UNTESTED except *SP++
 					switch(reg32ff<3..4>) {
 					case 0b11:
 						switch(reg32ff<5..7>) {
@@ -270,16 +260,12 @@ mode LOC16(reg16: loc16index) = reg16
 		// TODO: check bit order of constants
 		switch(reg16ff<0..1>) {
 			case 0b00:
-				// UNTESTED
 				format("@0x%x", reg16ff<2..7>)
 			case 0b01:
-				// UNTESTED
 				format("*-SP[%d]", reg16ff<2..7>)
 			case 0b11:
-				// UNTESTED
 				format("*+XAR%d[%d]", reg16ff<5..7>, reg16ff<2..4>)
 			case 0b10:
-				// UNTESTED
 				if reg16ff<2..2> == 0 then // 0b100
 					switch(reg16ff<3..4>) {
 					case 0b00: format("*XAR%d++", reg16ff<5..7>)
@@ -288,7 +274,6 @@ mode LOC16(reg16: loc16index) = reg16
 					case 0b11: format("*+XAR%d[AR1]", reg16ff<5..7>)
 					}
 				else // 0b101
-					// UNTESTED
 					switch(reg16ff<3..4>) {
 					case 0b11:
 						switch(reg16ff<5..7>) {
@@ -329,15 +314,7 @@ mode LOC16(reg16: loc16index) = reg16
 		}
 	image = format("%8b", reg16)
 
-macro setR(d, v) = if d != 0 then R[d] = v; endif 
-
-// mode IMM16(n: half) = n
-// 	syntax = format("#%d", n)
-// 	image = format("%16b", n)
-
-// mode UIMM16(n: uhalf) = n
-//    syntax = format ( "#%d", n )
-//    image  = format ( "%16b", n )
+macro setR(d, v) = if d != 0 then R[d] = v; endif
 
 // top-level instructions
 op instruction (x: allinstr)
@@ -348,10 +325,6 @@ op instruction (x: allinstr)
 		x.action;
 		PC = NPC;
 	}
-
-// op allinstr =
-// 	  all_movl
-// 	| all_other
 
 op init ()
 	action = {
