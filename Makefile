@@ -63,7 +63,8 @@ GFLAGS = \
 
 NMP_MAIN = $(ARCH).nmp
 NMP_OTHERS =\
-	nmp/all.nmp
+	nmp/all.nmp\
+	nmp/state.nmp
 
 NMP =\
 	$(NMP_MAIN) \
