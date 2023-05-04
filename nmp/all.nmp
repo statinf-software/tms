@@ -1004,6 +1004,15 @@ op lc_xar7()
 
     }
 
+// DOC: page 219
+op lc_22bit(addr: card(22))
+    syntax = format("LC 0x%6x", addr)
+    image = format("0000 0000 10%22b", addr)
+    action = {
+    
+    }
+
+
 // DOC: page 221
 op lcr_xarn(xarn: card(3))
 	syntax = format("LCR *XAR%d", xarn)
